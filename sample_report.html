@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>orator report</title>
+<style>
+  :root { --ink:#1c1c1e; --muted:#6b7280; --line:#e5e7eb; --bg:#fbfbfa; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
+  .wrap { max-width:880px; margin:0 auto; padding:40px 24px 80px; }
+  h1 { font-size:22px; margin:0 0 2px; letter-spacing:-.01em; }
+  .sub { color:var(--muted); margin:0 0 28px; }
+  .score { display:flex; align-items:baseline; gap:12px; margin:0 0 24px; }
+  .score .big { font-size:54px; font-weight:700; letter-spacing:-.02em; }
+  .score .of { color:var(--muted); font-size:18px; }
+  .summary { background:#fff; border:1px solid var(--line); border-radius:12px;
+             padding:14px 16px; margin:0 0 28px; }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.06em;
+       color:var(--muted); margin:30px 0 12px; }
+  .dim { display:grid; grid-template-columns:140px 1fr 64px; align-items:center;
+         gap:12px; margin:8px 0; }
+  .dim .name { font-weight:600; }
+  .bar { height:10px; background:#eef0f2; border-radius:6px; overflow:hidden; }
+  .bar > i { display:block; height:100%; border-radius:6px; }
+  .pts { text-align:right; font-variant-numeric:tabular-nums; color:var(--muted); }
+  .b-excellent { background:#16a34a; } .b-good { background:#65a30d; }
+  .b-fair { background:#d97706; } .b-poor { background:#dc2626; }
+  .transcript { background:#fff; border:1px solid var(--line); border-radius:12px;
+                padding:18px 20px; line-height:2.1; }
+  .transcript span { border-radius:4px; padding:1px 1px; }
+  .f-filler  { background:#fde68a; }
+  .f-weak    { background:#dbeafe; border-bottom:2px solid #3b82f6; }
+  .f-tripped { background:#fecaca; border-bottom:2px solid #dc2626; }
+  .f-repeat  { background:#ede9fe; border-bottom:2px solid #8b5cf6; }
+  .pause { color:#dc2626; font-size:11px; font-weight:600; opacity:.8;
+           padding:0 4px; white-space:nowrap; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; color:var(--muted);
+            font-size:12px; margin:14px 0 0; }
+  .legend i { display:inline-block; width:11px; height:11px; border-radius:3px;
+              margin-right:5px; vertical-align:-1px; }
+  table.metrics { width:100%; border-collapse:collapse; font-size:13px; }
+  table.metrics td { padding:6px 8px; border-bottom:1px solid var(--line); }
+  table.metrics td:first-child { color:var(--muted); width:55%; }
+  table.metrics td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+  .findings li { margin:4px 0; }
+  .findings .sg { color:#16a34a; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; }
+</style></head>
+<body><div class="wrap">
+  <h1>orator &mdash; speech report</h1>
+  <p class="sub">engine: fixture &nbsp;&middot;&nbsp; word-choice: offline-lexicon
+     &nbsp;&middot;&nbsp; 57 words / 24.4s</p>
+
+  <div class="score"><span class="big">53.0</span><span class="of">/ 100</span></div>
+  <div class="summary">Overall 53.0/100 (developing). Biggest opportunities: fillers, pauses.</div>
+
+  <h2>Dimensions</h2>
+  
+  <div class="dim">
+    <span class="name">Fillers</span>
+    <span class="bar"><i class="b-poor" style="width:28%"></i></span>
+    <span class="pts">28</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Pace</span>
+    <span class="bar"><i class="b-good" style="width:50%"></i></span>
+    <span class="pts">50</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Pauses / fluency</span>
+    <span class="bar"><i class="b-poor" style="width:28%"></i></span>
+    <span class="pts">28</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Word choice</span>
+    <span class="bar"><i class="b-good" style="width:82%"></i></span>
+    <span class="pts">82</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Vocabulary</span>
+    <span class="bar"><i class="b-good" style="width:82%"></i></span>
+    <span class="pts">82</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Hedging</span>
+    <span class="bar"><i class="b-poor" style="width:28%"></i></span>
+    <span class="pts">28</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Readability</span>
+    <span class="bar"><i class="b-fair" style="width:80%"></i></span>
+    <span class="pts">80</span>
+  </div>
+  
+
+  <h2>Transcript</h2>
+  <div class="transcript"><span class="f-filler" title="Discourse marker used as filler: &#x27;So,&#x27;.">So,</span> <span class="f-filler" title="Filled pause: &#x27;um,&#x27;.">um,</span> today I want to talk about, <span class="f-filler" title="Filled pause: &#x27;uh,&#x27;. Preceded by a hesitation pause.">uh,</span> our quarterly results. <span class="f-weak" title="filler/booster — cut it | &#x27;i think&#x27; is filler/hedging that weakens the point; cut it.">I</span> <span class="f-weak" title="filler/booster — cut it">think</span> the numbers are, like, pretty <span class="f-weak" title="weak word — prefer &#x27;(use a precise adjective)&#x27; | &#x27;good&#x27; is vague; a stronger word like &#x27;(use a precise adjective)&#x27; lands harder.  -> (use a precise adjective)">good.</span> <span class="f-repeat" title="Immediate repetition of &#x27;we&#x27;">We,</span> <span class="f-repeat" title="Immediate repetition of &#x27;we&#x27;">we</span> saw a <span class="f-weak" title="filler/booster — cut it | &#x27;really&#x27; is filler/hedging that weakens the point; cut it.">really</span> big increase in, <span class="f-filler" title="Filled pause: &#x27;um,&#x27;.">um,</span> revenue. <span class="f-repeat" title="Immediate repetition of &#x27;the&#x27;">The</span> <span class="f-repeat" title="Immediate repetition of &#x27;the&#x27;">the</span> team did a great job. <span class="f-filler" title="Discourse filler: &#x27;Basically,&#x27;. Preceded by a hesitation pause.">Basically,</span> the <span class="f-weak" title="weak word — prefer &#x27;(be specific)&#x27; | &#x27;thing&#x27; is vague; a stronger word like &#x27;(be specific)&#x27; lands harder.  -> (be specific)">thing</span> is we need to, <span class="f-filler" title="Filled pause: &#x27;uh,&#x27;. Preceded by a hesitation pause.">uh,</span> <span class="pause" title="Long mid-clause pause (awkward)">&#10629;1.4s&#10630;</span> <span class="f-tripped" title="weak word — prefer &#x27;use&#x27; | Stumble around &#x27;utilize&#x27;: a vague word choice, a long hesitation pause before it, a filler right before it. | &#x27;utilize&#x27; is vague; a stronger word like &#x27;use&#x27; lands harder.  -> use">utilize</span> our budget better. <span class="f-filler" title="Filler phrase: &#x27;you know&#x27;. Preceded by a hesitation pause.">You</span> <span class="f-filler" title="Filler phrase: &#x27;you know&#x27;. Preceded by a hesitation pause.">know,</span> <span class="f-filler" title="Filler phrase: &#x27;i guess&#x27;. | filler/booster — cut it | &#x27;i guess&#x27; is filler/hedging that weakens the point; cut it.">I</span> <span class="f-filler" title="Filler phrase: &#x27;i guess&#x27;. | filler/booster — cut it">guess</span> it <span class="f-weak" title="weak/hedging word — tighten or cut">could</span> <span class="f-weak" title="filler/booster — cut it | &#x27;maybe&#x27; is filler/hedging that weakens the point; cut it.">maybe</span> work.</div>
+  <div class="legend">
+    <span><i class="f-filler"></i>filler</span>
+    <span><i class="f-weak"></i>weak / hedge</span>
+    <span><i class="f-tripped"></i>tripped up</span>
+    <span><i class="f-repeat"></i>repetition</span>
+    <span class="pause">&#10629;pause&#10630;</span>
+  </div>
+
+  
+  <h2>Stronger word suggestions</h2>
+  <ul class="findings">
+    
+    <li><code>I think</code>
+        (cut it)
+        &nbsp;<span class="sub">filler/booster — cut it</span></li>
+    
+    <li><code>good.</code>
+        &rarr; <span class="sg">(use a precise adjective)</span>
+        &nbsp;<span class="sub">weak word — prefer '(use a precise adjective)'</span></li>
+    
+    <li><code>really</code>
+        (cut it)
+        &nbsp;<span class="sub">'really' is filler/hedging that weakens the point; cut it.</span></li>
+    
+    <li><code>thing</code>
+        &rarr; <span class="sg">(be specific)</span>
+        &nbsp;<span class="sub">'thing' is vague; a stronger word like '(be specific)' lands harder.</span></li>
+    
+    <li><code>utilize</code>
+        &rarr; <span class="sg">use</span>
+        &nbsp;<span class="sub">weak word — prefer 'use'</span></li>
+    
+    <li><code>I guess</code>
+        (cut it)
+        &nbsp;<span class="sub">filler/booster — cut it</span></li>
+    
+    <li><code>maybe</code>
+        (cut it)
+        &nbsp;<span class="sub">filler/booster — cut it</span></li>
+    
+  </ul>
+  
+
+  <h2>Metrics</h2>
+  <table class="metrics">
+    <tr><td>articulation_wpm</td><td>220.07722007722006</td></tr><tr><td>consistency</td><td>36.98648401781386</td></tr><tr><td>disfluency_per_minute</td><td>5.91</td></tr><tr><td>duration_sec</td><td>24.37</td></tr><tr><td>filler_count</td><td>8</td></tr><tr><td>filler_rate_per_100w</td><td>14.04</td></tr><tr><td>fillers_per_minute</td><td>19.7</td></tr><tr><td>flesch_kincaid_grade</td><td>4.055350877192982</td></tr><tr><td>flesch_reading_ease</td><td>82.90828947368422</td></tr><tr><td>gunning_fog</td><td>6.60701754385965</td></tr><tr><td>hedge_count</td><td>8</td></tr><tr><td>hedge_density_per_100w</td><td>14.04</td></tr><tr><td>high_severity</td><td>0</td></tr><tr><td>long_pauses</td><td>1</td></tr><tr><td>mattr</td><td>0.795</td></tr><tr><td>mtld</td><td>75.81000000000002</td></tr><tr><td>n_windows</td><td>3</td></tr><tr><td>repetitions</td><td>2</td></tr><tr><td>severity_sum</td><td>0.54</td></tr><tr><td>smog_index</td><td>7.793537801064561</td></tr><tr><td>speaking_sec</td><td>15.54</td></tr><tr><td>suggestions_offered</td><td>7</td></tr><tr><td>total</td><td>57</td></tr><tr><td>total_words</td><td>57</td></tr><tr><td>tripped_up</td><td>1</td></tr><tr><td>ttr</td><td>0.7894736842105263</td></tr><tr><td>unique</td><td>45</td></tr><tr><td>wpm</td><td>140.33647927780058</td></tr>
+  </table>
+</div></body></html>

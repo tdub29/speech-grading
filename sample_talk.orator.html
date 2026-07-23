@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>orator report</title>
+<style>
+  :root { --ink:#1c1c1e; --muted:#6b7280; --line:#e5e7eb; --bg:#fbfbfa; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
+  .wrap { max-width:880px; margin:0 auto; padding:40px 24px 80px; }
+  h1 { font-size:22px; margin:0 0 2px; letter-spacing:-.01em; }
+  .sub { color:var(--muted); margin:0 0 28px; }
+  .score { display:flex; align-items:baseline; gap:12px; margin:0 0 24px; }
+  .score .big { font-size:54px; font-weight:700; letter-spacing:-.02em; }
+  .score .of { color:var(--muted); font-size:18px; }
+  .summary { background:#fff; border:1px solid var(--line); border-radius:12px;
+             padding:14px 16px; margin:0 0 28px; }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.06em;
+       color:var(--muted); margin:30px 0 12px; }
+  .dim { display:grid; grid-template-columns:140px 1fr 64px; align-items:center;
+         gap:12px; margin:8px 0; }
+  .dim .name { font-weight:600; }
+  .bar { height:10px; background:#eef0f2; border-radius:6px; overflow:hidden; }
+  .bar > i { display:block; height:100%; border-radius:6px; }
+  .pts { text-align:right; font-variant-numeric:tabular-nums; color:var(--muted); }
+  .b-excellent { background:#16a34a; } .b-good { background:#65a30d; }
+  .b-fair { background:#d97706; } .b-poor { background:#dc2626; }
+  .transcript { background:#fff; border:1px solid var(--line); border-radius:12px;
+                padding:18px 20px; line-height:2.1; }
+  .transcript span { border-radius:4px; padding:1px 1px; }
+  .f-filler  { background:#fde68a; }
+  .f-weak    { background:#dbeafe; border-bottom:2px solid #3b82f6; }
+  .f-tripped { background:#fecaca; border-bottom:2px solid #dc2626; }
+  .f-repeat  { background:#ede9fe; border-bottom:2px solid #8b5cf6; }
+  .pause { color:#dc2626; font-size:11px; font-weight:600; opacity:.8;
+           padding:0 4px; white-space:nowrap; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px; color:var(--muted);
+            font-size:12px; margin:14px 0 0; }
+  .legend i { display:inline-block; width:11px; height:11px; border-radius:3px;
+              margin-right:5px; vertical-align:-1px; }
+  table.metrics { width:100%; border-collapse:collapse; font-size:13px; }
+  table.metrics td { padding:6px 8px; border-bottom:1px solid var(--line); }
+  table.metrics td:first-child { color:var(--muted); width:55%; }
+  table.metrics td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+  .findings li { margin:4px 0; }
+  .findings .sg { color:#16a34a; }
+  code { background:#f3f4f6; padding:1px 5px; border-radius:4px; }
+</style></head>
+<body><div class="wrap">
+  <h1>orator &mdash; speech report</h1>
+  <p class="sub">engine: text &nbsp;&middot;&nbsp; word-choice: claude-agent
+     &nbsp;&middot;&nbsp; 32 words / 0.0s</p>
+
+  <div class="score"><span class="big">54.8</span><span class="of">/ 100</span></div>
+  <div class="summary">Overall 54.8/100 (developing). Biggest opportunities: fillers, hedging.</div>
+
+  <h2>Dimensions</h2>
+  
+  <div class="dim">
+    <span class="name">Fillers</span>
+    <span class="bar"><i class="b-poor" style="width:28%"></i></span>
+    <span class="pts">28</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Word choice</span>
+    <span class="bar"><i class="b-fair" style="width:58%"></i></span>
+    <span class="pts">58</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Vocabulary</span>
+    <span class="bar"><i class="b-excellent" style="width:100%"></i></span>
+    <span class="pts">100</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Hedging</span>
+    <span class="bar"><i class="b-poor" style="width:28%"></i></span>
+    <span class="pts">28</span>
+  </div>
+  
+  <div class="dim">
+    <span class="name">Readability</span>
+    <span class="bar"><i class="b-fair" style="width:80%"></i></span>
+    <span class="pts">80</span>
+  </div>
+  
+
+  <h2>Transcript</h2>
+  <div class="transcript"><span class="f-filler" title="Discourse marker used as filler: &#x27;So,&#x27;.">So,</span> <span class="f-filler" title="Filled pause: &#x27;um,&#x27;.">um,</span> <span class="f-weak" title="filler/booster — cut it">I</span> <span class="f-weak" title="filler/booster — cut it">think</span> the results were, like, <span class="f-weak" title="filler/booster — cut it | really is an empty intensifier; cut it and let the number carry the weight.">really</span> <span class="f-weak" title="weak word — prefer &#x27;(use a precise adjective)&#x27; | good is vague; name the magnitude or impact.  -> (use a precise adjective)">good.</span> <span class="f-repeat" title="Immediate repetition of &#x27;we&#x27;">We</span> <span class="f-repeat" title="Immediate repetition of &#x27;we&#x27;">we</span> saw a big increase. <span class="f-filler" title="Discourse filler: &#x27;Basically,&#x27;.">Basically,</span> we need to <span class="f-weak" title="weak word — prefer &#x27;use&#x27; | utilize is corporate filler; use is cleaner.  -> use">utilize</span> the budget better. <span class="f-filler" title="Filler phrase: &#x27;you know&#x27;.">You</span> <span class="f-filler" title="Filler phrase: &#x27;you know&#x27;.">know,</span> <span class="f-filler" title="Filler phrase: &#x27;i guess&#x27;. | filler/booster — cut it">I</span> <span class="f-filler" title="Filler phrase: &#x27;i guess&#x27;. | filler/booster — cut it">guess</span> it <span class="f-weak" title="weak/hedging word — tighten or cut">could</span> <span class="f-tripped" title="filler/booster — cut it | the could/maybe hedge-stack signals reaching for certainty; commit to it.  -> will">maybe</span> work.</div>
+  <div class="legend">
+    <span><i class="f-filler"></i>filler</span>
+    <span><i class="f-weak"></i>weak / hedge</span>
+    <span><i class="f-tripped"></i>tripped up</span>
+    <span><i class="f-repeat"></i>repetition</span>
+    <span class="pause">&#10629;pause&#10630;</span>
+  </div>
+
+  
+  <h2>Stronger word suggestions</h2>
+  <ul class="findings">
+    
+    <li><code>I think</code>
+        (cut it)
+        &nbsp;<span class="sub">filler/booster — cut it</span></li>
+    
+    <li><code>I guess</code>
+        (cut it)
+        &nbsp;<span class="sub">filler/booster — cut it</span></li>
+    
+    <li><code>good.</code>
+        &rarr; <span class="sg">(use a precise adjective)</span>
+        &nbsp;<span class="sub">weak word — prefer '(use a precise adjective)'</span></li>
+    
+    <li><code>utilize</code>
+        &rarr; <span class="sg">use</span>
+        &nbsp;<span class="sub">weak word — prefer 'use'</span></li>
+    
+    <li><code>maybe</code>
+        (cut it)
+        &nbsp;<span class="sub">filler/booster — cut it</span></li>
+    
+  </ul>
+  
+
+  <h2>Metrics</h2>
+  <table class="metrics">
+    <tr><td>duration_sec</td><td>0.0</td></tr><tr><td>filler_count</td><td>5</td></tr><tr><td>filler_rate_per_100w</td><td>15.62</td></tr><tr><td>fillers_per_minute</td><td>0.0</td></tr><tr><td>flesch_kincaid_grade</td><td>3.017500000000002</td></tr><tr><td>flesch_reading_ease</td><td>87.67750000000001</td></tr><tr><td>gunning_fog</td><td>5.7</td></tr><tr><td>hedge_count</td><td>7</td></tr><tr><td>hedge_density_per_100w</td><td>21.88</td></tr><tr><td>high_severity</td><td>1</td></tr><tr><td>mattr</td><td>0.875</td></tr><tr><td>mtld</td><td>71.68</td></tr><tr><td>severity_sum</td><td>0.62</td></tr><tr><td>smog_index</td><td>7.168621630094336</td></tr><tr><td>speaking_sec</td><td>0.0</td></tr><tr><td>suggestions_offered</td><td>5</td></tr><tr><td>total</td><td>32</td></tr><tr><td>total_words</td><td>32</td></tr><tr><td>tripped_up</td><td>1</td></tr><tr><td>ttr</td><td>0.875</td></tr><tr><td>unique</td><td>28</td></tr>
+  </table>
+</div></body></html>

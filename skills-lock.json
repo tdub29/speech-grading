@@ -1,0 +1,161 @@
+{
+  "skills": {
+    "anti-slop-design": {
+      "source": "https://pols.dev/slop.md",
+      "sourceType": "url",
+      "computedHash": "860e2d6c661c4ba564fa9daad79d505d2bd86c15855bce2ddce79c2756b39e0e"
+    },
+    "deslop": {
+      "computedHash": "88095a619f65d6e47bf103f7c24f321ba5f77703829fb1c084c111b4a90533db",
+      "skillPath": ".agents/skills/deslop/SKILL.md",
+      "source": "aidenybai/react-doctor",
+      "sourceType": "github"
+    },
+    "find-similar-functions": {
+      "computedHash": "f4278f7ce83ca53c67cf2319194ab5b3db9b794a69afa7c972cdb8be5fb20a7e",
+      "skillPath": ".agents/skills/find-similar-functions/SKILL.md",
+      "source": "aidenybai/react-doctor",
+      "sourceType": "github"
+    },
+    "huyen-ai-engineering": {
+      "computedHash": "619d53f62ccd8f0fb53c969a802d885a4c1c806e5a02a046169356f24847e0ec",
+      "skillPath": ".agents/skills/huyen-ai-engineering/SKILL.md",
+      "source": "local/book-to-skill",
+      "sourceType": "local"
+    },
+    "impeccable": {
+      "computedHash": "b5c5c3592237f1305f8076f7679d56e6d3359e5c4e13144a3ba2242d25ffa477",
+      "skillPath": ".agents/skills/impeccable/SKILL.md",
+      "source": "pbakaus/impeccable",
+      "sourceType": "github"
+    },
+    "improve": {
+      "computedHash": "992d71e2ed2a83e7f25d8522d069f090e2ea16286ec29ea86f84cfa05c0c2430",
+      "skillPath": ".agents/skills/improve/SKILL.md",
+      "source": "shadcn/improve",
+      "sourceType": "github"
+    },
+    "planning-with-files": {
+      "computedHash": "1fa08a8d112b002c3984d8e41fa594e74b1418a6fa6c75d0d84f17596e6111ee",
+      "skillPath": ".agents/skills/planning-with-files/SKILL.md",
+      "source": "OthmanAdi/planning-with-files",
+      "sourceType": "github"
+    },
+    "prose-editing": {
+      "book": "William Zinsser - On Writing Well; Roy Peter Clark - Writing Tools; Joseph M. Williams and Joseph Bizup - Style: Lessons in Clarity and Grace; Steven Pinker - The Sense of Style",
+      "computedHash": "dc444bd992a8de6fa78e32b1a4b96ce098169fa7062f719ab2dcefb5c7a80491",
+      "skillPath": ".agents/skills/prose-editing/SKILL.md",
+      "source": "local/book-to-skill",
+      "sourceType": "local"
+    },
+    "rde-eval": {
+      "computedHash": "cc11149f51d3faad4213992ad70ebacfae347a7520cb3c025598e5ccbbf0095b",
+      "skillPath": ".agents/skills/rde-eval/SKILL.md",
+      "source": "aidenybai/react-doctor",
+      "sourceType": "github"
+    },
+    "systematic-debugging": {
+      "computedHash": "4999cb851360485eca5074e727bbdd62ef20549c5d5b01216fcbf5831badb473",
+      "skillPath": ".agents/skills/systematic-debugging/SKILL.md",
+      "source": "obra/superpowers",
+      "sourceType": "github"
+    },
+    "loopy": {
+      "source": "Forward-Future/loop-library",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/loopy/SKILL.md",
+      "computedHash": "b9b76d49be358e8978ea8acc200ff207743054aa59fac9c721c951ea48f7150d"
+    },
+    "caveman": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceCommit": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0",
+      "skillPath": "skills/caveman/SKILL.md",
+      "computedHash": "429b284113acbcd2fe6d8721211efb700bba440ca5c4a625a614b781ad669c90"
+    },
+    "caveman-compress": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceCommit": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0",
+      "skillPath": "skills/caveman-compress/SKILL.md",
+      "computedHash": "208475f3dcdd425f5452551b2b6acb8c1879e19edbbad47450113904e5f9732e"
+    },
+    "caveman-stats": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceCommit": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0",
+      "skillPath": "skills/caveman-stats/SKILL.md",
+      "computedHash": "7d6ba2ee3fb9b1629b6e95b326a0559f758d881d2ba826120fdfd625f578218d"
+    },
+    "caveman-review": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceCommit": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0",
+      "skillPath": "skills/caveman-review/SKILL.md",
+      "computedHash": "f5fcb5ec7cb461bfd95a6f5eb6dbe624967057dce7992e71213bcd3462ace742"
+    },
+    "caveman-commit": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceCommit": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0",
+      "skillPath": "skills/caveman-commit/SKILL.md",
+      "computedHash": "54d5ca0894ecab0c74361d0077b71ff4e0bb60c67546880c1807bc8406ea7aab"
+    },
+    "caveman-help": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceCommit": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0",
+      "skillPath": "skills/caveman-help/SKILL.md",
+      "computedHash": "c6fea66aacc891b9595aae54b2c8335c322e61f83ad8693e24d3b3ab8603849a"
+    },
+    "cavecrew": {
+      "source": "JuliusBrussee/caveman",
+      "sourceType": "github",
+      "sourceCommit": "0d95a81d35a9f2d123a5e9430d1cfc43d55f1bb0",
+      "skillPath": "skills/cavecrew/SKILL.md",
+      "computedHash": "f1ce6b651c9431cc248061471bf247787c2491c0b02b912691fc8f690f01be04"
+    },
+    "ponytail": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "sourceCommit": "40e50d9e03242aa5dd53ac771950f9127362b25f",
+      "skillPath": "skills/ponytail/SKILL.md",
+      "computedHash": "e575026e2a6dffe408b10e6f7acc7ed47c83d71fc69f9c0d3880115f3f6c6aa7"
+    },
+    "ponytail-audit": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "sourceCommit": "40e50d9e03242aa5dd53ac771950f9127362b25f",
+      "skillPath": "skills/ponytail-audit/SKILL.md",
+      "computedHash": "49e835c96313009179ec162d80ccc9d91625e387c8af7cd3975c531ba105b2d5"
+    },
+    "ponytail-debt": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "sourceCommit": "40e50d9e03242aa5dd53ac771950f9127362b25f",
+      "skillPath": "skills/ponytail-debt/SKILL.md",
+      "computedHash": "c0a5c0c0cc843cb53f15b792790946768500b45538d07fadbf0602ed6af63a47"
+    },
+    "ponytail-gain": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "sourceCommit": "40e50d9e03242aa5dd53ac771950f9127362b25f",
+      "skillPath": "skills/ponytail-gain/SKILL.md",
+      "computedHash": "f8847c410b54978fff41eab775fc754d41ede19ad6fb72fac799b65616cc6683"
+    },
+    "ponytail-help": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "sourceCommit": "40e50d9e03242aa5dd53ac771950f9127362b25f",
+      "skillPath": "skills/ponytail-help/SKILL.md",
+      "computedHash": "07e0fc50c722cee981d47f62a5d32a7def4cb65651f414724e5fd6939f145977"
+    },
+    "ponytail-review": {
+      "source": "DietrichGebert/ponytail",
+      "sourceType": "github",
+      "sourceCommit": "40e50d9e03242aa5dd53ac771950f9127362b25f",
+      "skillPath": "skills/ponytail-review/SKILL.md",
+      "computedHash": "6c8b7e5c897a406b66da6aabda7fa6509e8d1d447e73e602265d7986497445d1"
+    }
+  }
+}

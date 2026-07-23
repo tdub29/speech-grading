@@ -1,0 +1,787 @@
+{
+  "overall_score": 54.8,
+  "dimensions": [
+    {
+      "dimension": "fillers",
+      "raw": 15.62,
+      "band": "poor",
+      "points": 28.0,
+      "weight": 0.2812,
+      "findings": [
+        {
+          "kind": "filler",
+          "word_index": 24,
+          "span": [
+            24,
+            25
+          ],
+          "start": 0.0,
+          "end": 0.0,
+          "original": "You know,",
+          "suggestion": "",
+          "rationale": "Filler phrase: 'you know'.",
+          "score": 0.7,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 26,
+          "span": [
+            26,
+            27
+          ],
+          "start": 0.0,
+          "end": 0.0,
+          "original": "I guess",
+          "suggestion": "",
+          "rationale": "Filler phrase: 'i guess'.",
+          "score": 0.7,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 0,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "So,",
+          "suggestion": "",
+          "rationale": "Discourse marker used as filler: 'So,'.",
+          "score": 0.7,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 1,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "um,",
+          "suggestion": "",
+          "rationale": "Filled pause: 'um,'.",
+          "score": 0.95,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 16,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "Basically,",
+          "suggestion": "",
+          "rationale": "Discourse filler: 'Basically,'.",
+          "score": 0.7,
+          "source": "lexicon"
+        }
+      ],
+      "detail": {
+        "filler_count": 5,
+        "filler_rate_per_100w": 15.62,
+        "fillers_per_minute": 0.0
+      }
+    },
+    {
+      "dimension": "word_choice",
+      "raw": 0.62,
+      "band": "fair",
+      "points": 58.0,
+      "weight": 0.2812,
+      "findings": [
+        {
+          "kind": "tripped_up",
+          "word_index": 30,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "maybe",
+          "suggestion": "will",
+          "rationale": "the could/maybe hedge-stack signals reaching for certainty; commit to it.",
+          "score": 0.62,
+          "source": "wordchoice"
+        }
+      ],
+      "detail": {
+        "tripped_up": 1,
+        "high_severity": 1,
+        "severity_sum": 0.62,
+        "suggestions_offered": 5
+      }
+    },
+    {
+      "dimension": "vocabulary",
+      "raw": 0.875,
+      "band": "excellent",
+      "points": 100.0,
+      "weight": 0.1875,
+      "findings": [],
+      "detail": {
+        "mattr": 0.875,
+        "mtld": 71.68,
+        "ttr": 0.875,
+        "unique": 28,
+        "total": 32
+      }
+    },
+    {
+      "dimension": "hedging",
+      "raw": 21.88,
+      "band": "poor",
+      "points": 28.0,
+      "weight": 0.1562,
+      "findings": [
+        {
+          "kind": "hedge",
+          "word_index": 2,
+          "span": [
+            2,
+            3
+          ],
+          "start": 0.0,
+          "end": 0.0,
+          "original": "I think",
+          "suggestion": "",
+          "rationale": "filler/booster — cut it",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "hedge",
+          "word_index": 26,
+          "span": [
+            26,
+            27
+          ],
+          "start": 0.0,
+          "end": 0.0,
+          "original": "I guess",
+          "suggestion": "",
+          "rationale": "filler/booster — cut it",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "intensifier",
+          "word_index": 8,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "really",
+          "suggestion": "",
+          "rationale": "filler/booster — cut it",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "weak_word",
+          "word_index": 9,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "good.",
+          "suggestion": "(use a precise adjective)",
+          "rationale": "weak word — prefer '(use a precise adjective)'",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "weak_word",
+          "word_index": 20,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "utilize",
+          "suggestion": "use",
+          "rationale": "weak word — prefer 'use'",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "hedge",
+          "word_index": 29,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "could",
+          "suggestion": null,
+          "rationale": "weak/hedging word — tighten or cut",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "hedge",
+          "word_index": 30,
+          "span": null,
+          "start": 0.0,
+          "end": 0.0,
+          "original": "maybe",
+          "suggestion": "",
+          "rationale": "filler/booster — cut it",
+          "score": 1.0,
+          "source": "lexicon"
+        }
+      ],
+      "detail": {
+        "hedge_count": 7,
+        "hedge_density_per_100w": 21.88
+      }
+    },
+    {
+      "dimension": "readability",
+      "raw": 3.017500000000002,
+      "band": "fair",
+      "points": 80.0,
+      "weight": 0.0938,
+      "findings": [],
+      "detail": {
+        "flesch_reading_ease": 87.67750000000001,
+        "flesch_kincaid_grade": 3.017500000000002,
+        "smog_index": 7.168621630094336,
+        "gunning_fog": 5.7
+      }
+    }
+  ],
+  "findings": [
+    {
+      "kind": "filler",
+      "word_index": 24,
+      "span": [
+        24,
+        25
+      ],
+      "start": 0.0,
+      "end": 0.0,
+      "original": "You know,",
+      "suggestion": "",
+      "rationale": "Filler phrase: 'you know'.",
+      "score": 0.7,
+      "source": "lexicon"
+    },
+    {
+      "kind": "filler",
+      "word_index": 26,
+      "span": [
+        26,
+        27
+      ],
+      "start": 0.0,
+      "end": 0.0,
+      "original": "I guess",
+      "suggestion": "",
+      "rationale": "Filler phrase: 'i guess'.",
+      "score": 0.7,
+      "source": "lexicon"
+    },
+    {
+      "kind": "filler",
+      "word_index": 0,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "So,",
+      "suggestion": "",
+      "rationale": "Discourse marker used as filler: 'So,'.",
+      "score": 0.7,
+      "source": "lexicon"
+    },
+    {
+      "kind": "filler",
+      "word_index": 1,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "um,",
+      "suggestion": "",
+      "rationale": "Filled pause: 'um,'.",
+      "score": 0.95,
+      "source": "lexicon"
+    },
+    {
+      "kind": "filler",
+      "word_index": 16,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "Basically,",
+      "suggestion": "",
+      "rationale": "Discourse filler: 'Basically,'.",
+      "score": 0.7,
+      "source": "lexicon"
+    },
+    {
+      "kind": "repetition",
+      "word_index": 10,
+      "span": [
+        10,
+        11
+      ],
+      "start": 0.0,
+      "end": 0.0,
+      "original": "We we",
+      "suggestion": null,
+      "rationale": "Immediate repetition of 'we'",
+      "score": 1.0,
+      "source": "rule"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 2,
+      "span": [
+        2,
+        3
+      ],
+      "start": 0.0,
+      "end": 0.0,
+      "original": "I think",
+      "suggestion": "",
+      "rationale": "filler/booster — cut it",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 26,
+      "span": [
+        26,
+        27
+      ],
+      "start": 0.0,
+      "end": 0.0,
+      "original": "I guess",
+      "suggestion": "",
+      "rationale": "filler/booster — cut it",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "intensifier",
+      "word_index": 8,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "really",
+      "suggestion": "",
+      "rationale": "filler/booster — cut it",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 9,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "good.",
+      "suggestion": "(use a precise adjective)",
+      "rationale": "weak word — prefer '(use a precise adjective)'",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 20,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "utilize",
+      "suggestion": "use",
+      "rationale": "weak word — prefer 'use'",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 29,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "could",
+      "suggestion": null,
+      "rationale": "weak/hedging word — tighten or cut",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 30,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "maybe",
+      "suggestion": "",
+      "rationale": "filler/booster — cut it",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 8,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "really",
+      "suggestion": null,
+      "rationale": "really is an empty intensifier; cut it and let the number carry the weight.",
+      "score": 0.7,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 9,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "good.",
+      "suggestion": "strong",
+      "rationale": "good is vague; name the magnitude or impact.",
+      "score": 0.6,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 20,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "utilize",
+      "suggestion": "use",
+      "rationale": "utilize is corporate filler; use is cleaner.",
+      "score": 0.85,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "tripped_up",
+      "word_index": 30,
+      "span": null,
+      "start": 0.0,
+      "end": 0.0,
+      "original": "maybe",
+      "suggestion": "will",
+      "rationale": "the could/maybe hedge-stack signals reaching for certainty; commit to it.",
+      "score": 0.62,
+      "source": "wordchoice"
+    }
+  ],
+  "transcript": {
+    "words": [
+      {
+        "text": "So,",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "so"
+      },
+      {
+        "text": "um,",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "um"
+      },
+      {
+        "text": "I",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "i"
+      },
+      {
+        "text": "think",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "think"
+      },
+      {
+        "text": "the",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "the"
+      },
+      {
+        "text": "results",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "results"
+      },
+      {
+        "text": "were,",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "were"
+      },
+      {
+        "text": "like,",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "like"
+      },
+      {
+        "text": "really",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "really"
+      },
+      {
+        "text": "good.",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "good"
+      },
+      {
+        "text": "We",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "we"
+      },
+      {
+        "text": "we",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "we"
+      },
+      {
+        "text": "saw",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "saw"
+      },
+      {
+        "text": "a",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "a"
+      },
+      {
+        "text": "big",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "big"
+      },
+      {
+        "text": "increase.",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "increase"
+      },
+      {
+        "text": "Basically,",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "basically"
+      },
+      {
+        "text": "we",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "we"
+      },
+      {
+        "text": "need",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "need"
+      },
+      {
+        "text": "to",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "to"
+      },
+      {
+        "text": "utilize",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "utilize"
+      },
+      {
+        "text": "the",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "the"
+      },
+      {
+        "text": "budget",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "budget"
+      },
+      {
+        "text": "better.",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "better"
+      },
+      {
+        "text": "You",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "you"
+      },
+      {
+        "text": "know,",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "know"
+      },
+      {
+        "text": "I",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "i"
+      },
+      {
+        "text": "guess",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "guess"
+      },
+      {
+        "text": "it",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "it"
+      },
+      {
+        "text": "could",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "could"
+      },
+      {
+        "text": "maybe",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "maybe"
+      },
+      {
+        "text": "work.",
+        "start": 0.0,
+        "end": 0.0,
+        "confidence": null,
+        "is_filled_pause": false,
+        "normalized": "work"
+      }
+    ],
+    "audio_path": null,
+    "sample_rate": null,
+    "duration_sec": 0.0,
+    "speaking_sec": 0.0,
+    "language": "en",
+    "engine": "text",
+    "has_timing": false,
+    "speaker_median_gap": 0.0,
+    "sentences": [
+      [
+        0,
+        9
+      ],
+      [
+        10,
+        15
+      ],
+      [
+        16,
+        23
+      ],
+      [
+        24,
+        31
+      ]
+    ]
+  },
+  "metrics": {
+    "total_words": 32,
+    "duration_sec": 0.0,
+    "speaking_sec": 0.0,
+    "filler_count": 5,
+    "filler_rate_per_100w": 15.62,
+    "fillers_per_minute": 0.0,
+    "tripped_up": 1,
+    "high_severity": 1,
+    "severity_sum": 0.62,
+    "suggestions_offered": 5,
+    "mattr": 0.875,
+    "mtld": 71.68,
+    "ttr": 0.875,
+    "unique": 28,
+    "total": 32,
+    "hedge_count": 7,
+    "hedge_density_per_100w": 21.88,
+    "flesch_reading_ease": 87.67750000000001,
+    "flesch_kincaid_grade": 3.017500000000002,
+    "smog_index": 7.168621630094336,
+    "gunning_fog": 5.7
+  },
+  "metadata": {
+    "engine": "text",
+    "word_choice_mode": "claude-agent",
+    "weights": {
+      "fillers": 0.2812,
+      "word_choice": 0.2812,
+      "vocabulary": 0.1875,
+      "hedging": 0.1562,
+      "readability": 0.0938
+    },
+    "version": "0.1.0"
+  },
+  "summary": "Overall 54.8/100 (developing). Biggest opportunities: fillers, hedging."
+}

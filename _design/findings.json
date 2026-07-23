@@ -1,0 +1,1166 @@
+[
+  {
+    "angle": "Open-source ASR engines/approaches for VERBATIM transcripts that retain fillers (um/uh) with word-level timestamps and per-word confidence. Core finding confirmed: vanilla Whisper/Google deliberately drop disfluencies, so a verbatim-tuned engine OR a verbatim decode setting + a disfluency-aware step is mandatory to count fillers. The field splits into three tiers: (1) purpose-built verbatim+disfluency models (CrisperWhisper) that natively emit [UM]/[UH] with disfluency-robust timestamps; (2) Whisper-derivative timestampers (whisper-timestamped, WhisperX, stable-ts, faster-whisper) that give word timestamps+confidence but only keep fillers opportunistically unless coaxed (verbatim initial_prompt, detect_disfluencies, no-condition decode); (3) forced-alignment / non-Whisper engines (torchaudio wav2vec2 CTC, NeMo Forced Aligner, Vosk) that align an external verbatim transcript to audio for word timing+scores. Best practice for filler-counting: pair a verbatim transcript source with a forced aligner, or run a dedicated disfluency detector (amritkromana) on top. Two corrections to the prior list below.",
+    "repos": [
+      {
+        "name": "nyrahealth/CrisperWhisper",
+        "url": "https://github.com/nyrahealth/CrisperWhisper",
+        "whatItDoes": "Purpose-built VERBATIM ASR. Fine-tuned Whisper large-v3 that transcribes every spoken word including fillers, stutters, false starts and pauses, emitting explicit [UM]/[UH] tokens. Uses an adjusted tokenizer + custom attention loss for timestamps that stay accurate AROUND disfluencies and pauses (the hardest case). This is the single best native fit for um/uh counting.",
+        "libraries": "Custom transformers fork (pip install git+https://github.com/nyrahealth/transformers.git@crisper_whisper); HF pipeline with return_timestamps='word'; PyTorch 2.x; Python 3.10; CUDA cuBLAS 11.x/cuDNN 8.x for GPU, CPU works but slow. Snippet: model=AutoModelForSpeechSeq2Seq.from_pretrained('nyrahealth/CrisperWhisper'); pipe=pipeline('automatic-speech-recognition', model=model, return_timestamps='word'); out=pipe('audio.wav'); for c in out['chunks']: c['text'], c['timestamp']=(start,end). Word probability not exposed natively (run a forced-align/score pass if confidence required).",
+        "license": "CC BY-NC 4.0 — NON-COMMERCIAL. FLAG: cannot be used in a commercial product. (Base Whisper is MIT, but the released fine-tuned weights carry the NC restriction.)",
+        "relevance": "high",
+        "techniques": "Verbatim fine-tune + disfluency-aware tokenizer + custom attention loss for pause/disfluency-robust word timestamps. WER 6.66% avg across 8 datasets vs Whisper large-v3 7.7% (1.74% LibriSpeech-clean, 3.35% TED-LIUM)."
+      },
+      {
+        "name": "linto-ai/whisper-timestamped",
+        "url": "https://github.com/linto-ai/whisper-timestamped",
+        "whatItDoes": "Adds word-level timestamps AND per-word confidence to OpenAI Whisper via DTW on cross-attention weights (no extra model). Has an explicit detect_disfluencies=True mode that inserts [*] markers where the model swallowed a hesitation — the only Whisper timestamper with a built-in disfluency hook. Still inherits Whisper's tendency to drop fillers, so combine detect_disfluencies with a verbatim initial_prompt + condition_on_previous_text=False.",
+        "libraries": "pip3 install whisper-timestamped. Snippet: import whisper_timestamped as whisper; m=whisper.load_model('large-v3', device='cuda'); r=whisper.transcribe(m, whisper.load_audio('a.wav'), detect_disfluencies=True, language='en'); for s in r['segments']: for w in s['words']: w['text'], w['start'], w['end'], w['confidence']. CPU or GPU (install torch+cpu for CPU-only).",
+        "license": "AGPL-3.0 — copyleft. Usable commercially but viral: linking it into a networked service can obligate you to release your source. FLAG for proprietary SaaS.",
+        "relevance": "high",
+        "techniques": "DTW over cross-attention for timestamps; aggregated token logprob -> word confidence; detect_disfluencies inserts [*] gap markers."
+      },
+      {
+        "name": "m-bain/whisperX",
+        "url": "https://github.com/m-bain/whisperX",
+        "whatItDoes": "Fast batched Whisper (faster-whisper backend) + wav2vec2 FORCED ALIGNMENT for sharp word timestamps, plus VAD and optional pyannote diarization. Best timestamp precision of the Whisper family. Caveat for fillers: the aligner can only place words Whisper actually transcribed AND that exist in the alignment model's phoneme vocabulary — bare 'um'/'uh' are often dropped at the transcribe step and can be skipped by the aligner. Pair with a verbatim transcript source.",
+        "libraries": "pip install whisperx. Snippet: import whisperx; m=whisperx.load_model('large-v2','cuda'); audio=whisperx.load_audio('a.mp3'); r=m.transcribe(audio, batch_size=16); a,meta=whisperx.load_align_model(language_code='en', device='cuda'); r=whisperx.align(r['segments'], a, meta, audio, 'cuda', return_char_alignments=False); words=r['segments'][i]['words'] -> {word,start,end,score}. <8GB VRAM for large-v2; CPU via --compute_type int8 --device cpu.",
+        "license": "BSD-2-Clause — permissive, commercial-friendly. (Note: the default alignment + diarization models/pyannote may carry their own gated/Hugging-Face terms — verify the specific wav2vec2 align model license per language.)",
+        "relevance": "high",
+        "techniques": "wav2vec2 phoneme forced alignment for word timestamps + per-word 'score'; faster-whisper batched inference; Silero/pyannote VAD."
+      },
+      {
+        "name": "SYSTRAN/faster-whisper",
+        "url": "https://github.com/SYSTRAN/faster-whisper",
+        "whatItDoes": "CTranslate2 reimplementation of Whisper, ~4x faster, lower memory, same accuracy. CORRECTION to the prior note: it DOES expose per-word confidence — with word_timestamps=True each Word has .start, .end, .word, and .probability (confidence). For verbatim/filler retention use initial_prompt with a filler-laden style prompt + condition_on_previous_text=False + no suppression. Best general-purpose commercial base; not natively disfluency-aware, so add a disfluency step.",
+        "libraries": "pip install faster-whisper. Snippet: from faster_whisper import WhisperModel; m=WhisperModel('large-v3', device='cuda', compute_type='float16'); segs,_=m.transcribe('a.mp3', word_timestamps=True, condition_on_previous_text=False, initial_prompt='Umm, uh, like, you know...'); for s in segs: for w in s.words: w.word, w.start, w.end, w.probability. CPU (int8) or GPU (CUDA 12, cuDNN 9).",
+        "license": "MIT — permissive, fully commercial. Best license/perf base for a commercial offline pipeline.",
+        "relevance": "high",
+        "techniques": "CTranslate2 INT8/FP16 inference; word_timestamps via cross-attention; word.probability confidence; initial_prompt steers verbatim style."
+      },
+      {
+        "name": "jianfch/stable-ts",
+        "url": "https://github.com/jianfch/stable-ts",
+        "whatItDoes": "Wraps OpenAI Whisper or faster-whisper to produce more stable/regularized word timestamps (cross-attention + DTW) with per-word probability, plus refinement, gap-filling, VAD, and clean SRT/VTT/JSON export. Good for tightening timestamps and exporting word-level data. Does not specifically preserve fillers — depends on the underlying decode settings.",
+        "libraries": "pip install -U stable-ts (add [fw] for faster-whisper backend). Snippet: import stable_whisper; m=stable_whisper.load_faster_whisper('large-v3'); r=m.transcribe('a.mp3', word_timestamps=True); for seg in r.segments: for w in seg.words: w.word, w.start, w.end, w.probability; r.to_srt_vtt('a.srt', word_level=True). CPU or GPU (install matching torch).",
+        "license": "MIT — permissive, commercial-friendly. NOTE: upstream development is paused/archived as of latest README, so treat as stable-but-unmaintained.",
+        "relevance": "medium",
+        "techniques": "Cross-attention + DTW timestamp regularization, gap/silence suppression, word probability, multi-backend (whisper/faster-whisper)."
+      },
+      {
+        "name": "pytorch/audio (torchaudio) wav2vec2 forced alignment",
+        "url": "https://docs.pytorch.org/audio/stable/tutorials/forced_alignment_tutorial.html",
+        "whatItDoes": "Reference forced-alignment recipe: take a wav2vec2 CTC model's frame emissions and a KNOWN verbatim transcript, run trellis/Viterbi alignment + backtracking to get per-token and per-word start/end frames with an averaged-probability confidence per span. The canonical way to get accurate word timing + scores for ANY transcript that already contains the fillers — you supply the verbatim text (e.g. transcribed by CrisperWhisper or hand-corrected) and it times every token including um/uh.",
+        "libraries": "pip install torch torchaudio. Pattern: bundle=torchaudio.pipelines.MMS_FA (or WAV2VEC2_ASR_BASE_960H); model=bundle.get_model(); emission=model(waveform); aligner=torchaudio.functional.forced_align (or TorchAudio Aligner API); token_spans=merge_tokens(aligned, scores); word_spans grouped on the '|' separator -> start_frame,end_frame,score; convert frames->seconds via ratio = waveform_len/emission_len/sample_rate. CPU or GPU.",
+        "license": "BSD-2-Clause (torchaudio). MMS_FA alignment model weights are CC-BY-NC for some MMS assets — FLAG: use WAV2VEC2_ASR_BASE_960H (MIT/Apache-style, LibriSpeech) for commercial alignment instead of MMS-NC variants.",
+        "relevance": "high",
+        "techniques": "CTC emission -> trellis -> Viterbi backtrack -> token merge -> word spans; per-span averaged-probability confidence; REQUIRES an input transcript (alignment, not recognition)."
+      },
+      {
+        "name": "NVIDIA-NeMo/NeMo — NeMo Forced Aligner (NFA)",
+        "url": "https://github.com/NVIDIA-NeMo/NeMo/blob/main/tools/nemo_forced_aligner/README.md",
+        "whatItDoes": "Production forced aligner that emits token-, word-, AND segment-level timestamps using a CTC ASR model (e.g. Parakeet-TDT/CTC, Canary). Can align supplied ground-truth verbatim text OR the model's own predicted text to the audio via Viterbi over CTC log-probs. Strong path for high-throughput, GPU-accelerated word timing of verbatim transcripts; combine with a verbatim transcript to time fillers.",
+        "libraries": "pip install nemo_toolkit['asr']. CLI pattern: python tools/nemo_forced_aligner/align.py pretrained_name=stt_en_fastconformer_hybrid_large_pc manifest_filepath=manifest.json output_dir=out (manifest rows give audio_filepath + verbatim 'text'); outputs CTM/ASS/JSON with per-word start/end + alignment confidence. GPU strongly recommended.",
+        "license": "Apache-2.0 (NeMo framework) — permissive/commercial. CHECK individual pretrained model cards: many Parakeet/Canary checkpoints are CC-BY-4.0 (commercial OK), but verify the specific checkpoint you load.",
+        "relevance": "high",
+        "techniques": "CTC log-prob Viterbi forced alignment; token/word/segment timestamps; aligns ground-truth or predicted text; CTM/ASS export."
+      },
+      {
+        "name": "alphacep/vosk-api",
+        "url": "https://github.com/alphacep/vosk-api",
+        "whatItDoes": "Lightweight, fully offline, streaming Kaldi-based recognizer. With SetWords(True) it returns per-WORD result objects containing word, start, end, and conf (confidence) — native word timestamps+confidence without GPU. Small (~50MB) models run on Raspberry Pi/Android. Lower raw accuracy than Whisper-class models and not verbatim-tuned, but its lexicon/grammar can be edited to keep fillers, and it streams in real time.",
+        "libraries": "pip install vosk. Snippet: from vosk import Model, KaldiRecognizer; rec=KaldiRecognizer(Model('model-en'), 16000); rec.SetWords(True); rec.AcceptWaveform(chunk); res=json.loads(rec.Result()); for w in res['result']: w['word'], w['start'], w['end'], w['conf']. CPU-only, real-time, offline.",
+        "license": "Apache-2.0 — permissive, fully commercial. Best license+footprint for embedded/real-time offline.",
+        "relevance": "medium",
+        "techniques": "Kaldi WFST decoding; SetWords(True) -> per-word start/end/conf; streaming zero-latency API; editable lexicon to retain/force filler tokens."
+      },
+      {
+        "name": "amritkromana/disfluency_detection_from_audio",
+        "url": "https://github.com/amritkromana/disfluency_detection_from_audio",
+        "whatItDoes": "Dedicated disfluency detector (not an ASR). Classifies five disfluency types — filled pauses (FP, i.e. um/uh), partial words (PW), repetitions (RP), revisions (RV), restarts (RS) — via language (Whisper+BERT), acoustic (WavLM), or multimodal (BLSTM fusion) modes. CORRECTION to prior note: the acoustic backbone is WavLM, not wav2vec2. Run as a post/parallel step over a verbatim transcript+audio to label and count fillers robustly, including ones ASR may have normalized.",
+        "libraries": "Python; demo: python3 demo.py --audio_file input.wav --output_file pred.csv --modality [language|acoustic|multimodal]. Trained on Switchboard, 20ms frame labels. GPU recommended for WavLM/Whisper backbones.",
+        "license": "No explicit LICENSE file in repo — UNLICENSED by default (all rights reserved). FLAG: do NOT assume commercial rights; contact the author or treat as research-only until a license is added.",
+        "relevance": "medium",
+        "techniques": "Whisper+BERT (text), WavLM (acoustic), BLSTM multimodal fusion; 5-class disfluency tagging at 20ms granularity; Switchboard training."
+      }
+    ],
+    "techniques": [
+      "Verbatim decode settings on any Whisper engine: set condition_on_previous_text=False (stops the model 'cleaning up' across windows), supply a filler-laden initial_prompt ('Umm, uh, like, you know, I mean...') to prime verbatim style, and avoid suppress_tokens that strip hesitations. This is the cheapest way to push a standard Whisper toward keeping um/uh.",
+      "Two-stage verbatim+align pattern (most reliable for counting): Stage 1 produce a verbatim transcript that contains the fillers (CrisperWhisper, or human-corrected). Stage 2 force-align that exact text to audio with torchaudio wav2vec2 CTC or NeMo NFA to get accurate per-word start/end + averaged-probability confidence. Decouples recognition quality from timestamp quality.",
+      "Disfluency-marker hook: whisper-timestamped detect_disfluencies=True inserts [*] tokens where the model perceives a swallowed hesitation, giving you gap evidence even when the literal 'um' wasn't decoded.",
+      "Forced alignment = recognition + a known transcript. wav2vec2 CTC: log_softmax emissions -> trellis (max(prev+blank, trans+token_prob)) -> Viterbi backtrack -> merge identical tokens -> split on word-boundary token -> word spans; confidence = mean frame probability over the span. NeMo NFA does the same via CTC log-probs and also exports segment level.",
+      "Confidence sources differ per engine: whisper-timestamped word['confidence'] and faster-whisper word.probability come from aggregated token log-probabilities; WhisperX 'score' and torchaudio/NFA come from alignment frame probabilities; Vosk 'conf' from the Kaldi lattice. They are NOT directly comparable across engines — normalize before thresholding.",
+      "Filler-aware metrics on top of word output: filler_rate = filler_words / total_words * 100; WPM from word timestamps (sum words / total speaking-time minutes); inter-word silence/pause detection from gaps between word.end and next word.start (great for catching 'silent' hesitations the lexicon missed); type-token ratio (TTR) for vocabulary richness.",
+      "Real-time/embedded path: Vosk (streaming, SetWords(True), CPU-only) or NeMo streaming Parakeet for low-latency word timing+conf when you can't afford GPU batch inference; Whisper-family engines are batch/near-real-time at best."
+    ],
+    "metricsOrFormulas": [
+      "filler_rate (%) = (count of filler tokens) / (total words) * 100",
+      "WPM = total_words / (total_speaking_seconds / 60); coaching ideal band commonly cited ~111-140 WPM",
+      "Type-Token Ratio (vocabulary richness) = unique_words / total_words",
+      "Pause/hesitation detection: gap = word[i+1].start - word[i].end; flag gap > threshold (e.g. 0.3-0.5s) as a silent hesitation even when no lexical filler present",
+      "Word confidence (Whisper-derivative) = exp(mean token log-prob over the word) -> whisper-timestamped word['confidence'] / faster-whisper word.probability",
+      "Forced-alignment confidence (wav2vec2 CTC / NFA) = (sum of per-frame probabilities over the token/word span) / (number of frames in span)",
+      "Frame->time conversion in wav2vec2 alignment: seconds = frame_index * (waveform_length / emission_length) / sample_rate",
+      "WER comparison (verbatim quality): CrisperWhisper 6.66% avg over 8 datasets vs Whisper large-v3 7.7% (LibriSpeech-clean 1.74%, TED-LIUM 3.35%)"
+    ],
+    "recommendations": [
+      "(a) COMMERCIAL + OFFLINE: faster-whisper (MIT, large-v3) as the recognizer with word_timestamps=True (gives word.start/.end/.probability), condition_on_previous_text=False, and a filler-laden initial_prompt to retain um/uh; then force-align the verbatim text with torchaudio wav2vec2 (use WAV2VEC2_ASR_BASE_960H, NOT the CC-BY-NC MMS_FA weights) or NeMo NFA for crisp word timing. Add amritkromana-style disfluency logic only after confirming/obtaining a license (currently unlicensed). This stack is fully permissive, runs offline on CPU or GPU, and avoids every NC trap.",
+      "(b) BEST ACCURACY (research / internal / non-commercial OK): CrisperWhisper — it is the only engine purpose-built to emit [UM]/[UH] with timestamps that stay accurate around disfluencies, and it beats Whisper large-v3 on WER. Use it to produce the verbatim transcript, then force-align with torchaudio/NFA if you need per-word confidence (CrisperWhisper does not expose word probability natively). HARD CONSTRAINT: CC BY-NC 4.0 means non-commercial only — never ship it in a paid product.",
+      "Do NOT rely on vanilla Whisper, WhisperX, or Google STT alone to count fillers: they normalize away um/uh by design and the wav2vec2 aligner can skip the few that survive. A verbatim transcript source is mandatory before any counting.",
+      "License flags to enforce: CrisperWhisper = CC BY-NC 4.0 (non-commercial); whisper-timestamped = AGPL-3.0 (copyleft, risky for closed SaaS); amritkromana/disfluency_detection_from_audio = NO license file (all-rights-reserved, research-only until clarified); torchaudio MMS_FA alignment weights = CC-BY-NC (pick the LibriSpeech wav2vec2 model for commercial use). Safe-commercial cores: faster-whisper (MIT), WhisperX (BSD-2), stable-ts (MIT, but unmaintained), Vosk (Apache-2.0), NeMo framework (Apache-2.0, verify each checkpoint card).",
+      "If you need real-time / on-device filler feedback (e.g. live presentation coaching): use Vosk (Apache-2.0, CPU, streaming, SetWords(True) gives word+conf+timestamps) or a streaming NeMo Parakeet model, accepting lower verbatim accuracy than the Whisper-class batch pipeline.",
+      "Robust counting architecture overall: verbatim ASR (CrisperWhisper or faster-whisper+verbatim prompt) -> forced alignment (torchaudio CTC / NeMo NFA) for word timing+confidence -> a disfluency/pause pass (whisper-timestamped detect_disfluencies marker, gap-based silent-hesitation detection, or a licensed disfluency classifier) -> metrics (filler_rate, WPM, TTR, pause stats)."
+    ]
+  },
+  {
+    "angle": "Filler-word AND broad-disfluency detection across two modalities. Audio-model approaches: verbatim ASR, wav2vec2 and neural semi-CRF acoustic classifiers, and stuttering-event models. Text-plus-timestamp heuristics: sequence labeling, span and parse-based detectors, and gap-and-repeat rules. The non-obvious through-line is that ordinary ASR such as Whisper and Google is trained to DROP fillers, so counting them requires either a verbatim ASR engine, an acoustic event detector, or operating on already-disfluent verbatim text. Beyond fillers, the literature uses a standard taxonomy worth scoring separately: filled pauses (um, uh, er); discourse markers and parentheticals (like, you know, I mean, so, basically, well); repetitions (word, phrase, sound, part-word); false starts and restarts; revisions and self-corrections; partial words; prolongations; and blocks. The strongest reusable assets are the pariajm awesome-disfluency-detection hub plus its MIT-licensed parser, the gzhu06 PodcastFillers and semi-CRF audio family, and Apple SEP-28k for stuttering-style events. Consumer tools (Voquill, daily-demos) show the verbatim-ASR-then-lexicon pattern in production.",
+    "repos": [
+      {
+        "name": "pariajm/awesome-disfluency-detection",
+        "url": "https://github.com/pariajm/awesome-disfluency-detection",
+        "whatItDoes": "Curated index of the disfluency-detection literature with links to released code. The single best entry point; maps each paper to its repo across sequence taggers, parsers, prosody, augmentation, and end-to-end ASR. Use it to find SOTA text-side detectors for repetitions, false starts, corrections, partial words, and interjections.",
+        "libraries": "index and bibliography linking to PyTorch and TF repos",
+        "license": "MIT for the list; linked repos vary",
+        "relevance": "high",
+        "techniques": "BiLSTM-CRF and transformer sequence labeling, self-attentive parsing, prosody-aware models, noisy-channel, incremental streaming detection, data augmentation"
+      },
+      {
+        "name": "pariajm/joint-disfluency-detector-and-parser",
+        "url": "https://github.com/pariajm/joint-disfluency-detector-and-parser",
+        "whatItDoes": "Self-attentive model that jointly does constituency parsing plus disfluency detection on transcribed speech. Detects EDITED spans covering repetitions, corrections, false starts, and restarts; treats filled pauses and discourse-marker parentheticals as a finite trivial lexicon. About 90.9 EDITED-word F1 on Switchboard with BERT.",
+        "libraries": "PyTorch, BERT or ELMo embeddings, benepar-style parser",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Self-attentive constituency parser, self-training, ensembling, BERT or ELMo word reps, EDITED-node span detection"
+      },
+      {
+        "name": "pariajm/deep-disfluency-detector",
+        "url": "https://github.com/pariajm/deep-disfluency-detector",
+        "whatItDoes": "Auto-correlational neural network from EMNLP 2018. The auto-correlation kernel is purpose-built to catch repetitions and rough-copy repairs where a token resembles an earlier token, useful as a learned repeated-token detector.",
+        "libraries": "PyTorch",
+        "license": "check repo, academic",
+        "relevance": "high",
+        "techniques": "Auto-correlational CNN over the word sequence, rough-copy and repetition modeling, sequence tagging"
+      },
+      {
+        "name": "vickyzayats/disfluency_detection",
+        "url": "https://github.com/vickyzayats/disfluency_detection",
+        "whatItDoes": "Zayats et al. NAACL 2019 Giving attention to the unexpected. A BiLSTM sequence tagger that flags disfluent tokens, treating disfluencies as locally unexpected continuations. Good baseline for token-level reparandum, interregnum, and repair tagging.",
+        "libraries": "TensorFlow or PyTorch",
+        "license": "check repo",
+        "relevance": "medium",
+        "techniques": "BiLSTM tagging, attention, language-model surprisal and unexpectedness features"
+      },
+      {
+        "name": "Sreyan88/Disfluency-Detection-with-Span-Classification",
+        "url": "https://github.com/Sreyan88/Disfluency-Detection-with-Span-Classification",
+        "whatItDoes": "Span-classification approach versus token tagging, with structured info, for disfluency detection in spoken utterances; BERT-Large on Switchboard. Predicts disfluent spans, mapping cleanly onto false-start, revision, and repetition regions.",
+        "libraries": "PyTorch, HuggingFace Transformers, BERT-Large",
+        "license": "check repo",
+        "relevance": "medium",
+        "techniques": "Span classification, structured and graph features, BERT-Large encoder"
+      },
+      {
+        "name": "clp-research/deep_disfluency",
+        "url": "https://github.com/clp-research/deep_disfluency",
+        "whatItDoes": "Incremental word-by-word disfluency tagger that emits XML-style tags marking each part of a repair or edit term as words stream in. Built for real-time feedback and emits reparandum, edit-term, and repair structure live.",
+        "libraries": "Python, Theano or Keras era, RNN or LSTM",
+        "license": "check repo, research",
+        "relevance": "medium",
+        "techniques": "Incremental RNN tagging, explicit repair structure labels, optional prosodic features"
+      },
+      {
+        "name": "GT-SALT/Disfluency-Generation-and-Detection",
+        "url": "https://github.com/GT-SALT/Disfluency-Generation-and-Detection",
+        "whatItDoes": "Planner-based disfluency generation plus detection from EMNLP 2020. Generates synthetic repetitions, restarts, and repairs to augment scarce labeled data, since Switchboard is only about 6 percent disfluent.",
+        "libraries": "PyTorch",
+        "license": "check repo",
+        "relevance": "medium",
+        "techniques": "Controlled disfluency generation, data augmentation, sequence labeling"
+      },
+      {
+        "name": "scir-zywang/self-training-self-supervised-disfluency",
+        "url": "https://github.com/scir-zywang/self-training-self-supervised-disfluency",
+        "whatItDoes": "Self-training plus self-supervised pretraining for disfluency detection with limited labeled data from EMNLP 2020. A pattern for bootstrapping a detector from mostly-unlabeled verbatim transcripts.",
+        "libraries": "PyTorch, Transformers",
+        "license": "check repo",
+        "relevance": "low",
+        "techniques": "Self-training, self-supervised auxiliary objectives, low-resource token tagging"
+      },
+      {
+        "name": "trangham283/prosody_nlp",
+        "url": "https://github.com/trangham283/prosody_nlp",
+        "whatItDoes": "Tran et al. INTERSPEECH 2019. Speech constituency parsing plus disfluency using prosodic features such as pauses, duration, and pitch on top of text. Bridges audio and text, showing how gap-before-word and pause cues improve detection beyond a lexicon.",
+        "libraries": "PyTorch, Kaldi-style prosodic feature extraction",
+        "license": "check repo",
+        "relevance": "medium",
+        "techniques": "Prosody pause duration and F0 plus text parsing, multimodal disfluency detection"
+      },
+      {
+        "name": "pariajm/e2e-asr-and-disfluency-removal-evaluator",
+        "url": "https://github.com/pariajm/e2e-asr-and-disfluency-removal-evaluator",
+        "whatItDoes": "Evaluation harness for end-to-end systems that jointly transcribe and remove disfluencies, EMNLP 2020. Useful for metrics tying ASR error to disfluency-removal quality.",
+        "libraries": "Python eval scripts",
+        "license": "check repo",
+        "relevance": "low",
+        "techniques": "Joint ASR and disfluency-removal evaluation, EDITED-removal scoring"
+      },
+      {
+        "name": "gzhu06/Filler-semi-CRF",
+        "url": "https://github.com/gzhu06/Filler-semi-CRF",
+        "whatItDoes": "Transcription-free filler word detection with Neural semi-CRFs, ICASSP 2023. Detects fillers directly from audio with no ASR step and segments variable-length filler events end to end. The strongest audio-only filler detector to pair with PodcastFillers; sidesteps the verbatim-ASR requirement.",
+        "libraries": "PyTorch, wav2vec or log-mel front-end, semi-CRF segmentation head",
+        "license": "check repo, academic",
+        "relevance": "high",
+        "techniques": "Neural semi-CRF event segmentation, wav2vec or log-mel features, transcription-free filler localization with timestamps"
+      },
+      {
+        "name": "PodcastFillers dataset and baselines",
+        "url": "https://podcastfillers.github.io/",
+        "whatItDoes": "35K annotated filler words um and uh plus 50K other events including breaths, laughter, repetitions, you know, and like, across 199 podcasts, 145 hours, 350-plus speakers, with timestamps. The benchmark and label schema for audio filler detection. Baseline pipeline is VAD plus ASR candidate proposal plus a wav2vec or FBANK classifier, coarse 5-class or granular 6-class.",
+        "libraries": "wav2vec2 plus log-mel FBANK features, VAD plus ASR candidate proposal, PyTorch baselines on Zenodo",
+        "license": "data non-commercial research, see Zenodo",
+        "relevance": "high",
+        "techniques": "VAD candidate proposal, ASR-assisted detection, wav2vec or log-mel frame classifier, coarse versus granular filler labels, timestamped events"
+      },
+      {
+        "name": "apple/ml-stuttering-events-dataset (SEP-28k)",
+        "url": "https://github.com/apple/ml-stuttering-events-dataset",
+        "whatItDoes": "28k-plus 3-second clips plus about 4k FluencyBank clips labeled with 5 dysfluency event types: blocks, prolongations, sound repetitions, word repetitions, and interjections or fillers. The canonical labeled audio source for the harder classes such as prolongations and blocks that text plus timestamps cannot see.",
+        "libraries": "label CSVs plus extraction scripts, pairs with wav2vec2 classifier heads",
+        "license": "labels CC-BY-NC-4.0, audio fetched from podcasts",
+        "relevance": "high",
+        "techniques": "Acoustic event classification 5-class, wav2vec2 plus classification head or SVM on wav2vec baselines, multi-label variants"
+      },
+      {
+        "name": "th-nuernberg/ml-stuttering-events-dataset-extended",
+        "url": "https://github.com/th-nuernberg/ml-stuttering-events-dataset-extended",
+        "whatItDoes": "Extended and cleaned SEP-28k labels, SEP-28k-Extended, with corrected annotations and added metadata; companion to multi-label dysfluency work Dysfluencies Seldom Come Alone. Better training signal than raw SEP-28k.",
+        "libraries": "label CSVs, wav2vec2 baselines",
+        "license": "follows Apple SEP-28k terms, non-commercial research",
+        "relevance": "medium",
+        "techniques": "Multi-label dysfluency detection, relabeled SEP-28k, wav2vec2 fine-tuning"
+      },
+      {
+        "name": "amritkromana/disfluency_detection_from_audio",
+        "url": "https://github.com/amritkromana/disfluency_detection_from_audio",
+        "whatItDoes": "Untranscribed-speech disfluency detection from Microsoft Applied Sciences. Detects partial words, fillers, repetitions, and revisions directly from audio via wav2vec2.0 embeddings into CNN or Transformer heads, one task per disfluency type. Confirms the skip-ASR classify-acoustic-frames route.",
+        "libraries": "PyTorch, wav2vec2.0 embeddings, CNN and Transformer heads",
+        "license": "check repo",
+        "relevance": "high",
+        "techniques": "wav2vec2 frame embeddings, per-type binary detection, CNN or Transformer, variable-length handling"
+      },
+      {
+        "name": "saharshmehrotra/Stutter-Detection-and-Classification",
+        "url": "https://github.com/saharshmehrotra/Stutter-Detection-and-Classification",
+        "whatItDoes": "Applied SEP-28k-style classifier for stutter types including blocks, prolongations, repetitions, and interjections, aimed at speech-therapy support. A practical reference implementation of acoustic feature extraction into a classifier.",
+        "libraries": "Python, MFCC or spectrogram or FBANK features, CNN or SVM",
+        "license": "check repo",
+        "relevance": "low",
+        "techniques": "MFCC spectrogram and FBANK features, CNN or SVM classification of stutter event types"
+      },
+      {
+        "name": "obkaul/AhemPreventor",
+        "url": "https://github.com/obkaul/AhemPreventor",
+        "whatItDoes": "Real-time presentation coach that detects filler words via a neural net and gives tactile haptic feedback when a filler occurs. A concrete real-time-feedback architecture for presentation training.",
+        "libraries": "neural net plus audio capture, wearable haptic output",
+        "license": "check repo",
+        "relevance": "low",
+        "techniques": "Real-time filler classification, live haptic biofeedback loop"
+      },
+      {
+        "name": "daily-demos/filler-word-removal",
+        "url": "https://github.com/daily-demos/filler-word-removal",
+        "whatItDoes": "Production demo removing fillers from recordings using Whisper and Deepgram Nova. Shows the verbatim-ASR requirement in practice; it relies on engines or configs that preserve um and uh, such as Deepgram filler_words true and Whisper word timestamps, then lexicon-matches.",
+        "libraries": "Whisper, Deepgram Nova API, Python",
+        "license": "check repo, demo, permissive",
+        "relevance": "medium",
+        "techniques": "Verbatim ASR with word timestamps, lexicon match on filler tokens, audio splice removal"
+      },
+      {
+        "name": "josiahsrc/voquill",
+        "url": "https://github.com/josiahsrc/voquill",
+        "whatItDoes": "Open-source voice dictation that auto-cleans transcripts, removing filler words and false starts via LLM post-processing. A reference for the LLM-as-disfluency-cleaner pattern, good for false starts and revisions that rule lexicons miss.",
+        "libraries": "Whisper or ASR plus LLM cleanup, cross-platform desktop",
+        "license": "open source, check repo",
+        "relevance": "medium",
+        "techniques": "ASR plus LLM rewrite to strip fillers and false starts, personal dictionary"
+      },
+      {
+        "name": "itsmevictor/clean-transcribe",
+        "url": "https://github.com/itsmevictor/clean-transcribe",
+        "whatItDoes": "CLI that transcribes YouTube or local media then LLM-cleans transcripts, removing fillers, fixing grammar, multi-provider across Gemini, ChatGPT, and Claude. An easy baseline for LLM-based disfluency removal to diff against rule-based counts.",
+        "libraries": "Whisper or yt-dlp plus LLM APIs, Python CLI",
+        "license": "check repo, open source",
+        "relevance": "low",
+        "techniques": "ASR plus LLM cleanup prompt, provider-agnostic disfluency removal"
+      }
+    ],
+    "techniques": [
+      "VERBATIM-ASR-FIRST, mandatory for text-side counting. Whisper, Google, and most ASR delete fillers, so use a verbatim engine before any lexicon match. Options: CrisperWhisper for verbatim plus accurate word timestamps, whisper-timestamped for forced-alignment timestamps on standard Whisper, Deepgram Nova with filler_words true, faster-whisper with a verbatim prompt as in dougcalobrisi/erm, or wav2vec2 CTC which transcribes more literally than seq2seq Whisper.",
+      "TRANSCRIPTION-FREE AUDIO EVENT DETECTION, skip ASR entirely and classify acoustic frames or segments directly. gzhu06/Filler-semi-CRF uses a neural semi-CRF over wav2vec or log-mel to localize filler events with timestamps; amritkromana uses wav2vec2 embeddings into CNN or Transformer per disfluency type. Best for prolongations, blocks, and sound repetitions that have no clean text token.",
+      "SEQUENCE LABELING ON VERBATIM TEXT, token tagging. Tag each token as fluent, reparandum, interregnum, or repair in BIO style. BiLSTM-CRF or BERT token classification trained on Switchboard. Captures repetitions, corrections, false starts, and restarts at token granularity, as in vickyzayats and deep_disfluency.",
+      "SPAN OR PARSE-BASED DETECTION. Predict disfluent spans or EDITED constituency nodes rather than isolated tokens, better for multi-word false starts and revisions. See pariajm joint parser, MIT, and Sreyan88 span classification.",
+      "AUTO-CORRELATION ROUGH-COPY MODELING. Learn that a token resembles a recent token to catch repetitions and repairs without hand rules, as in deep-disfluency-detector.",
+      "PROSODY-AUGMENTED DETECTION. Add pause duration, word duration, and pitch F0 features to the text model; the gap-before-word and lengthening cues disambiguate filled pauses, prolongations, and repair boundaries. See trangham283/prosody_nlp and PodcastFillers VAD.",
+      "STUTTERING-EVENT MULTI-LABEL CLASSIFICATION. wav2vec2 plus a classification head over 3-second windows for blocks, prolongations, sound-rep, word-rep, and interjection. See SEP-28k and SEP-28k-Extended. A clip can carry multiple labels.",
+      "LLM POST-CLEANUP AS A DETECTOR. Prompt an LLM to remove fillers, false starts, and revisions, then diff against the verbatim transcript; the removed tokens are the detected disfluencies. Catches messy false starts lexicons miss, as in voquill and clean-transcribe, but is non-deterministic, so use for removal and UX, not for exact counts.",
+      "REAL-TIME FEEDBACK LOOP. Stream an incremental tagger or live classifier and surface filler events live. See clp-research incremental tagger and obkaul/AhemPreventor haptic.",
+      "DATA AUGMENTATION FOR LOW LABELS. Switchboard is only about 6 percent disfluent; synthesize repetitions, restarts, and repairs with GT-SALT, or self-train on unlabeled verbatim transcripts with scir-zywang, to train a custom detector."
+    ],
+    "metricsOrFormulas": [
+      "Filler rate equals filler_count divided by total_words times 100, per the SharathKumar787 rubric. Also report fillers per minute equals filler_count divided by duration_minutes, more stable across speech length.",
+      "Disfluency rate equals disfluent_tokens divided by total_tokens. Switchboard baseline is about 6 percent disfluent, a useful normal-speech reference floor.",
+      "WPM speech rate equals words divided by duration_minutes. Rubric ideal band is about 111 to 140; slower can co-occur with more filled pauses.",
+      "Type-Token Ratio TTR equals unique_words divided by total_words for vocabulary richness. Confound: TTR drops with transcript length, so prefer MATTR or moving-average TTR over fixed windows.",
+      "Detector quality metric: EDITED-word F1, precision and recall on reparandum tokens, the standard Switchboard disfluency metric. The pariajm joint parser reports about 90.9.",
+      "Audio event metric: per-class and macro-F1 over labels such as uh, um, you-know, like, and repetition, the PodcastFillers coarse 5-class versus granular 6-class, plus event-level F1 with onset tolerance or IoU for semi-CRF localization. SEP-28k 5-class macro-F1 ranges about 0.28 to 0.50-plus.",
+      "GAP-BEFORE-WORD heuristic, needs word timestamps: flag a token as a candidate filled pause or hesitation if the inter-word gap immediately preceding it exceeds a threshold such as 0.2 to 0.3 seconds, and or if the token itself is a lexicon filler. Pause plus lexicon together cuts false positives versus lexicon alone.",
+      "REPEATED-TOKEN heuristic: flag immediate repetition when token at i lowercased equals token at i minus 1 (word repetition), or when an n-gram of length 2 to 4 repeats consecutively (phrase repetition such as I know I know). Collapse to detect stutter-style word repetition without acoustics.",
+      "PARTIAL-WORD or fragment heuristic: a token ending in a hyphen, or a non-dictionary prefix of the following token such as wou- then would, or oper- then operation, signals a false start or partial word.",
+      "PROLONGATION heuristic: in verbatim ASR output, a token with three-plus repeated characters such as whooo or sooo, or better an acoustic token whose duration is a large outlier versus that phone mean duration.",
+      "DISCOURSE-MARKER CONTEXT rules to reduce over-counting of legit content words: count like as filler only when NOT preceded by a copula or comparison such as is like, looks like, feels like, and NOT followed by a noun phrase it compares; count so as filler mainly utterance-initial; count well as filler utterance-initial; require know to be preceded by you for the you-know marker; treat right and okay as fillers mainly when tag-final.",
+      "REVISION or CORRECTION heuristic: detect reparandum-repair pairs where a span is restarted with overlapping head words separated by an edit term, such as to Sydney no to Melbourne; edit terms include no, sorry, I mean, rather, well acting as interregnum between reparandum and repair."
+    ],
+    "recommendations": [
+      "Two-track architecture. Track A for counts and metrics: verbatim ASR with word timestamps such as CrisperWhisper or whisper-timestamped or Deepgram filler_words true, then a lexicon plus rule pass for fillers, discourse markers, repetitions, and partial words, emitting per-type counts, rate, and WPM. Track B for hard acoustic classes: a transcription-free audio model such as gzhu06/Filler-semi-CRF for fillers and a SEP-28k-trained wav2vec2 for prolongations, blocks, and sound-reps. Fuse on the timeline by timestamp.",
+      "Do not count fillers off plain Whisper or Google output; they strip um, uh, and like by design. Validate by transcribing a known clip with and without the verbatim engine and confirming the fillers reappear; treat this as a regression test.",
+      "Adopt the PodcastFillers plus SEP-28k label taxonomy as your schema: uh, um, you-know, like, word-rep, sound-rep, prolongation, block, false-start or revision, partial-word, interjection. It is the de-facto standard, gives ready-made training and eval data, and makes metrics comparable.",
+      "Make like, so, well, and right context-sensitive, not raw substring matches. Apply the discourse-marker context rules using POS, position, and collocation, or you will massively over-count legitimate uses such as it looks like or so that I could.",
+      "Combine pause plus lexicon for filled pauses: a lexicon hit that is also preceded by an above-threshold inter-word gap is a high-confidence filler; lexicon-only hits are lower confidence. This uses the word timestamps you already get from the verbatim engine.",
+      "For the strongest text-side detector with a clean license, start from pariajm/joint-disfluency-detector-and-parser, MIT, BERT, about 90.9 EDITED-F1, for repetitions, false starts, and revisions, then layer the finite filler and discourse-marker lexicon on top for the trivial classes it intentionally ignores.",
+      "If labeled data is the blocker, since Switchboard is only about 6 percent disfluent, augment with GT-SALT disfluency generation or self-train with scir-zywang on your own verbatim transcripts before fine-tuning.",
+      "Check each academic repo LICENSE file before any commercial use. Most are MIT such as the pariajm parser, but several list none; SEP-28k labels are CC-BY-NC-4.0 and PodcastFillers data is non-commercial research only. CrisperWhisper is CC BY-NC 4.0, non-commercial. Keep the audio datasets out of any shipped product and treat the verbatim engine license as the gating constraint.",
+      "Use the LLM-cleanup path such as voquill or clean-transcribe only for user-facing transcript polishing or to mine false-start examples, never as the counter of record, since it is non-deterministic and will silently rewrite content."
+    ]
+  },
+  {
+    "angle": "Complete multimodal public-speaking / presentation / interview COACHING systems on GitHub — full feature sets, architectures, libraries, scoring rubrics, and UI approaches — mined for a MAXIMAL grading-system feature list. Emphasis on the most complete, verifiable open-source systems (academic multimodal feedback platforms + production real-time coach frameworks + LLM mock-interview platforms), beyond the filler-word/verbatim-ASR detectors already cataloged.",
+    "repos": [
+      {
+        "name": "xaoch/OpenOPAF",
+        "url": "https://github.com/xaoch/OpenOPAF",
+        "whatItDoes": "The single most complete open-source multimodal Oral Presentation Automated Feedback (OPAF) system (NYU, Xavier Ochoa, Journal of Learning Analytics 2024). Scores SIX named presentation skills, each with its own swappable 'scorer' module containing adjustable, culture-tunable thresholds: (1) Looking at the audience / eye contact, (2) Maintaining open posture, (3) Using gestures, (4) Maintaining adequate speech cadence (articulation rate), (5) Avoiding filled pauses, (6) Visual-aid quality split into avoiding too much text (TLen) + visible font size (FSize). Also captures speech volume. Web UI: login, start a session (set duration, optionally upload slides), then a reviewable post-session report + a progress dashboard across past sessions. Companion 3D-printed hardware kit (Jetson Nano) documented in /hardware.",
+        "libraries": "MediaPipe Holistic (3D body/face/hand landmarks → posture + Gaze/GazeDirection extractor GGDE); Parselmouth (Python PRAAT) with De Jong's scripts for volume, Articulation Rate (counts syllabic nuclei over rolling 5-second windows, converts to WPM assuming 1.66 syllables/word), and Filled Pauses (detects prolonged syllables with minimal spectral contrast); python-pptx + OCR for slide text length & font size; Flask backend; SQLite DB (create_database.py); JS/HTML/CSS frontend served at :5000. Modular pipeline: frame/audio capture → feature extractors → per-skill scorers → feedback generator.",
+        "license": "GPL-3.0 (paper states GPLv3 for code + 3D models; verify LICENSE file in repo)",
+        "relevance": "high",
+        "techniques": "Per-skill scorer modules with externalized thresholds (e.g. eye contact 'mastered' = gaze on audience >=85% of time); rolling 5-second windowed audio analysis; syllable-nuclei articulation-rate estimation (1.66 syll/word); spectral-contrast filled-pause detection; statistical-mode aggregation of frames into reviewable segments; slide-text-density + font-size scoring; tunable-by-culture rubric design; real-time + post-hoc report duality."
+      },
+      {
+        "name": "GetStream/Vision-Agents",
+        "url": "https://github.com/GetStream/Vision-Agents",
+        "whatItDoes": "Production-grade open framework for real-time voice+vision agents; the backbone of freeCodeCamp's 'Real-Time Public Speaking & Presentation Coach' (~50 lines of main.py). The coach build measures 7 dimensions: filler words (um/uh/like/you know), speaking pace (too fast/slow), vocal variety (monotone), clarity, posture (shoulders/back/chin), hand gestures, and eye contact. Agent runs autonomously — only speaks feedback after 3-5s of detected silence; replies are 1-2 sentences, positive-first, one actionable tip. Pluggable frame-by-frame processor pipeline (here ~6 fps) feeds a realtime speech-to-speech model.",
+        "libraries": "Stream Video (WebRTC edge transport, sub-30ms routing); Ultralytics YOLO11 pose (yolo11n-pose.pt, 17 keypoints) for posture/gesture; OpenAI Realtime API for low-latency speech-to-speech; integrations also include Gemini Live, AWS Nova Sonic, Qwen/Inworld realtime; STT (Deepgram, AssemblyAI, Fast-Whisper, Wizper, Voxtral); TTS (ElevenLabs, Cartesia, Kokoro, Polly); vision (Roboflow, Moondream, NVIDIA Cosmos); built-in Turn Detection + VAD.",
+        "license": "Apache-2.0",
+        "relevance": "high",
+        "techniques": "Silence-gated feedback (only coach during pauses, not mid-sentence); turn detection + VAD; pluggable pre/post-LLM frame processors; realtime multimodal fusion of pose keypoints + speech-to-speech; brevity-constrained coaching prompt (positive-first, 1 tip); fps-throttled vision sampling to control latency/cost."
+      },
+      {
+        "name": "isaactony/AI-Interview-Coach",
+        "url": "https://github.com/isaactony/AI-Interview-Coach",
+        "whatItDoes": "Privacy-first (fully local) real-time body-language coach for interviews and presentations. Tracks 17 body keypoints (shoulders, elbows, wrists, hips, knees, ankles), monitors posture/gestures/movement live, draws keypoint overlays + green bounding boxes. Webcam loop at ~30 FPS, press 'q' to quit. Voice coaching, web UI, and analytics dashboard are on the roadmap (Gemini + Stream planned).",
+        "libraries": "YOLO11 pose (Ultralytics), OpenCV for capture/render; planned: Stream video infra, Gemini for coaching intelligence.",
+        "license": "MIT",
+        "relevance": "medium",
+        "techniques": "Local-only pose inference (privacy posture); real-time keypoint overlay as the feedback channel; minimal-dependency single-loop architecture — good reference for the cheapest possible posture/gesture grader."
+      },
+      {
+        "name": "IliaLarchenko/Interviewer",
+        "url": "https://github.com/IliaLarchenko/Interviewer",
+        "whatItDoes": "Speech-first AI mock interviewer (coding, system design, ML system design, behavioral, math, SQL, etc.). Three-model loop: an LLM interviewer asks/probes, STT transcribes the candidate, TTS speaks the interviewer. Generates a structured post-interview feedback report (strengths, gaps, suggestions). Model-agnostic — swap any provider via .env. Gradio UI + Hugging Face Spaces demo + Docker.",
+        "libraries": "LLM: OpenAI GPT-4o/4/3.5, Anthropic Claude, HF Meta-Llama, local Ollama; STT: OpenAI Whisper or HF open models; TTS: OpenAI tts-1 or open alternatives; UI: Gradio 4.40.",
+        "license": "Apache-2.0",
+        "relevance": "high",
+        "techniques": "Decoupled STT→LLM→TTS pipeline with provider abstraction; streaming responses; LLM-as-interviewer + LLM-as-evaluator (rubric-style feedback report); fully swappable open-vs-cloud model tiers — template for the content/answer-quality grading half of a system."
+      },
+      {
+        "name": "darrylschaefer/mock-interviews-with-ai",
+        "url": "https://github.com/darrylschaefer/mock-interviews-with-ai",
+        "whatItDoes": "Voice-to-AI-to-voice mock interview app (React/Node). Configurable AI interviewer personalities (Friendly, Formal, Challenging, Encouraging, Enthusiastic) and 4 question types (Technical, Behavioral, Situational, Culture Fit). Real-time feedback + dynamic follow-up questioning.",
+        "libraries": "React + Node; browser speech + LLM backend (OpenAI-class).",
+        "license": "Check repo (not confirmed; likely MIT)",
+        "relevance": "medium",
+        "techniques": "Persona-parameterized interviewer (difficulty/tone presets); question-type taxonomy as a coverage rubric; dynamic follow-ups based on prior answers."
+      },
+      {
+        "name": "adrianhajdin/ai_mock_interviews",
+        "url": "https://github.com/adrianhajdin/ai_mock_interviews",
+        "whatItDoes": "Popular tutorial-grade real-time AI mock-interview platform (Next.js + Vapi voice AI + Firebase + Google Gemini). Generates personalized interview sessions and a detailed scored feedback breakdown (per-category scores, strengths, areas to improve, final assessment).",
+        "libraries": "Next.js, Vapi (voice agent orchestration), Google Gemini, Firebase, Tailwind/shadcn UI.",
+        "license": "Check repo (tutorial repos often MIT/none)",
+        "relevance": "medium",
+        "techniques": "Category-scored feedback rubric generated by an LLM judge; Vapi for production voice-turn handling; clean dashboard UI for session history — strong UI reference."
+      },
+      {
+        "name": "hfroot/Prezence",
+        "url": "https://github.com/hfroot/Prezence",
+        "whatItDoes": "Turns a NAO robot + microphone + Kinect into a live presentation coach. Watches a speech and gives both real-time embodied nudges (NAO gestures to you when you drift from a configurable ideal-delivery model) and a post-session statistics summary. Tracks speech accuracy, volume, speed, head gaze, and gesticulation.",
+        "libraries": "NAO/Choregraphe SDK, Microsoft Kinect skeleton+gaze, speech recognition for accuracy/speed.",
+        "license": "Check repo",
+        "relevance": "medium",
+        "techniques": "Configurable 'ideal delivery model' as the comparison target; embodied real-time correction signal (robot gesture) instead of a screen; pairing of live nudge + end-of-session stats."
+      },
+      {
+        "name": "JermaineV/AI_Coach",
+        "url": "https://github.com/JermaineV/AI_Coach",
+        "whatItDoes": "Platform to improve communication for both public speaking and interviews: speech recognition to capture input, text analysis for sentiment / keywords / named entities, and a pre-trained LLM (GPT-J) to generate coaching responses.",
+        "libraries": "ASR (speech-to-text), NLP (sentiment, keyword & NER), GPT-J LLM.",
+        "license": "Check repo",
+        "relevance": "low",
+        "techniques": "Content-side analysis (sentiment, keyword density, named-entity coverage) layered on top of transcription — complements delivery metrics."
+      },
+      {
+        "name": "TadasBaltrusaitis/OpenFace",
+        "url": "https://github.com/TadasBaltrusaitis/OpenFace",
+        "whatItDoes": "Not a coach itself but the de-facto face-behavior feature engine used by nearly every academic presentation-competence system. Provides facial-landmark detection, head-pose estimation, eye-gaze estimation, and FACS facial Action Unit occurrence+intensity — the raw signals for eye-contact %, head-pose stability, and facial-expressiveness/affect scoring.",
+        "libraries": "OpenFace 2.0 (MTCNN face detection, CE-CLM landmarks); C++ with Python/CLI wrappers.",
+        "license": "Academic/research license (free for non-commercial academic use; NOT permissive — commercial use requires separate licensing)",
+        "relevance": "high",
+        "techniques": "Per-frame AU intensity → smile/expressiveness scoring; gaze vector → eye-contact-with-audience %; head-pose → nervous-sway / look-down detection. The license restriction is a real adoption trap to flag."
+      },
+      {
+        "name": "Sumer/ahcounter-style + CMU-MultimodalSDK reference (Estimating Presentation Competence, arXiv 2105.02636)",
+        "url": "https://arxiv.org/abs/2105.02636",
+        "whatItDoes": "Reference taxonomy (Sümer et al.) for what a MAXIMAL grader can measure: fuses three nonverbal channels — speech, face (head pose + gaze + AUs), and body pose — over 251 student presentation videos to predict human rubric competence ratings. Establishes which channel fusions score best and the exact feature families to extract.",
+        "libraries": "OpenFace 2.0 (landmarks/head-pose/gaze/AUs), OpenPose (2D body joints: neck/shoulders/arms/wrists/elbows/hips), audio prosody (f0 mean/SD/max, speaking rate), classical models (SVR, Random Forest, GLM); time-aggregated statistics + histograms of feature co-occurrence.",
+        "license": "Paper (code availability varies); cite as design source",
+        "relevance": "high",
+        "techniques": "Feature families to copy: f0 (pitch) mean/std/max, speaking rate, audio intensity; head-pose & gaze histograms; AU co-occurrence; body-joint displacement; lexical features (first-person pronoun count). Fusion of speech+face+body beats any single channel — directly informs a multimodal grading rubric."
+      }
+    ],
+    "techniques": [
+      "VERBATIM ASR IS NON-NEGOTIABLE (correcting/confirming prior insight): standard Whisper/Google normalize away disfluencies, so fillers must come from a verbatim engine (CrisperWhisper, whisper-timestamped) OR an acoustic detector. OpenOPAF sidesteps ASR entirely for fillers — it detects filled pauses acoustically as prolonged syllables with minimal spectral contrast (Parselmouth/PRAAT), which is robust to ASR filler-stripping. Offer BOTH paths.",
+      "Per-skill scorer modules with externalized, tunable thresholds (OpenOPAF): each metric is its own module + threshold constant so rubrics can be re-tuned per culture/level without touching extraction. This is the cleanest grading architecture to copy.",
+      "Rolling fixed-window analysis (OpenOPAF uses 5-second windows) so every metric becomes a time series — enables a timeline view, trend detection (e.g. pace creeping up), and per-segment color coding rather than one summary number.",
+      "Articulation rate without ASR: count syllabic nuclei over a window and convert to WPM via ~1.66 syllables/word (De Jong & Wempe). Lets you score pace even when transcription is unavailable or noisy.",
+      "Multichannel fusion beats any single channel (Sümer et al.): combine speech + face + body. Best accuracy/regression came from fusion, not audio-only or pose-only — a maximal grader should fuse, then attribute the final score back to channels.",
+      "Eye-contact-with-audience % via gaze classification: random-forest GOOD/BAD per frame (RAP system) using eye/nose/ear keypoint angles+distances, or gaze vector from OpenFace/MediaPipe; 'mastered' threshold ~85% gaze-on-audience (OpenOPAF default).",
+      "Silence-gated coaching (Vision Agents): only deliver real-time feedback during detected pauses (3-5s silence) so you never talk over the speaker — pair VAD + turn detection.",
+      "Embodied/ambient real-time nudge vs. screen report (Prezence): real-time correction can be a non-textual signal (robot gesture, LED, haptic) measured against a configurable 'ideal delivery model'; pair with an end-of-session statistics report.",
+      "Two-tier feedback timing: live nudges during the run + a reviewable post-session report and a cross-session progress dashboard (OpenOPAF, adrianhajdin). Almost every complete system does both.",
+      "LLM-as-judge for content/answer quality (Interviewer, ai_mock_interviews): an LLM generates a category-scored rubric (strengths, gaps, actionable tips, final assessment) over the transcript — the content half that pairs with delivery metrics.",
+      "Persona/difficulty parameterization (mock-interviews-with-ai): configurable interviewer tone (Friendly→Challenging) and question-type taxonomy (Technical/Behavioral/Situational/Culture-Fit) double as a coverage rubric.",
+      "Slide/visual-aid grading (OpenOPAF): score text density (too much text) and font-size visibility via python-pptx + OCR — a presentation grader should grade the slides, not just the speaker.",
+      "Facial Action Units → expressiveness/affect (OpenFace): AU intensity time series detects smiling, brow tension (nervousness), and flat affect (under-expressive)."
+    ],
+    "metricsOrFormulas": [
+      "Eye contact mastery (OpenOPAF default): gaze directed at audience >= 85% of total time = mastered (threshold is meant to be tuned per culture/objective).",
+      "Articulation rate (OpenOPAF/De Jong): WPM = (syllabic nuclei counted over 5s window) * (60/5) / 1.66 syllables-per-word; analyze on rolling 5-second windows.",
+      "Pace target (from prior SharathKumar787 ref, keep): ideal WPM band ~111-140; flag <~110 (too slow/monotone) and >~150-160 (rushed).",
+      "Filler rate (SharathKumar787, confirmed): filler_rate = (filler_count / total_words) * 100. Filler list: um, uh, like, you know, so, actually, basically, right, i mean, well, kinda, sort of, okay, hmm, ah.",
+      "Acoustic filled-pause detection (OpenOPAF, no ASR needed): flag prolonged syllables with minimal spectral contrast within each 5s window.",
+      "Vocabulary richness: Type-Token Ratio (TTR) = unique_words / total_words (SpeakEZ/SharathKumar787); supplement with mean word complexity and common-word ratio (SpeakEZ).",
+      "Prosody features (Sümer et al.): fundamental frequency f0 mean, f0 standard deviation (monotone = low SD), f0 max, speaking rate, audio intensity (volume). Low f0-SD = monotone flag.",
+      "Volume: measured per 5s window in dB-equivalent (OpenOPAF, robust to typical classroom noise); score against a target loudness band, flag too-quiet/too-loud.",
+      "Pose/posture: 17 keypoints (YOLO11 pose) or OpenPose joints (neck/shoulders/arms/wrists/elbows/hips); derive shoulder symmetry, chin/head tilt, body-joint displacement variance (sway/fidget vs. stillness).",
+      "Gaze classification (RAP): per-frame GOOD/BAD via random forest over angles + normalized distances between facial keypoints (eyes, nose, ears).",
+      "Facial Action Units (OpenFace): per-frame AU occurrence + intensity → smile rate, brow-furrow (tension), and expressiveness range.",
+      "Slide quality (OpenOPAF): text-length per slide (TLen, lower=better) and font size (FSize, must exceed visibility threshold) via python-pptx + OCR.",
+      "Sentiment / keyword / named-entity coverage on the transcript (JermaineV/AI_Coach) for content scoring; pair with LLM rubric scores (Interviewer/ai_mock_interviews).",
+      "Frame sampling: ~6 fps was sufficient for real-time pose/gesture coaching (Vision Agents) — a cost/latency lever."
+    ],
+    "recommendations": [
+      "Anchor the architecture on xaoch/OpenOPAF — it is the most complete verifiable open-source presentation grader (GPL-3.0): six tunable per-skill scorer modules, rolling 5s windows, acoustic filler detection, slide grading, web report + progress dashboard. Note GPL-3.0 is copyleft — if your product is closed-source, treat OpenOPAF as a design/reference, not a code import.",
+      "Build delivery-metric extraction as independent, threshold-externalized scorer modules (one per skill) so the rubric is re-tunable per audience/culture without touching the extractors. This is OpenOPAF's key reusable pattern.",
+      "Use TWO filler paths in parallel: (a) verbatim ASR (CrisperWhisper — flag its CC BY-NC-4.0 non-commercial license — or whisper-timestamped, MIT/permissive) for word-level filler timestamps; (b) OpenOPAF-style acoustic filled-pause detection via Parselmouth/PRAAT, which works even when ASR strips fillers and needs no transcript. Reconcile the two for a robust count.",
+      "Adopt a multimodal fusion grader (Sümer et al. proves fusion beats any single channel): speech prosody (f0 mean/SD/max, rate, intensity) + face (gaze %, head-pose stability, AU expressiveness) + body pose (posture, sway/gesture). Then attribute the composite score back to each channel for actionable feedback.",
+      "Pick the pose/face stack by license: YOLO11 pose (Ultralytics, AGPL-3.0 — copyleft, commercial license available) or MediaPipe (Apache-2.0, friendliest) for body/gesture; for gaze + facial Action Units, OpenFace is the richest but its license is academic/non-commercial — flag this trap and consider MediaPipe FaceLandmarker (Apache-2.0) blendshapes as a permissive substitute.",
+      "Implement silence-gated real-time feedback (Vision Agents): VAD + turn detection so the coach only speaks during 3-5s pauses, with 1-2 sentence positive-first tips — then a full post-session report + cross-session progress dashboard. Live + retrospective is what every complete system ships.",
+      "For the content/answer-quality half (interview mode), reuse the LLM-as-judge rubric pattern from IliaLarchenko/Interviewer (Apache-2.0) and adrianhajdin/ai_mock_interviews: per-category scores + strengths + gaps + final assessment over the transcript; parameterize interviewer persona and question-type taxonomy.",
+      "Don't skip slide grading for presentation mode (OpenOPAF): score text density and font-size visibility via python-pptx + OCR — a maximal grader grades the visual aids, not only the speaker.",
+      "Frameworks worth importing wholesale: GetStream/Vision-Agents (Apache-2.0) gives you WebRTC transport + turn detection + VAD + pluggable STT/TTS/vision processors out of the box, turning the coach into ~50 lines. Strong if you want production realtime fast.",
+      "Verify each repo's LICENSE file directly before importing — several tutorial repos (darrylschaefer, adrianhajdin, JermaineV, Prezence) had no confirmed license in metadata, and OpenFace + YOLO carry restrictive/copyleft terms that materially affect a commercial grading product."
+    ]
+  },
+  {
+    "angle": "Concrete SCORING rubrics and exact metric formulas with threshold/ideal bands for speech & oral-presentation grading — WPM, filler rate, pause/articulation analysis, lexical diversity (TTR/MATTR/MTLD), lexical density, spoken-text readability/grade level, and grammar-error rate. Emphasis on defensible numbers traceable to repos OR peer-reviewed papers, and on the construct-driven research standard (ETS SpeechRater / utterance-fluency literature) that the already-found hobbyist tools approximate. KEY CONFIRMED INSIGHT preserved: standard ASR (Whisper, Google STT) deliberately removes disfluencies, so a verbatim engine (CrisperWhisper, whisper-timestamped, or a Praat/parselmouth acoustic path that needs no transcript) is mandatory for filler/pause counts. Two correctness notes on the already-found set: (1) WPM 'ideal' is context- and source-dependent — the 111-140 band in AI-Transcript-Scoring-Tool is one tool's choice; the broader evidence-backed comfortable range is ~130-160 WPM (Toastmasters 120-160; comprehension optimum ~150-160 per Univ. of Missouri-cited work). (2) Plain TTR is length-confounded and should NOT be used as an absolute richness score across responses of different lengths — use MATTR (50-word window) or MTLD instead; TTR is only safe at fixed/standardized length.",
+    "repos": [
+      {
+        "name": "Shahabks/my-voice-analysis",
+        "url": "https://github.com/Shahabks/my-voice-analysis",
+        "whatItDoes": "Praat/parselmouth voice analyzer that needs NO transcript — segments syllable nuclei and silences directly from audio. Exposes named functions: myspsyl (syllable count), mysppaus (pause count), myspsr (speech rate, syll/sec over total time), myspatc (articulation rate, syll/sec over phonation time only), myspst (speaking duration excl. pauses), myspod (total duration), myspbala (balance = speaking_duration/original_duration = phonation-time ratio), and f0 mean/sd/median/min/max/q25/q75. This is the cleanest open implementation of the speech-rate-vs-articulation-rate distinction.",
+        "libraries": "Praat (myspsolution.praat), parselmouth, numpy; WAV 44kHz/16-bit",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "de Jong & Wempe syllable-nuclei detection; speech rate vs articulation rate vs phonation-time ratio (balance)"
+      },
+      {
+        "name": "Shahabks/myprosody",
+        "url": "https://github.com/Shahabks/myprosody",
+        "whatItDoes": "Sibling of my-voice-analysis adding scoring: avg syllable-pause duration, long pauses, articulation rate, words-per-minute, filler words, voiced-syllables/pause ratio, F0 stats, plus a TOEFL-scale score, Shannon index, intonation index, pronunciation posterior, CEFR level, and prosody-vs-native comparison. Cites Klaus Zechner (ETS SpeechRater) as the research basis.",
+        "libraries": "Praat, parselmouth, pickled ML models; WAV 48kHz",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "construct-driven prosody scoring; TOEFL/CEFR mapping; intonation & Shannon indices"
+      },
+      {
+        "name": "Shahabks/Speechat",
+        "url": "https://github.com/Shahabks/Speechat",
+        "whatItDoes": "Spoken-language assessment using ASR with HMM/GMM acoustic models per phoneme/speaker — useful as a pronunciation-scoring reference (goodness-of-pronunciation style) rather than fluency.",
+        "libraries": "Kaldi-style HMM/GMM, Praat",
+        "license": "check repo (research code)",
+        "relevance": "medium",
+        "techniques": "phoneme-level acoustic modeling for pronunciation scoring"
+      },
+      {
+        "name": "SharathKumar787/AI-Transcript-Scoring-Tool",
+        "url": "https://github.com/SharathKumar787/AI-Transcript-Scoring-Tool",
+        "whatItDoes": "Single-file Flask+NLTK rubric scorer (already found). Confirmed formulas: WPM = (word_count / duration_sec) * 60; filler_rate = (fillers / total_words) * 100; vocabulary richness = TTR = unique_words / total_words. Note its WPM 'ideal' 111-140 is a tool-specific band — see recommendations for the better-supported 130-160 band.",
+        "libraries": "Flask, NLTK",
+        "license": "check repo",
+        "relevance": "high",
+        "techniques": "rule-based rubric buckets; TTR; filler-rate percentage"
+      },
+      {
+        "name": "pulkittyagi02/Text-Analyzer",
+        "url": "https://github.com/pulkittyagi02/Text-Analyzer",
+        "whatItDoes": "Multi-criterion transcript scorer: Salutation, Keyword Presence, Flow, Speech Rate, Grammar, Vocabulary Richness (TTR), Clarity (filler count from preset list), Engagement. A good template for assembling a weighted composite rubric from per-metric sub-scores.",
+        "libraries": "Python NLP (NLTK-class)",
+        "license": "check repo",
+        "relevance": "medium",
+        "techniques": "weighted multi-criterion composite scoring"
+      },
+      {
+        "name": "obkaul/AhemPreventor",
+        "url": "https://github.com/obkaul/AhemPreventor",
+        "whatItDoes": "Neural-net filler-word detector for live oral presentations giving discreet tactile feedback — an acoustic (not transcript) filler detector, complementing the verbatim-ASR approach for real-time use.",
+        "libraries": "neural network on audio features",
+        "license": "check repo",
+        "relevance": "medium",
+        "techniques": "acoustic filler-word detection in real time"
+      },
+      {
+        "name": "speechsuper/SpeechSuper-API-Samples",
+        "url": "https://github.com/speechsuper/SpeechSuper-API-Samples",
+        "whatItDoes": "Reference samples for a commercial pronunciation/fluency API across 8 languages: returns words-correct-per-minute, pause count, IELTS/PTE score estimation, and off-topic penalization. Useful as a feature-set spec to replicate, not as an open scorer.",
+        "libraries": "REST API client samples",
+        "license": "sample code (API is commercial)",
+        "relevance": "medium",
+        "techniques": "WCPM, pause count, exam-band estimation, off-topic detection"
+      },
+      {
+        "name": "jdvelasq/lexicalrichness (pkg: lexicalrichness on PyPI)",
+        "url": "https://pypi.org/project/lexicalrichness/",
+        "whatItDoes": "Python library implementing TTR, Root-TTR (Guiraud), Corrected-TTR, Herdan's C, Maas, MSTTR, MATTR, MTLD, HD-D (vocd-D), Yule's K/I — the full lexical-diversity toolkit so you can use length-robust measures instead of raw TTR.",
+        "libraries": "pure Python",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "MATTR, MTLD, HD-D / vocd-D, Maas, Yule's K"
+      },
+      {
+        "name": "chrisdankuck/textstat (pkg: textstat)",
+        "url": "https://github.com/textstat/textstat",
+        "whatItDoes": "Readability library implementing Flesch Reading Ease, Flesch-Kincaid Grade Level, Gunning Fog, SMOG, Coleman-Liau, ARI, Dale-Chall — apply to ASR transcript to get spoken-text grade level / reading ease.",
+        "libraries": "pyphen (syllables), pure Python",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Flesch / FK grade / SMOG / Gunning Fog readability"
+      },
+      {
+        "name": "chrisjbryant/errant (ERRANT) + nusnlp/m2scorer",
+        "url": "https://github.com/chrisjbryant/errant",
+        "whatItDoes": "ERRANT auto-annotates and classifies grammatical edits (insert/delete/substitute by error type) between learner text and a correction, yielding precision/recall/F0.5 per error type; the M2 scorer is the companion span-based metric. Pair with a GEC model (e.g., GECToR / a T5 corrector) to derive a grammar-error count per 100 words.",
+        "libraries": "spaCy, Python",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "ERRANT error typing, M2/F0.5, GLEU; errors-per-100-words via edit count"
+      },
+      {
+        "name": "de Jong & Wempe Praat syllable-nuclei script",
+        "url": "https://sites.google.com/site/speechrate",
+        "whatItDoes": "Canonical Praat script that detects syllable nuclei and silences to compute speech rate, articulation rate, and pause counts WITHOUT a transcript. The acoustic source-of-truth underneath my-voice-analysis/myprosody; standard in L2-fluency research.",
+        "libraries": "Praat",
+        "license": "academic/free use",
+        "relevance": "high",
+        "techniques": "automatic syllable-nucleus & silent-pause detection; utterance-fluency measures"
+      }
+    ],
+    "techniques": [
+      "Verbatim-ASR-first pipeline (non-negotiable): Whisper/Google STT strip fillers and disfluencies by design, so route audio through a verbatim engine (nyrahealth/CrisperWhisper, linto-ai/whisper-timestamped) OR a transcript-free acoustic path (de Jong-Wempe Praat / parselmouth via my-voice-analysis) before counting fillers, repetitions, or pauses.",
+      "Two timing measures, kept separate (the single most-confused pair): SPEECH RATE = total syllables / total time INCLUDING pauses; ARTICULATION RATE = total syllables / phonation time EXCLUDING all silent+filled pauses. Report both — a fast articulation rate with low speech rate signals excessive pausing, not fast talking.",
+      "Phonation-time ratio (a.k.a. 'balance' in my-voice-analysis) = speaking time / total time. A compact single-number fluency proxy; low values = halting/over-paused delivery.",
+      "Silent-pause detection threshold: count a silence as a pause only if it exceeds ~250 ms (research convention is 250-300 ms; ETS SpeechRater 'longpfreq' counts silences > 0.5 s as long pauses). Report pause count, mean pause length, and long-pause frequency separately.",
+      "Length-robust lexical diversity: prefer MATTR (mean TTR over a sliding 50-word window) or MTLD (mean run length before TTR drops below 0.72) over raw TTR; HD-D/vocd-D for medium texts. Raw TTR only when sample length is fixed/standardized.",
+      "Lexical density via POS tagging: tag the transcript, then density = content words (noun/verb/adj/adverb) / total tokens * 100 (Ure) — spoken language characteristically sits BELOW ~40%, written above; do not penalize a speaker for sub-40% density, it is normal for speech.",
+      "Spoken-text readability/grade level: apply Flesch-Kincaid Grade / Flesch Reading Ease to the transcript using syllable counts, but treat absolute grade level cautiously — readability formulas were built for written prose; use relative change as the signal.",
+      "Grammar-error rate: run a GEC corrector to get edits, classify with ERRANT, then normalize as errors per 100 words = (edit_count / total_words) * 100; report by error type for actionable feedback. CEFR-style: grammatical-error-rate correlated ~0.73 with human grammar-accuracy scores in CEFR-J work.",
+      "Construct-driven composite (ETS SpeechRater pattern): score independent constructs — delivery/fluency, pronunciation, prosody/rhythm, vocabulary, grammar, content — then weight into a final band, rather than one opaque number. SpeechRater v5 uses ~24 features across these constructs.",
+      "Acoustic filler detection as a complement: for real-time coaching where no verbatim transcript exists, an acoustic detector (AhemPreventor, um_detector) flags 'um/uh' from audio features directly."
+    ],
+    "metricsOrFormulas": [
+      "WPM (speech rate, words) = (word_count / duration_seconds) * 60. Ideal/comfortable band ~130-160 WPM (Toastmasters 120-160; comprehension optimum ~150-160 WPM, Univ. of Missouri-cited; ~140 WPM perceived most credible). Slow <120, fast >170-200. [Note: AI-Transcript-Scoring-Tool uses 111-140 as its 'ideal' — narrower and tool-specific.]",
+      "Speech rate (syllables) = total_syllables / total_time_incl_pauses (syll/sec). Fluent-adult normal ~4-5 syll/sec (~162-230 syll/min).",
+      "Articulation rate = total_syllables / phonation_time_excl_pauses (syll/sec). Fluent-adult normal ~4.0-5.9 syll/sec; children ~2.9-4.2; adultlike by ~age 10.",
+      "Phonation-time ratio (balance) = speaking_time / total_time. (my-voice-analysis myspbala = speaking_duration / original_duration.)",
+      "Speech-to-pause ratio = total_speech_time / total_silence_time.",
+      "Filler rate (%) = (filler_count / total_words) * 100. Normal spontaneous-speech filled-pause (um/uh) baseline ~1.6-3.0 per 100 words (Bortfeld et al. 2001: ~2.6; Shriberg 1994: 1.6-2.2; men ~3.04 vs women ~2.07); total disfluencies ~6 per 100 words. So filler RATE >~6/100 is elevated, >~10/100 distracting. Default filler list: um, uh, like, you know, so, actually, basically, right, i mean, well, kinda, sort of, okay, hmm, ah.",
+      "Disfluencies-per-second (SpeechRater 'dpsec') = count(um/eer/repairs) / duration_sec; Long-pause frequency (SpeechRater 'longpfreq') = count(silences > 0.5 s).",
+      "Silent-pause threshold: silence counts as a pause if duration > ~250 ms (range used in literature 250-300 ms).",
+      "Type-Token Ratio (TTR) = unique_words / total_words (0-1; length-confounded — falls as length grows; use only at fixed length).",
+      "MATTR = mean of TTR computed over every sliding window of W tokens (W=50 standard); stable across lengths.",
+      "MTLD = mean number of tokens needed for sequential TTR to fall to the 0.72 factor threshold (computed forward and backward, averaged); length-independent. HD-D/vocd-D = probabilistic TTR estimate via hypergeometric sampling.",
+      "Lexical density (Ure) = (content_word_tokens / total_tokens) * 100. Halliday variant = content_words / number_of_clauses. Spoken language typically <40%, written >40%.",
+      "Flesch Reading Ease = 206.835 - 1.015*(words/sentences) - 84.6*(syllables/words). 0-100; higher = easier (60-70 ~ plain English).",
+      "Flesch-Kincaid Grade Level = 0.39*(words/sentences) + 11.8*(syllables/words) - 15.59 → US grade.",
+      "Grammar-error rate = (grammatical_edit_count / total_words) * 100 (errors per 100 words), edits typed via ERRANT; GEC systems scored with M2/ERRANT F0.5 or GLEU. CEFR-J study: grammar-error-rate ~0.73 correlation with human grammar-accuracy scores.",
+      "Yule's K (vocabulary repetitiveness) and Maas index a^2 = (log N - log V) / (log N)^2 — alternative length-robust richness measures available in lexicalrichness."
+    ],
+    "recommendations": [
+      "Make the verbatim engine a hard dependency upstream of all filler/pause/repetition metrics. Standard Whisper output will silently under-report fillers and make any filler-rate score wrong; gate the pipeline on CrisperWhisper / whisper-timestamped (or a transcript-free Praat path) before computing those metrics.",
+      "Compute timing metrics from AUDIO, not from the transcript word count alone. WPM-from-transcript ignores pauses; add the parselmouth/Praat path (my-voice-analysis / de Jong-Wempe) to get true speech rate, articulation rate, and phonation-time ratio — these three together diagnose 'too fast' vs 'too many pauses,' which WPM alone cannot.",
+      "Replace raw TTR as the vocabulary-richness score. Swap in MATTR (window=50) or MTLD via the lexicalrichness package; keep TTR only for fixed-length comparisons. This is a correctness fix to the already-found tools that score TTR directly across variable-length responses.",
+      "Treat WPM 'ideal' as a configurable band, defaulting to 130-160 WPM (or 120-160 Toastmasters), not a hardcoded 111-140; expose presentation-type presets (technical 130-140, persuasive 150-160). Cite the band's source in the rubric so it is defensible.",
+      "Do not penalize normal-for-speech traits: lexical density below 40% and a small number of filled pauses (~2/100 words) are baseline for fluent spontaneous speech. Set elevated-filler flags at >~6/100 and distracting at >~10/100, anchored to Bortfeld et al. 2001, rather than 'zero fillers = perfect.'",
+      "Adopt a construct-driven composite (the SpeechRater model): score fluency, pronunciation, prosody, vocabulary, grammar, and content as separate sub-scores with documented thresholds, then weight — this is more defensible, more actionable for learners, and aligns the hobbyist tools with the research standard (Zechner/Loukina; ~24 features in SpeechRater v5).",
+      "For grammar, pair a GEC corrector with ERRANT to get errors-per-100-words AND a per-error-type breakdown; report types (article, agreement, tense) for actionable feedback rather than a single grammar number.",
+      "Apply Flesch-Kincaid to transcripts for relative tracking (improvement over sessions), not as an absolute verdict — readability formulas were validated on written prose and over-penalize the short clauses typical of good spoken delivery."
+    ]
+  },
+  {
+    "angle": "Detecting weak/vague/hedging/filler words and overused intensifiers, suggesting stronger replacements (synonym strength + LLM rewrite), and detecting word-finding difficulty by fusing word-choice flags with timestamp/pause signals — i.e., the lexicon + linter + LLM-as-judge layer that sits on top of a verbatim-ASR filler counter. KEY CONSTRAINT (preserved and correct): mainstream ASR (Whisper, Google STT) silently deletes fillers and disfluencies, so a verbatim engine (CrisperWhisper, whisper-timestamped with word timestamps, faster-whisper with a verbatim/disfluency prompt) is mandatory upstream; everything in this angle consumes that verbatim, word-timestamped transcript. The pipeline is three stages: (1) FLAG weak/hedge/filler/intensifier words via curated lexicons + rule linters; (2) SUGGEST a stronger word via synonym-strength scoring (word norms / WordNet / thesaurus) or LLM rewrite; (3) DETECT 'got tripped up' moments by intersecting lexical hedge/vagueness flags with acoustic pause + disfluency features from the timestamps (a hedge word right after a long silent pause = high-confidence word-finding event).",
+    "repos": [
+      {
+        "name": "amperser/proselint",
+        "url": "https://github.com/amperser/proselint",
+        "whatItDoes": "Python prose linter with named checks that map directly onto this task: weasel_words (vague qualifiers), hedging (uncertainty/undermining), redundancy.misc, lexical_illusions (repeated words), misc.metadiscourse, and typography.punctuation.hyperbole. Each check returns a span + message, so you get word-level flags you can overlay on timestamps.",
+        "libraries": "Python (pip install proselint), CLI + Python API; checks are individual modules under proselint/checks/",
+        "license": "BSD-3-Clause",
+        "relevance": "high",
+        "techniques": "Rule/regex + curated word lists per check; emits start/end offsets per flag for downstream alignment to ASR word timings"
+      },
+      {
+        "name": "btford/write-good",
+        "url": "https://github.com/btford/write-good",
+        "whatItDoes": "JS English-prose linter. Directly relevant checks: weasel (vague language), adverb (weakening intensifiers like 'really'/'very'/'extremely'), tooWordy, passive, illusion (repeated words), so, thereIs, cliches, eprime (to-be verbs, off by default). Returns {index, offset, reason} per issue.",
+        "libraries": "Node/JS (npm i write-good); each check is a standalone module in lib/ with its own word list (e.g. lib/adverb, lib/weasel-words)",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Word-list + regex matching; the per-check word lists (weasel-words, adverbs) are reusable lexicons you can lift directly"
+      },
+      {
+        "name": "retextjs/retext-intensify",
+        "url": "https://github.com/retextjs/retext-intensify",
+        "whatItDoes": "retext plugin that checks for WEAK and MITIGATING wording — the canonical 'find the hedge/filler' plugin. Flags weasel/qualifier words and softeners (e.g. 'just', 'quite', 'pretty', 'rather', 'really', 'somewhat', 'maybe', 'I think') so writers strengthen the claim.",
+        "libraries": "Node/JS, unified/retext ecosystem (npm i retext-intensify); composes with retext-stringify/retext-english",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "AST-based (nlcst) word matching against a built-in weak/mitigating word list; positions map to text ranges"
+      },
+      {
+        "name": "retextjs/retext-passive",
+        "url": "https://github.com/retextjs/retext-passive",
+        "whatItDoes": "retext plugin to detect passive voice (a weakness signal that correlates with vague, low-agency speech). Pairs with intensify/simplify in the same unified pipeline.",
+        "libraries": "Node/JS, retext/unified (npm i retext-passive)",
+        "license": "MIT",
+        "relevance": "medium",
+        "techniques": "Pattern match on participle + 'to be' constructions over the nlcst AST"
+      },
+      {
+        "name": "retextjs/retext-simplify",
+        "url": "https://github.com/retextjs/retext-simplify",
+        "whatItDoes": "retext plugin that flags complex/wordy phrases and SUGGESTS a simpler alternative (e.g. 'utilize'->'use', 'in order to'->'to'). This is the suggestion side: built-in map of phrase -> stronger/simpler replacement.",
+        "libraries": "Node/JS, retext/unified (npm i retext-simplify); ships a phrase->replacement dictionary",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Dictionary lookup of weak/verbose phrase to concise replacement; provides the actual better-word suggestion, not just a flag"
+      },
+      {
+        "name": "retextjs/retext-equality + retext-readability + retext-repeated-words",
+        "url": "https://github.com/retextjs/awesome-retext",
+        "whatItDoes": "Sibling retext plugins: retext-equality (insensitive/inconsiderate language — overlaps alex), retext-readability (per-sentence readability grade to flag overcomplex passages), retext-repeated-words (catches 'the the' style repeats that often mark a stumble). awesome-retext is the index of the whole plugin family.",
+        "libraries": "Node/JS, retext/unified; each is a separate npm package",
+        "license": "MIT (per plugin)",
+        "relevance": "medium",
+        "techniques": "AST plugins; readability uses multiple formulas (Dale-Chall, Flesch, SMOG, etc.) to pick a consensus grade you can threshold"
+      },
+      {
+        "name": "get-alex/alex",
+        "url": "https://github.com/get-alex/alex",
+        "whatItDoes": "alex.js — catches insensitive/inconsiderate writing (gender-favoring, polarizing, condescending phrasing) on top of retext-equality + retext-profanities. Complements the weak-word linters with a tone/inclusivity layer.",
+        "libraries": "Node/JS (npm i alex); also a CLI and editor plugins; built on retext",
+        "license": "MIT",
+        "relevance": "medium",
+        "techniques": "retext-equality/profanities word databases; good source of curated 'avoid' lexicons"
+      },
+      {
+        "name": "languagetool-org/languagetool",
+        "url": "https://github.com/languagetool-org/languagetool",
+        "whatItDoes": "Production-grade style+grammar checker for 25+ languages. Beyond grammar it has STYLE rules for wordiness, redundancy, filler, and overused words, and is self-hostable via HTTP API — a heavier alternative/superset of write-good+proselint for the suggestion layer.",
+        "libraries": "Java; runs as local HTTP server; python-language-tool / language-tool-python wrappers exist",
+        "license": "LGPL-2.1",
+        "relevance": "high",
+        "techniques": "Rule engine (XML rules + Java rules) + n-gram data + optional ML; returns matches with suggested replacements (the 'better word' API)"
+      },
+      {
+        "name": "Ejhfast/empath-client",
+        "url": "https://github.com/Ejhfast/empath-client",
+        "whatItDoes": "Empath (Fast et al., Stanford) — LIWC-style lexical category analyzer over 200 categories built from fiction word-embeddings, and crucially it can GENERATE a new lexicon on demand from seed terms. Use it to build a custom 'hedging' / 'filler' / 'vague' category from a handful of seeds, then score transcripts.",
+        "libraries": "Python (pip install empath); embedding-backed category generation",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Word2vec-style embedding neighborhood expansion from seed words -> category lexicon; gives counts per category for scoring vocabulary strength"
+      },
+      {
+        "name": "PeterZhizhin/BERTUncertaintyDetection",
+        "url": "https://github.com/PeterZhizhin/BERTUncertaintyDetection",
+        "whatItDoes": "BERT-based hedge/uncertainty detection — learns to tag hedge cues and uncertain sentences rather than relying purely on a static cue list. Useful where a lexicon misses context-dependent hedges ('that might be the issue').",
+        "libraries": "Python, PyTorch + HuggingFace transformers",
+        "license": "Check repo (not declared/limited) — treat as research code; verify before reuse",
+        "relevance": "medium",
+        "techniques": "Token-classification fine-tune on CoNLL-2010/BioScope-style hedge-cue labels"
+      },
+      {
+        "name": "Tirthankar-Ghosal/HedgePeer-Dataset",
+        "url": "https://github.com/Tirthankar-Ghosal/HedgePeer-Dataset",
+        "whatItDoes": "HedgePeer: a large annotated dataset of hedge cues in peer-review text (an informal, opinionated register closer to spoken hedging than biomedical corpora). Good training/eval data and a ready hedge-cue lexicon.",
+        "libraries": "Data (annotations) + baselines",
+        "license": "Check repo (dataset license stated in repo) — verify before redistribution",
+        "relevance": "medium",
+        "techniques": "Sentence-level + token-level hedge-cue annotation; usable to seed or validate a hedge lexicon"
+      },
+      {
+        "name": "CoNLL-2010 Shared Task + BioScope corpus",
+        "url": "https://rgai.inf.u-szeged.hu/conll2010st",
+        "whatItDoes": "The canonical academic benchmark for hedge/uncertainty detection: subtask 1 = sentence-level uncertainty, subtask 2 = cue token + semantic scope. BioScope corpus annotates speculation/negation cues + scope. These define the gold hedge-cue lexicon everyone reuses (~19% of biomedical sentences contain a hedge cue).",
+        "libraries": "Datasets + scorer; widely mirrored",
+        "license": "Academic/research use (per corpus terms) — verify",
+        "relevance": "high",
+        "techniques": "Cue-tagging + scope resolution; the cue word lists (suggest, may, might, possibly, likely, appear, etc.) are the backbone hedge lexicon"
+      },
+      {
+        "name": "Brysbaert concreteness / AoA / SUBTLEX norms",
+        "url": "https://github.com/ArtsEngine/concreteness",
+        "whatItDoes": "Psycholinguistic word norms: concreteness (40k words, 1-5 abstract->concrete), Age-of-Acquisition, and SUBTLEX word-frequency. These quantify word STRENGTH/specificity — vague speech skews abstract + high-frequency + low-AoA, so you can score 'is there a more concrete/precise word' and rank candidate replacements.",
+        "libraries": "CSV norm tables; load with pandas; (also distributed via the original Brysbaert lab pages)",
+        "license": "CC / academic (per dataset) — free for research, verify for commercial",
+        "relevance": "high",
+        "techniques": "Lookup tables joined to tokens; compute concreteness/frequency deltas between a hedge word and proposed synonyms to pick the stronger one"
+      },
+      {
+        "name": "WordNet (nltk.corpus.wordnet) + PyDictionary/PyMultiDictionary",
+        "url": "https://github.com/goldsmith/Wordnik-Python",
+        "whatItDoes": "The synonym-source layer for the SUGGEST step: WordNet gives synsets/hypernyms (precision via more specific terms), and thesaurus clients (PyDictionary, PyMultiDictionary, Wordnik API) fetch synonyms. Combine candidate synonyms with the concreteness/frequency norms above to choose a STRONGER word, not just any synonym.",
+        "libraries": "Python: nltk WordNet, PyDictionary, PyMultiDictionary; Wordnik for richer thesaurus",
+        "license": "WordNet license (permissive); clients MIT",
+        "relevance": "high",
+        "techniques": "Synset expansion -> filter by POS + rank by concreteness/specificity/frequency to surface the strongest replacement"
+      },
+      {
+        "name": "microsoft/LLM-Rubric",
+        "url": "https://github.com/microsoft/LLM-Rubric",
+        "whatItDoes": "ACL-2024 framework for multidimensional, CALIBRATED LLM-as-judge scoring against a hand-built rubric. Directly applicable to scoring word-choice/clarity/confidence dimensions of a transcript and calibrating the judge against human ratings (reduces judge bias/variance).",
+        "libraries": "Python; prompts the LLM per rubric question and learns a calibration network over its answer distribution",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Per-dimension rubric prompting + calibration regression on human labels; the pattern for turning 'is the wording weak?' into a stable score"
+      },
+      {
+        "name": "trotacodigos/Rubric-MQM",
+        "url": "https://github.com/trotacodigos/Rubric-MQM",
+        "whatItDoes": "LLM-as-judge + automatic POST-EDITOR: scores text on a rubric AND emits concrete edit suggestions (reference-optional, batch). Template for the 'suggest a stronger word + rewrite' half of this angle with structured rationale.",
+        "libraries": "Python + LLM API",
+        "license": "Check repo — verify before reuse",
+        "relevance": "medium",
+        "techniques": "Rubric scoring then targeted rewrite/post-edit generation per flagged span"
+      },
+      {
+        "name": "evidentlyai/evidently",
+        "url": "https://github.com/evidentlyai/evidently",
+        "whatItDoes": "Open-source LLM-eval library with an LLM-judge prompt OPTIMIZER: feed labeled examples (e.g. human 'this phrasing is weak/strong') and it generates a tuned judge prompt. Good for hardening a word-choice judge instead of hand-writing the prompt.",
+        "libraries": "Python (pip install evidently)",
+        "license": "Apache-2.0",
+        "relevance": "medium",
+        "techniques": "Prompt optimization from labeled feedback; descriptor/LLM-based text quality checks"
+      },
+      {
+        "name": "pariajm/joint-disfluency-detector-and-parser (and arxiv 2311.00867 untranscribed disfluency)",
+        "url": "https://github.com/pariajm/joint-disfluency-detector-and-parser",
+        "whatItDoes": "Text-side disfluency detector (repairs, false starts, repetitions) — the lexical complement to acoustic pause detection. Tagging reparandum/interregnum/repair gives you the 'self-correction / restart' signal that, combined with pauses, marks a tripped-up moment.",
+        "libraries": "Python, PyTorch (BERT-based parser)",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Joint constituency parse + disfluency span tagging; integrate its repair spans with ASR word timings"
+      },
+      {
+        "name": "linto-ai/whisper-timestamped + nyrahealth/CrisperWhisper (verbatim upstream)",
+        "url": "https://github.com/linto-ai/whisper-timestamped",
+        "whatItDoes": "The mandatory verbatim, word-level-timestamp source this whole angle depends on. whisper-timestamped adds per-word timestamps + confidence to Whisper; CrisperWhisper (CC BY-NC 4.0) is verbatim and KEEPS fillers/disfluencies. Their word start/end times + per-word confidence are the inputs you intersect with lexical hedge flags to compute pause-before-word and locate word-finding events.",
+        "libraries": "Python (PyTorch); whisper-timestamped uses dynamic-time-warping on cross-attention for word timings",
+        "license": "whisper-timestamped: AGPL-3.0; CrisperWhisper: CC BY-NC 4.0 (non-commercial)",
+        "relevance": "high",
+        "techniques": "Per-word timestamps + confidence; derive inter-word gaps (silent pauses), low-confidence tokens, and filled-pause tokens as 'tripped up' features"
+      }
+    ],
+    "techniques": [
+      "LEXICON LAYER (flag): maintain four merged word/phrase lists — (a) FILLERS (um, uh, er, ah, like, you know, I mean, so, well, basically, actually, literally, right, okay, kinda, sort of); (b) HEDGES/qualifiers (maybe, perhaps, possibly, kind of, I guess, I think, sort of, somewhat, probably, might, could, seems, apparently); (c) WEASEL words (many, some, various, several, fairly, quite, surprisingly); (d) INTENSIFIERS/boosters (very, really, extremely, totally, absolutely, super, definitely). Source them from write-good (lib/weasel-words, lib/adverb), retext-intensify, proselint weasel_words+hedging checks, and LIWC tentative/certainty categories.",
+      "RULE-LINTER LAYER (flag, fast, deterministic): run proselint (weasel_words, hedging, redundancy, lexical_illusions, hyperbole) and write-good / the retext pipeline (retext-intensify + retext-passive + retext-simplify + retext-repeated-words) and capture each flag's character offsets so they can be aligned back to ASR word timestamps. These are CI-grade and need no model.",
+      "ML HEDGE LAYER (flag, context-aware): for context-dependent hedges a static list misses, run a BERT hedge/uncertainty token-classifier (BERTUncertaintyDetection) or fine-tune on CoNLL-2010/BioScope/HedgePeer cue annotations. Use this to catch 'that might work' vs 'might' as a noun.",
+      "SYNONYM-STRENGTH LAYER (suggest): for each flagged weak word, expand candidates via WordNet synsets + a thesaurus (PyDictionary/Wordnik), then RANK candidates by psycholinguistic norms — prefer higher concreteness (Brysbaert), lower corpus frequency / more specific (SUBTLEX), appropriate POS — to surface a genuinely stronger word rather than a random synonym. retext-simplify and LanguageTool provide ready phrase->replacement dictionaries for the common cases.",
+      "LLM-AS-JUDGE LAYER (suggest + score): use a calibrated rubric (LLM-Rubric pattern) scoring dimensions like word precision, confidence/assertiveness, conciseness, and filler density; pair with an automatic post-editor (Rubric-MQM pattern) that returns a stronger rewrite + rationale per span. Harden the judge prompt with Evidently's optimizer against human labels. Four-part judge prompt: criterion in domain words + forced step-by-step reasoning + deterministic score mapping + edge-case clause.",
+      "FUSION LAYER (detect 'got tripped up'): from the verbatim word-timestamped transcript compute per-word features — preceding silent-pause duration (gap to prior word end), filled-pause token present, ASR word confidence, local speech-rate dip, and self-repair/repetition span (joint disfluency parser). A word-finding / tripped-up event = a HEDGE or VAGUE-word flag OR low word-confidence co-located with an above-threshold silent pause and/or a filled pause and/or a repair. Score each candidate moment and rank.",
+      "CALIBRATION/THRESHOLDS: silent-pause threshold typically 250-500ms above the speaker's own median inter-word gap (per-speaker normalization beats a global constant); filler RATE = fillers / total words * 100; vocabulary richness via TTR / MTLD; benchmark word-finding flags against held-out human-annotated stumbles to set per-feature weights.",
+      "PRESERVED CONSTRAINT: do all of the above on a VERBATIM, word-timestamped transcript. Standard Whisper/Google STT strip fillers and smooth disfluencies, which destroys both the filler counts and the pause/repair signals the fusion layer needs — so CrisperWhisper / whisper-timestamped / faster-whisper-with-verbatim-prompt is non-optional upstream."
+    ],
+    "metricsOrFormulas": [
+      "Filler rate = (filler_count / total_words) * 100  (per SharathKumar787 rubric; report as fillers per 100 words)",
+      "Hedge density = hedge_word_count / total_words ; Booster/intensifier density = intensifier_count / total_words",
+      "Silent pause (per word i) = start_time[i] - end_time[i-1]; flag if > speaker_median_gap + k (k ~ 250-500ms) — per-speaker normalization",
+      "Word-finding event score = w1*hedge_flag + w2*vague_flag + w3*(pause_norm) + w4*(1 - asr_word_confidence) + w5*filled_pause + w6*repair_span ; rank moments by score",
+      "Type-Token Ratio (TTR) = unique_words / total_words ; prefer MTLD or MATTR for length-robust vocabulary richness",
+      "Concreteness gain of a replacement = concreteness(candidate) - concreteness(original)  (Brysbaert 1-5 scale); specificity gain ~ -log(freq_SUBTLEX)",
+      "Speech rate / WPM = words / minutes (rubric ideal band ~111-140 WPM); detect local rate dips around a candidate stumble vs rolling baseline",
+      "Readability consensus grade (retext-readability): flag a span if >=N of {Dale-Chall, Flesch-Kincaid, SMOG, Gunning-fog, ARI, Coleman-Liau, spache} exceed target grade",
+      "LLM-judge calibration: report judge-vs-human agreement (Spearman / quadratic-weighted kappa) before trusting scores (LLM-Rubric calibrates the answer distribution)"
+    ],
+    "recommendations": [
+      "Build the FLAG stage as a deterministic ensemble first: proselint (weasel_words+hedging+redundancy+lexical_illusions+hyperbole) + the retext pipeline (retext-intensify + retext-passive + retext-simplify + retext-repeated-words) + write-good. All are permissive (BSD-3 / MIT) and emit character offsets — no model, CI-friendly, and the union of their word lists is a free filler/hedge/intensifier lexicon. (Correction to the brief: proselint is BSD-3-Clause and is primarily a Python package; write-good and the retext family are MIT JS.)",
+      "Merge a single canonical lexicon from write-good (lib/weasel-words, lib/adverb), retext-intensify's weak/mitigating list, proselint's weasel+hedging lists, LIWC tentative/certainty categories, and the CoNLL-2010/BioScope/HedgePeer hedge-cue sets — dedupe and tag each entry as filler|hedge|weasel|intensifier so downstream scoring can weight them differently.",
+      "Make the verbatim word-timestamped transcript the hard upstream dependency (CrisperWhisper for verbatim fillers; whisper-timestamped for per-word times+confidence). Note the license trap: CrisperWhisper is CC BY-NC 4.0 (non-commercial) and whisper-timestamped is AGPL-3.0 — if the product is commercial, use faster-whisper with a verbatim/disfluency prompt or WhisperX word alignment instead.",
+      "For the SUGGEST stage, do NOT hand back raw WordNet synonyms — rank candidates by Brysbaert concreteness + SUBTLEX frequency so the replacement is measurably stronger/more specific; reserve the LLM rewrite (Rubric-MQM-style post-editor) for phrase-level fixes where a single-word swap won't carry the meaning.",
+      "Use LLM-as-judge only as the top calibrated layer, not the flag layer: prompt per dimension (precision, confidence, filler density, conciseness) with the LLM-Rubric pattern, calibrate against a small human-labeled set, and harden the prompt with Evidently's optimizer. Always report judge-vs-human agreement so scores are trustworthy.",
+      "Implement the 'got tripped up' detector as the FUSION of lexical + acoustic signals, never lexical alone: a hedge/vague word is only a confident word-finding event when co-located with an above-baseline SILENT pause, a filled pause, low ASR word-confidence, or a self-repair span from a disfluency parser (pariajm joint detector). Normalize pause thresholds per speaker.",
+      "Validate end-to-end against a small human-annotated set of real stumbles to learn the fusion weights (w1..w6) and pause threshold k — the brief's existing feedback systems (unruli, SpeakEZ, AI-Transcript-Scoring-Tool) are good integration references but they score globally; the differentiator here is per-MOMENT, timestamp-anchored word-finding detection.",
+      "Mind licenses for a shippable product: proselint BSD-3, write-good/retext/alex/empath MIT, Evidently Apache-2.0, LLM-Rubric MIT are all clean; LanguageTool is LGPL-2.1 (linkable but self-host the server); GPL/AGPL/CC-BY-NC components (unruli GPL-3.0, whisper-timestamped AGPL-3.0, CrisperWhisper CC-BY-NC) need isolation or replacement; treat undeclared research repos (BERTUncertaintyDetection, Rubric-MQM, HedgePeer) as verify-before-use."
+    ]
+  },
+  {
+    "angle": "Open-source acoustic/prosody analysis libraries that power delivery-quality metrics (monotone, too-fast/too-slow, long-awkward-pauses, low-energy/flat) from the audio signal itself. These complement, rather than replace, the verbatim-ASR layer: ASR gives words, fillers, and word-level timestamps; the prosody layer turns the waveform into pitch (F0), energy/loudness, rate, and pause structure. The six requested libraries split into three tiers: (1) raw signal toolkits you compose yourself (Librosa, Parselmouth/Praat, pyAudioAnalysis) — maximum control, you write the metric formulas; (2) clinical/feature-set extractors that hand you named prosody features (DisVoice, openSMILE eGeMAPS) — research-validated descriptors; (3) turnkey but stale wrappers (my-voice-analysis, myprosody) — they output exactly the delivery metrics you want (rate of speech, articulation rate, pauses, balance ratio, F0 stats) with one call, but are unmaintained Praat-script wrappers with packaging/Python-3 breakage. CRITICAL preserved insight: standard ASR (Whisper/Google) deliberately strips fillers, so a verbatim engine (CrisperWhisper, whisper-timestamped) is mandatory to COUNT fillers — but the prosody layer here measures HOW words are delivered and does not need transcription at all, so the two layers are orthogonal and should run in parallel on the same audio.",
+    "repos": [
+      {
+        "name": "Parselmouth (praat-parselmouth)",
+        "url": "https://github.com/YannickJadoul/Parselmouth",
+        "whatItDoes": "Pythonic bindings to Praat's actual C/C++ internals (not a script wrapper). The gold standard for F0/pitch, intensity/loudness, formants, harmonicity (HNR), jitter/shimmer (via PointProcess), and voiced/unvoiced detection. Powers monotone detection (F0 std/range/CV over voiced frames), loudness dynamics (intensity contour std/range), and is the engine under my-voice-analysis, myprosody, and DisVoice's prosody module.",
+        "libraries": "pybind11, numpy; pip install praat-parselmouth (import parselmouth). Pairs with librosa for I/O.",
+        "license": "GPL-3.0-or-later (Praat itself is GPL) — copyleft, matters for distribution",
+        "relevance": "high",
+        "techniques": "snd=parselmouth.Sound(wav); pitch=snd.to_pitch(); f0=pitch.selected_array['frequency']; f0=f0[f0>0] (drop unvoiced); monotone=np.std(f0) or np.std(f0)/np.mean(f0) (CV); intensity=snd.to_intensity(); energy_dynamics=np.std(intensity.values). PointProcess + to_harmonicity() give jitter/shimmer/HNR for voice quality."
+      },
+      {
+        "name": "Librosa",
+        "url": "https://github.com/librosa/librosa",
+        "whatItDoes": "General-purpose audio analysis. For delivery quality it provides RMS energy (loudness dynamics), pitch via pyin (probabilistic YIN, returns f0 + voiced_flag + voiced_probs — directly usable for voiced/unvoiced ratio and monotone), onset/tempo, zero-crossing rate, and MFCC/spectral features. Also the de-facto loader (librosa.load resamples to a target SR). Best for energy/pause-via-silence and as the feature backbone in Whisper+Librosa feedback systems (e.g. unruli/Real-Time-Feedback-System).",
+        "libraries": "numpy, scipy, soundfile, numba; pip install librosa",
+        "license": "ISC (permissive)",
+        "relevance": "high",
+        "techniques": "f0,voiced_flag,voiced_prob=librosa.pyin(y,fmin=65,fmax=300,sr=sr); vu_ratio=voiced_flag.mean(); monotone=np.nanstd(f0[voiced_flag]). rms=librosa.feature.rms(y=y)[0]; energy_dynamics=rms.std()/rms.mean(). Pauses: intervals=librosa.effects.split(y,top_db=30); gaps between intervals = pauses; long_pause=gap>0.7s. WPM/articulation rate needs word timestamps from the ASR layer."
+      },
+      {
+        "name": "openSMILE (opensmile-python)",
+        "url": "https://github.com/audeering/opensmile-python",
+        "whatItDoes": "Industrial feature extractor. Hands you the standardized eGeMAPS/GeMAPS and ComParE_2016 sets as a single pandas DataFrame. eGeMAPSv02 = 88 functionals built from LLDs incl. F0 (mean/percentiles/std/range — monotone), loudness (mean/std/range/rise — energy dynamics), jitter, shimmer, HNR, spectral flux, plus voiced/unvoiced segment lengths and rate-related stats. The fastest way to get research-validated, paper-citable delivery features without writing formulas.",
+        "libraries": "audonnx-free C backend wrapped in python; pip install opensmile (numpy/pandas/audeer)",
+        "license": "CORRECTION to common assumption: NOT plain open-source for all uses. Dual-licensed — free for private/research/educational use only; commercial use requires a paid audEERING license. Flag this for any shipped/commercial product.",
+        "relevance": "high",
+        "techniques": "smile=opensmile.Smile(feature_set=opensmile.FeatureSet.eGeMAPSv02, feature_level=opensmile.FeatureLevel.Functionals); df=smile.process_file(wav). Read F0semitoneFrom27.5Hz_sma3nz_stddevNorm (monotone), loudness_sma3_stddevNorm (energy dynamics), MeanVoicedSegmentLengthSec / MeanUnvoicedSegmentLengthSec (pace+pause proxies), VoicedSegmentsPerSec (articulation proxy)."
+      },
+      {
+        "name": "DisVoice",
+        "url": "https://github.com/jcvasquezc/DisVoice",
+        "whatItDoes": "Clinical speech-feature toolkit (built for dysarthria/Parkinson research) with a dedicated Prosody module computing F0 statistics (mean/std/max/min/skewness/kurtosis on contour, slopes), energy/intensity contour statistics, and duration features: voiced-segment durations, unvoiced/pause durations, and their distributions — i.e. exactly the pace, pause-distribution, and monotone primitives. Other modules: phonation (jitter/shimmer/APQ/PPQ), articulation, glottal, phonological. Returns static (one vector/file) or dynamic (per-frame) features.",
+        "libraries": "praat-parselmouth, kaldi-io, scipy, scikit-learn, pysptk, torch; install from repo (pip install disvoice / git clone)",
+        "license": "MIT (permissive — safe for commercial, unlike openSMILE)",
+        "relevance": "high",
+        "techniques": "from disvoice.prosody import Prosody; p=Prosody(); feats=p.extract_features_file(wav, static=True, plots=False, fmt='dataframe'). Static vector exposes F0 avg/std (monotone), max/min F0, voiced-rate, and avg/std of voiced + unvoiced (pause) segment durations — pause distribution comes straight out. Permissive license makes it the best 'named features + shippable' option."
+      },
+      {
+        "name": "pyAudioAnalysis",
+        "url": "https://github.com/tyiannak/pyAudioAnalysis",
+        "whatItDoes": "Broad audio-ML toolkit. For delivery quality its most useful pieces are silence_removal (energy+SVM-based VAD that segments speech vs silence — gives you pause segments and their durations/distribution directly) and short-term feature extraction (energy, energy entropy, ZCR, spectral, MFCC, chroma — 34 features). Also classification, segmentation, and speaker diarization. Good for pause distribution and energy dynamics; weaker for precise F0 than Parselmouth.",
+        "libraries": "numpy, scipy, scikit-learn, hmmlearn, eyed3, pydub; pip install pyAudioAnalysis",
+        "license": "Apache-2.0 (permissive, patent grant)",
+        "relevance": "medium",
+        "techniques": "from pyAudioAnalysis.audioSegmentation import silence_removal; segs=silence_removal(x,Fs,0.05,0.05,smoothWindow=1.0,weight=0.3) -> list of [start,end] speech regions; complements (gaps) = pauses -> count long pauses, pause-rate, pause-duration histogram. ShortTermFeatures.feature_extraction gives per-frame energy for loudness-dynamics std/range."
+      },
+      {
+        "name": "my-voice-analysis",
+        "url": "https://github.com/Shahabks/my-voice-analysis",
+        "whatItDoes": "Turnkey Praat-script wrapper that, from a raw wav, outputs the delivery metrics almost verbatim: number of syllables, number of pauses, rate of speech (syll/sec over total), articulation rate (syll/sec over speaking time only), speaking duration (excl. pauses), total duration, balance ratio (speaking/total — a flow/pause-heaviness index), and F0 mean/std/median/min/max/q25/q75. Detects syllable nuclei acoustically, so NO transcript needed for pace/pause/monotone. Directly powers 'too fast' (rate of speech), 'monotone' (F0 std), 'long awkward pauses' (n_pauses + low balance ratio).",
+        "libraries": "Wraps Praat via the bundled myspsolution.praat script; needs numpy, scipy, pandas. Requires 44.1kHz/16-bit mono wav.",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "import myspsolution as mysp; mysp.myspsr(name,path) (rate of speech), mysp.myspatc (articulation rate), mysp.myspst (speaking time), mysp.mysppaus (pauses), mysp.myspbala (balance), mysp.myspf0sd (F0 std=monotone). CAVEAT: unmaintained (~2019), pip packaging broken, Python-3.7-era; many users vendor the .praat script and call it via Parselmouth instead. Treat as a reference recipe more than a dependency."
+      },
+      {
+        "name": "myprosody",
+        "url": "https://github.com/Shahabks/myprosody",
+        "whatItDoes": "Sister project to my-voice-analysis, extended for non-native/native comparison and CEFR/TOEFL-style scoring. Adds average syllable pause duration, count of long pauses, intonation index, F2/F1 ratio (formant-based vowel-space), Shannon entropy, gender/mood, and a proficiency estimate on top of the same rate/articulation/pause/F0 stack. Useful as a formula reference for 'long awkward pauses' (avg pause duration + long-pause count) and intonation/monotone scoring.",
+        "libraries": "Praat script + numpy, scipy, pandas, scikit-learn, hmmlearn (ships pre-trained model files).",
+        "license": "MIT",
+        "relevance": "medium",
+        "techniques": "import myprosody as mysp; mysp.mysptotal(...) returns the full feature table incl. avg syllable pause duration and n long pauses (direct 'awkward pause' signals) plus intonation index (monotone). SAME maintenance caveat as my-voice-analysis — broken packaging, dated; mine it for the metric definitions and reimplement on Parselmouth for production."
+      },
+      {
+        "name": "ProPer_Projekt",
+        "url": "https://github.com/finkelbert/ProPer_Projekt",
+        "whatItDoes": "BONUS / breadth: an R+Praat academic workflow built specifically around continuous periodic-energy and F0 measurement — pitch contours, prominence, speech-rate, syllabic structure, with rich visualizations and quantification. Strong reference for principled monotone/prominence quantification (it weights F0 by periodic energy so unreliable pitch in low-energy frames is down-weighted — a refinement over naive F0-std monotone metrics).",
+        "libraries": "R + RStudio + Praat (not a Python library)",
+        "license": "GPL-3.0 (typical for Praat-derived workflows; verify in repo)",
+        "relevance": "low",
+        "techniques": "Methodology to borrow: weight F0 variance by periodic-energy mass before computing monotone score, so silences/breathy frames don't pollute the pitch-range metric. Reimplementable in Parselmouth (intensity-weighted F0 std)."
+      }
+    ],
+    "techniques": [
+      "Monotone (pitch variance): extract F0 with Parselmouth to_pitch() or librosa.pyin, keep only voiced frames (f0>0), then monotone_score = std(f0) in semitones, or coefficient of variation std/mean, or F0 range (p95-p5). Convert Hz->semitones (12*log2(f0/ref)) before std so the metric is perception-aligned and speaker-pitch-independent. eGeMAPS field F0semitoneFrom27.5Hz_..._stddevNorm is the validated turnkey version.",
+      "Refined monotone: weight F0 by frame periodic energy / intensity before taking variance (ProPer approach) so low-energy/breathy frames with unreliable pitch don't distort the range. In Parselmouth: align to_intensity() to to_pitch() frames, compute intensity-weighted F0 std.",
+      "Pace / 'too fast': two distinct rates — Speech Rate = total syllables / total duration (includes pauses); Articulation Rate = syllables / speaking duration (excludes pauses). A fast articulation rate with low balance ratio = rushed. Syllable nuclei can be detected acoustically (de Jong & Wempe Praat script, used by my-voice-analysis) without a transcript; or use ASR word timestamps for WPM.",
+      "WPM from ASR layer: WPM = (word_count / speech_duration_sec) * 60. Ideal band ~111-150 WPM (the AI-Transcript-Scoring-Tool used 111-140; public-speaking norms ~130-150). Flag too_fast > ~160-170, too_slow < ~110. Needs word timestamps from the VERBATIM ASR layer (CrisperWhisper / whisper-timestamped), not the prosody layer.",
+      "Pause detection (two methods): (a) energy-VAD — librosa.effects.split(top_db=30) or pyAudioAnalysis silence_removal; gaps between speech segments are pauses. (b) ASR inter-word gaps — time between consecutive word end/start from whisper-timestamped. Method (b) distinguishes mid-sentence hesitation pauses from natural sentence-boundary pauses; method (a) needs no transcript.",
+      "Pause distribution / 'long awkward pauses': classify each pause: micro (<0.2s, ignore), normal (0.2-0.7s), long/awkward (>0.7-1.0s). Report long_pause_count, long_pause_rate (per minute), max_pause, and pause_duration histogram. Awkward-pause flag = long pauses occurring mid-clause (not at punctuation) — requires aligning pause timestamps to ASR token positions.",
+      "Loudness / energy dynamics: RMS energy contour (librosa.feature.rms) or Parselmouth to_intensity(). Flatness metric = std(intensity)/mean(intensity); very low = flat/under-projected delivery; report range (p95-p5 dB). eGeMAPS loudness_sma3_stddevNorm is the validated equivalent. Combine low energy-dynamics + low F0-variance => 'flat/monotone delivery' composite flag.",
+      "Articulation rate (signal-only): syllable_count (acoustic nuclei) / phonation_time (sum of voiced+short-pause speaking segments). my-voice-analysis myspatc and DisVoice voiced-segment stats both expose this without transcription.",
+      "Voiced/unvoiced ratio: from librosa.pyin voiced_flag.mean(), or DisVoice voiced/unvoiced segment durations, or Parselmouth pitch frames with f0>0. Low voiced ratio can indicate excessive breathiness, whispering, or heavy pausing; combine with energy to disambiguate.",
+      "Voice-quality add-ons (jitter/shimmer/HNR): Parselmouth PointProcess + to_harmonicity, or DisVoice phonation module, or eGeMAPS jitterLocal/shimmerLocaldB/HNRdBACF. High jitter/shimmer or low HNR => shaky/strained voice — a secondary 'nervousness' signal beyond fillers.",
+      "Composite delivery scoring: z-score each metric (F0 CV, articulation rate, long-pause rate, energy dynamics) against a calibrated reference distribution, then map to labels. 'Monotone' = low F0-CV AND low energy-dynamics; 'too fast' = high articulation rate AND high WPM AND low balance ratio; 'awkward pauses' = high mid-clause long-pause rate. Calibrate thresholds on a labeled sample, don't hardcode raw values across mics/rooms.",
+      "ORTHOGONALITY (preserved insight): the prosody layer (this angle) measures HOW it's delivered from the waveform and needs NO transcript; the verbatim-ASR layer measures fillers/words and DOES need a verbatim engine (Whisper/Google strip fillers by design). Run both in parallel on the same wav, then fuse on a shared time axis (align pauses/energy to ASR word/token timestamps) for the richest feedback (e.g. 'long pause before filler', 'rushed during low-energy section')."
+    ],
+    "metricsOrFormulas": [
+      "Monotone score (Hz): std(f0_voiced); pitch_range = percentile(f0,95) - percentile(f0,5)",
+      "Monotone score (perceptual): f0_st = 12*log2(f0/ref_Hz); monotone = std(f0_st); lower std => more monotone",
+      "Pitch coefficient of variation: F0_CV = std(f0_voiced)/mean(f0_voiced) (speaker-independent)",
+      "Speech Rate = syllable_count / total_duration_sec (syll/sec)",
+      "Articulation Rate = syllable_count / phonation_time_sec (syll/sec, pauses excluded)",
+      "WPM = word_count / speech_duration_sec * 60 ; ideal ~111-150, too_fast > ~160-170, too_slow < ~110",
+      "Balance ratio = speaking_duration / total_duration (low => pause-heavy / halting)",
+      "Pause classes: micro <0.2s | normal 0.2-0.7s | long/awkward >0.7s ; long_pause_rate = long_pauses / minutes",
+      "Energy dynamics (loudness flatness) = std(RMS)/mean(RMS) ; energy_range = p95(dB)-p5(dB)",
+      "Voiced/unvoiced ratio = voiced_frames / total_frames (from pyin voiced_flag or f0>0)",
+      "Mean voiced segment length & mean unvoiced (pause) segment length (eGeMAPS / DisVoice) — pace + pause proxies",
+      "Filler rate = fillers / total_words * 100 (from VERBATIM ASR layer; preserved from AI-Transcript-Scoring-Tool)",
+      "Voice quality: jitter (local), shimmer (local dB), HNR (dB) — shaky/strained-voice signal",
+      "Composite flat-delivery flag = (F0_CV low) AND (energy_dynamics low) ; rushed flag = (articulation_rate high) AND (balance_ratio low)"
+    ],
+    "recommendations": [
+      "Build the prosody layer on Parselmouth + Librosa as the production core: Parselmouth for F0/intensity/HNR/jitter-shimmer (accurate, Praat-grade), Librosa for I/O, RMS energy, pyin voiced-flag, and pause-via-silence. Both are well-maintained; you write the metric formulas and own the thresholds. This is the highest-leverage, license-clean foundation.",
+      "Use my-voice-analysis and myprosody as FORMULA REFERENCES, not runtime dependencies. They output exactly your target metrics (rate of speech, articulation rate, pauses, balance ratio, F0 stats) but are unmaintained (~2019), Python-3.7-era, with broken pip packaging. Best practice (and what the community does): vendor the bundled de Jong & Wempe syllable-nuclei .praat script and call it through Parselmouth in your own code.",
+      "For research-validated named features fast, add DisVoice (prosody module) — MIT-licensed, so safe to ship — before reaching for openSMILE. DisVoice gives F0, energy, and voiced/unvoiced + pause segment-duration stats in one call.",
+      "WATCH THE LICENSE on openSMILE: it is dual-licensed, free ONLY for private/research/educational use; any commercial product needs a paid audEERING license. eGeMAPS is excellent and citable, but for a shipped product prefer DisVoice (MIT), pyAudioAnalysis (Apache-2.0), or roll-your-own on Parselmouth. Also note Parselmouth itself is GPL-3.0 (copyleft) — fine for internal/SaaS use, a consideration for distributed binaries.",
+      "Keep the two layers strictly separate and run in parallel: (1) VERBATIM ASR layer for fillers/words/timestamps — CrisperWhisper (CC BY-NC 4.0, non-commercial) or whisper-timestamped (more permissive) — because standard ASR strips fillers; (2) this acoustic prosody layer for monotone/pace/pauses/energy, which needs no transcript. Fuse them on a shared time axis afterward.",
+      "Fuse for the highest-value feedback: align pause and energy events to ASR word/token timestamps so you can say 'long pause + filler mid-sentence' or 'rushed during the low-energy closing' — far more actionable than per-metric scores. This pairing of energy-VAD pauses with ASR inter-word gaps is the single biggest accuracy win for 'awkward pause' detection.",
+      "Calibrate thresholds, don't hardcode. WPM bands, long-pause cutoffs, and especially energy dynamics drift with microphone, room, and speaker baseline. Z-score each metric against a small labeled reference set and map z-scores to labels (monotone/too-fast/awkward-pauses) rather than shipping raw constants.",
+      "For monotone specifically, upgrade the naive std(F0) metric two ways: (a) compute it in semitones (perceptual + speaker-pitch-independent), and (b) energy-weight the F0 variance (ProPer methodology) so breathy/low-energy frames with garbage pitch don't pollute the range. Both are a few lines on top of Parselmouth.",
+      "Pin a reproducible environment for the older wrappers if you must run them: numba/numpy version conflicts plague librosa+pyAudioAnalysis+my-voice-analysis together. Isolate the Praat-script tools in their own venv or, better, eliminate them by reimplementing on Parselmouth.",
+      "Validate the pace primitive both ways: acoustic syllable-nuclei rate (no transcript) vs ASR WPM. Large disagreement flags either ASR errors or unusual speech (heavy accent, lots of non-lexical sound). Reporting both gives a robustness check and lets the system degrade gracefully when one layer is weak."
+    ]
+  },
+  {
+    "angle": "Maximal taxonomy of speech-grading dimensions BEYOND fillers + word choice, triangulated from (a) commercial coach feature lists (Yoodli, Poised, Speeko, Vocal Image, Orai, Toastmasters Pathways) and (b) verifiable open-source repos/libraries, with the open-source computation recipe and a value-vs-effort call for each. Organized into four families: ACOUSTIC/PROSODIC (audio-only), LINGUISTIC/CONTENT (transcript-only), PARALINGUISTIC/AFFECT (audio or audio+text), and VISUAL/MULTIMODAL (video). Confirms the brief's key insight: standard ASR strips fillers, so a verbatim engine is mandatory to count them AND to get the accurate word-timestamps every pacing/pause/rate metric below depends on. Note one correction to a brief reference: openSMILE/eGeMAPS is NOT freely usable in a commercial product (dual license) — use Parselmouth/librosa/Silero for a permissively-licensed stack.",
+    "repos": [
+      {
+        "name": "Parselmouth (praat-parselmouth)",
+        "url": "https://github.com/YannickJadoul/Parselmouth",
+        "whatItDoes": "Python bindings to Praat. The workhorse for prosody: pitch (F0 mean/range/SD = intonation/monotone), intensity (loudness/energy), jitter & shimmer & HNR (voice quality/vocal strain/breathiness), formants. Backbone of most open-source vocal-variety scoring.",
+        "libraries": "Python C++ binding over Praat; pip install praat-parselmouth; pairs with numpy",
+        "license": "GPL-3.0",
+        "relevance": "high",
+        "techniques": "Intonation/pitch-variation, loudness/energy dynamics, vocal variety, voice quality (jitter/shimmer/HNR), monotone detection"
+      },
+      {
+        "name": "drfeinberg/PraatScripts",
+        "url": "https://github.com/drfeinberg/PraatScripts",
+        "whatItDoes": "Ready-made Jupyter notebooks (Measure Pitch/HNR/Jitter/Shimmer; syllable-nuclei script) that wrap Parselmouth into copy-paste functions for pitch, HNR, jitter, shimmer, and automatic syllable/speech-rate detection. Fastest path to a vocal-variety + speech-rate baseline.",
+        "libraries": "Parselmouth, numpy, pandas",
+        "license": "check repo (Praat-derived scripts, generally permissive/academic)",
+        "relevance": "high",
+        "techniques": "Speech rate via syllable nuclei, pitch SD (intonation), jitter/shimmer (vocal strain)"
+      },
+      {
+        "name": "Shahabks/my-voice-analysis",
+        "url": "https://github.com/Shahabks/my-voice-analysis",
+        "whatItDoes": "Transcription-free Python lib over Praat that directly outputs speech rate (myspsr, syllables/sec over total duration), articulation rate (myspatc, syllables/sec over phonation time only), number of pauses (myspaus), a speaking 'balance' (phonation-to-total ratio), and F0 statistics. Near drop-in for pacing + pause + rate dimensions.",
+        "libraries": "Parselmouth/Praat under the hood; pip install my-voice-analysis",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Speech rate vs articulation rate split, pause count, speaking/pause balance, F0 stats. Sibling repos: Shahabks/myprosody (native-vs-learner prosody) and Shahabks/Speechat (MIT)"
+      },
+      {
+        "name": "snakers4/silero-vad",
+        "url": "https://github.com/snakers4/silero-vad",
+        "whatItDoes": "Tiny, fast, CPU-only neural Voice Activity Detector. Cleanest open-source way to segment speech-vs-silence to compute pause QUALITY (count, duration, distribution), strategic vs hesitation pauses (>=250ms intentional vs sub-250ms fillers-of-silence), pace consistency, and the phonation/silence ratio.",
+        "libraries": "PyTorch (or ONNX), runs on Raspberry-Pi-class hardware",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Pause count/length/placement, pause quality, pacing consistency, speaking-time ratio, real-time-friendly"
+      },
+      {
+        "name": "pyannote/pyannote-audio",
+        "url": "https://github.com/pyannote/pyannote-audio",
+        "whatItDoes": "Neural diarization toolkit: VAD, speaker change, overlapped-speech detection, speaker embeddings. For graded conversations/interviews it gives talk-time share, turn-taking, interruptions/overlap, and per-speaker pause stats — the substrate for question-handling and conversational-balance scoring.",
+        "libraries": "PyTorch; pretrained models gated via HuggingFace; GPU recommended",
+        "license": "MIT (models under separate HF user conditions)",
+        "relevance": "medium",
+        "techniques": "Diarization, talk-time balance, interruption/overlap detection, turn-taking, per-speaker pause analysis"
+      },
+      {
+        "name": "audeering/opensmile-python",
+        "url": "https://github.com/audeering/opensmile-python",
+        "whatItDoes": "Wrapper for openSMILE exposing the eGeMAPS (88 features) and ComParE sets in one call: loudness, F0 semitone, jitter, shimmer, HNR, spectral flux, MFCCs, energy. The standard acoustic backbone academia uses for emotion/charisma/engagement/stress models. CORRECTION to brief's framing: not free for commercial products.",
+        "libraries": "Python wrapper over C++ openSMILE; pip install opensmile",
+        "license": "Source-available dual license — free for research/private/education; commercial PRODUCT use requires a paid license (NOT OSI-open). Prefer Parselmouth/librosa for a shippable permissive stack.",
+        "relevance": "medium",
+        "techniques": "eGeMAPS feature vector for energy/charisma/emotion/engagement/stress classifiers; spectral flux (vocal-dynamics flatness = low engagement)"
+      },
+      {
+        "name": "ddlBoJack/emotion2vec",
+        "url": "https://github.com/ddlBoJack/emotion2vec",
+        "whatItDoes": "Self-supervised speech emotion representation + emotion2vec+ foundation models (seed/base/large) doing 9-class speech emotion recognition from raw audio. State-of-the-art, drop-in for tone/emotion/affect scoring without hand-built features.",
+        "libraries": "PyTorch, fairseq/funasr; weights on HuggingFace & ModelScope",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Speech emotion recognition (tone/affect), 9-class emotion, embeddings for downstream confidence/energy heads"
+      },
+      {
+        "name": "b04901014/FT-w2v2-ser",
+        "url": "https://github.com/b04901014/FT-w2v2-ser",
+        "whatItDoes": "Official Wav2vec2 fine-tuning recipe for speech emotion recognition (the canonical IEMOCAP SER baseline). Use when you want to train/fine-tune your own tone/emotion/confidence head on labeled presentation audio.",
+        "libraries": "PyTorch, transformers, fairseq",
+        "license": "check repo (research code)",
+        "relevance": "medium",
+        "techniques": "Wav2vec2 fine-tuning for emotion/affect; transferable to confidence/energy regression"
+      },
+      {
+        "name": "YuanGongND/gopt",
+        "url": "https://github.com/YuanGongND/gopt",
+        "whatItDoes": "ICASSP-2022 Goodness-of-Pronunciation Transformer: multi-aspect (accuracy, fluency, prosody, completeness), multi-granularity (phoneme/word/utterance) non-native pronunciation assessment. The strongest open pronunciation-scoring model; trains on speechocean762.",
+        "libraries": "PyTorch; built on GOP features (Kaldi) + transformer",
+        "license": "BSD-3-Clause",
+        "relevance": "high",
+        "techniques": "Pronunciation scoring, phoneme/word/sentence accuracy, fluency & prosody sub-scores, mispronunciation detection"
+      },
+      {
+        "name": "speechocean762 corpus + Kaldi gop recipe",
+        "url": "https://github.com/jimbozhang/speechocean762",
+        "whatItDoes": "Open non-native English corpus with expert pronunciation labels at sentence/word/phoneme level, plus the Kaldi 'gop_speechocean762' recipe to compute Goodness-of-Pronunciation. The data+baseline for any pronunciation/enunciation dimension.",
+        "libraries": "Kaldi (HMM-DNN) or wav2vec2-XLSR for alignment-free GOP",
+        "license": "CC BY 4.0 (corpus)",
+        "relevance": "high",
+        "techniques": "GOP scoring, clarity/enunciation proxy, per-phoneme accuracy, accentedness"
+      },
+      {
+        "name": "get-alex/alex",
+        "url": "https://github.com/get-alex/alex",
+        "whatItDoes": "Inclusive-language linter: flags insensitive/ableist/gendered/profane wording on the transcript and suggests neutral alternatives (built on retext-equality + retext-profanities). Direct match for Yoodli's 'inclusive language' metric.",
+        "libraries": "Node.js; retext ecosystem; CLI or programmatic",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Inclusive-language detection, profanity, sensitivity flags on the transcript"
+      },
+      {
+        "name": "PrincetonUniversity/blocklint",
+        "url": "https://github.com/PrincetonUniversity/blocklint",
+        "whatItDoes": "Lightweight CLI for non-inclusive wording (Python). Simpler than alex; good complement for fast inclusive-language passes if you want a Python-only stack.",
+        "libraries": "Python, pip install blocklint",
+        "license": "BSD-3-Clause",
+        "relevance": "medium",
+        "techniques": "Inclusive-language flagging, keyword-based, Python-native"
+      },
+      {
+        "name": "textstat/textstat",
+        "url": "https://github.com/textstat/textstat",
+        "whatItDoes": "Readability + complexity stats from the transcript: Flesch Reading Ease, Flesch-Kincaid grade, Gunning Fog, SMOG, syllable/sentence counts, difficult-word ratio. Powers sentence-complexity / accessibility-of-language / jargon-density scoring.",
+        "libraries": "Python, pip install textstat",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Sentence complexity, grade level, jargon/difficult-word density, readability of spoken content"
+      },
+      {
+        "name": "jennafl/lexical-diversity (LexicalRichness) ",
+        "url": "https://github.com/LSYS/LexicalRichness",
+        "whatItDoes": "Lexical-diversity metrics: TTR, root TTR, MTLD, HD-D, MAAS, vocd. Measures vocabulary richness and (inversely) word repetition/redundancy beyond simple filler counting.",
+        "libraries": "Python, pip install lexicalrichness",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Vocabulary richness (MTLD/HD-D/TTR), repetition/redundancy proxy, crutch-word reliance"
+      },
+      {
+        "name": "TadasBaltrusaitis/OpenFace",
+        "url": "https://github.com/TadasBaltrusaitis/OpenFace",
+        "whatItDoes": "Real-time webcam facial-behavior toolkit: facial landmarks, head pose, 17 facial Action Units, and eye-gaze estimation. The reference open-source basis for eye-contact, facial-expression, and head-stability (nervous movement) scoring on video.",
+        "libraries": "C++ (Python wrappers exist); OpenCV/dlib",
+        "license": "Academic/research only (free for non-commercial; commercial requires CMU/license — NOT a permissive OSS license)",
+        "relevance": "high",
+        "techniques": "Eye-contact (gaze toward camera), facial expression/AU intensity (smiling/animation), head pose stability, blink rate"
+      },
+      {
+        "name": "Ahmednull/L2CS-Net",
+        "url": "https://github.com/Ahmednull/L2CS-Net",
+        "whatItDoes": "Modern deep-learning gaze estimation (yaw/pitch) in unconstrained webcam video. Cleaner, more permissive alternative to OpenFace specifically for eye-contact / gaze-direction-toward-camera scoring.",
+        "libraries": "PyTorch; pip install l2cs-net",
+        "license": "MIT",
+        "relevance": "high",
+        "techniques": "Gaze direction, eye-contact-with-camera estimation, looking-away detection"
+      },
+      {
+        "name": "google-ai-edge/mediapipe",
+        "url": "https://github.com/google-ai-edge/mediapipe",
+        "whatItDoes": "Cross-platform real-time face mesh, hand, and pose tracking. Permissive, runs in-browser/mobile — practical engine for gesture frequency/amplitude (hand landmarks), posture/openness (pose), and head-movement scoring without OpenFace's licensing constraints.",
+        "libraries": "C++/Python/JS/Android/iOS; pip install mediapipe",
+        "license": "Apache-2.0",
+        "relevance": "high",
+        "techniques": "Hand-gesture detection/frequency, body posture/openness, head movement, fidget/sway detection"
+      },
+      {
+        "name": "unruli/Real-Time-Feedback-System-for-Student-Presentations",
+        "url": "https://github.com/unruli/Real-Time-Feedback-System-for-Student-Presentations",
+        "whatItDoes": "(In brief, expanded here) End-to-end reference architecture wiring Whisper + Librosa (prosody/energy) + Llama-3 (content/structure feedback) + Streamlit UI. Good blueprint for combining the dimensions below into one graded report.",
+        "libraries": "Whisper, librosa, Llama-3, Streamlit",
+        "license": "GPL-3.0",
+        "relevance": "medium",
+        "techniques": "Reference integration of ASR + prosody + LLM content critique + UI; energy via librosa RMS"
+      },
+      {
+        "name": "QC20/Multimodal-Persuasion-Recognition (POM dataset)",
+        "url": "https://github.com/QC20/Multimodal-Persuasion-Recognition",
+        "whatItDoes": "ML on the Persuasive Opinion Multimedia (POM) dataset predicting speaker persuasiveness/confidence/credibility from text+audio (bi-modal ~71.7% acc). Reference for charisma/persuasiveness/confidence scoring and the labeled data behind it.",
+        "libraries": "scikit-learn/PyTorch; POM dataset features",
+        "license": "check repo (research)",
+        "relevance": "medium",
+        "techniques": "Persuasiveness/credibility/confidence prediction (POM also annotates dominance, vividness, expertise — a rich charisma label set)"
+      },
+      {
+        "name": "isunitha98selvan/Multimodal-Behavioral-Analytics",
+        "url": "https://github.com/isunitha98selvan/Multimodal-Behavioral-Analytics",
+        "whatItDoes": "Interview-feedback prototype fusing facial expression + prosody + speech content to comment on behavioral cues and body language (uses the MIT Interview dataset). Concrete example of question-handling / interview-performance scoring.",
+        "libraries": "OpenCV, prosody features, NLP",
+        "license": "check repo",
+        "relevance": "medium",
+        "techniques": "Interview/question-handling feedback, multimodal behavioral cues, body-language commentary"
+      }
+    ],
+    "techniques": [
+      "VERBATIM ASR IS A PREREQUISITE, NOT A DIMENSION: every pacing/pause/rate/repetition metric needs accurate WORD-LEVEL timestamps, and filler counting needs un-normalized output. Use CrisperWhisper / whisper-timestamped / WhisperX (forced alignment) as the front-end; standard Whisper/Google strip fillers AND smooth timing.",
+      "ACOUSTIC/PROSODIC FAMILY (audio-only, Parselmouth/librosa/Silero): (1) Pace/WPM and its consistency over time; (2) Articulation rate vs speech rate split (phonation-only speed reveals rushing inside fluent stretches); (3) Pause quality — count, duration, placement, strategic(>=250-300ms) vs hesitation pauses, phonation/silence ratio; (4) Intonation / pitch variation (F0 mean/range/SD) -> monotone detection; (5) Loudness/energy dynamics (RMS, SD of RMS) -> flat-energy = low engagement; (6) Volume consistency / trailing-off; (7) Voice quality: jitter, shimmer, HNR -> vocal strain, breathiness, shakiness/nervousness; (8) Vocal variety composite (Toastmasters tone+speed+volume) = pitch SD + rate variance + loudness SD.",
+      "LINGUISTIC/CONTENT FAMILY (transcript-only, NLP): (9) Sentence complexity / readability (textstat: Flesch, FK grade, Gunning Fog, SMOG); (10) Lexical diversity / vocabulary richness (MTLD, HD-D, TTR via LexicalRichness); (11) Repetition & redundancy (n-gram repeat rate, crutch-word reliance, consecutive-word echo) — distinct from fillers; (12) Jargon / difficult-word density (textstat difficult_words + domain wordlists); (13) Inclusive / sensitive language (alex, blocklint); (14) Sentiment/tone of content (VADER/transformer sentiment over the transcript); (15) Structure / discourse (intro-body-close detection via cue phrases 'first/however/in conclusion'; signposting density; opener & closer strength) — best done with an LLM rubric pass; (16) Hedging / qualifier density ('I think', 'kind of', 'maybe') -> confidence proxy from text; (17) Question handling (in Q&A/interview: directness, latency-to-answer via timestamps, on-topic relevance via embedding similarity to the question).",
+      "PARALINGUISTIC / AFFECT FAMILY (audio or audio+text): (18) Emotion recognition (emotion2vec / wav2vec2-SER, 4-9 classes); (19) Tone/sentiment fusion (acoustic affect + text sentiment); (20) Confidence estimation (low jitter/shimmer + steady energy + few hedges + few hesitation pauses -> composite confidence score); (21) Energy / charisma / engagement (loudness dynamics + pitch variability + rate variability + spectral flux; POM-style persuasiveness models); (22) Stress/nervousness (shimmer + F0 instability + faster-than-baseline rate + filler-of-silence spikes); (23) Enthusiasm/warmth (smiling-AU + rising intonation + positive sentiment).",
+      "VISUAL / MULTIMODAL FAMILY (video, opt-in tier): (24) Eye contact / gaze toward camera (L2CS-Net preferred for license; OpenFace); (25) Facial expressiveness / smiling / animation (OpenFace AUs, MediaPipe face mesh); (26) Hand-gesture frequency & amplitude (MediaPipe Hands); (27) Posture / openness / leaning (MediaPipe Pose); (28) Head & body stability — sway/fidget/nervous-movement detection; (29) Slide/visual-aid quality (separate CV/heuristic pass).",
+      "PROGRESS / META DIMENSIONS (cut across all above): (30) Progress-over-time trend lines per metric (Poised/Yoodli core selling point) — store every session's scores, show deltas, rolling baselines, and personal targets; (31) Per-speaker normalization / personal baseline (compare to the user's own history, not just population norms) to avoid penalizing naturally deep/quiet voices; (32) Composite 'overall score' (Poised Score / Speeko 6-metric radar) = weighted blend, surfaced as a radar/spider chart.",
+      "LICENSING TRAPS to flag for a shippable product: openSMILE/eGeMAPS = dual license, NOT free for commercial products; OpenFace = academic/non-commercial only; CrisperWhisper = CC BY-NC 4.0 (non-commercial); many feedback-system repos are GPL-3.0 (copyleft). Permissive (MIT/BSD/Apache) safe stack for commercial: Parselmouth is GPL so swap to librosa(ISC)+Silero-VAD(MIT)+whisper-timestamped/WhisperX(BSD/MIT)+emotion2vec(MIT)+L2CS-Net(MIT)+MediaPipe(Apache)+textstat(MIT)+LexicalRichness(MIT)+alex(MIT)."
+    ],
+    "metricsOrFormulas": [
+      "WPM = (total words / total speaking minutes); commonly cited ideal conversational/presentation band ~ 110-150 wpm (brief's SharathKumar tool uses 111-140). Compute over rolling windows to get pace CONSISTENCY = SD of windowed WPM (lower = steadier).",
+      "Articulation rate = syllables / phonation-time-only (excludes pauses); Speech rate = syllables / total time. Articulation >> speech rate means many/long pauses. Both via my-voice-analysis (myspatc/myspsr) or syllable-nuclei script.",
+      "Pause analysis from VAD: silence_ratio = total_silence / total_duration; classify gaps: <250ms = micro/hesitation, 250ms-1s = rhetorical/strategic, >1.5-2s = dead air. Score = reward strategic pauses, penalize dead air and high hesitation-gap count.",
+      "Filler rate = (filler_count / total_words) * 100 (brief's rubric). Requires verbatim ASR. Extend filler list with timestamps to map filler density over the timeline.",
+      "Intonation/monotone: F0 in semitones; pitch_variation = SD(F0_semitones) or pitch range (P95-P5). Low SD over a long window = monotone flag. eGeMAPS uses F0 semitone mean/SD.",
+      "Energy dynamics: frame RMS (librosa.feature.rms) or eGeMAPS loudness; flat_energy_flag when SD(RMS) below a personal/population threshold (research: flatter vocal dynamics correlate with poorer perceived engagement).",
+      "Voice quality: local jitter (cycle-to-cycle F0 perturbation), local shimmer (amplitude perturbation), HNR (Parselmouth). Elevated jitter/shimmer + lower HNR -> strained/shaky/nervous voice.",
+      "Lexical diversity: TTR = unique_words/total_words (length-biased); prefer MTLD (segments text until TTR drops to 0.72, averages factor lengths) or HD-D (hypergeometric) — both length-robust. Higher = richer, less repetitive.",
+      "Readability: Flesch Reading Ease = 206.835 - 1.015*(words/sentences) - 84.6*(syllables/words); Flesch-Kincaid Grade = 0.39*(words/sentences) + 11.8*(syllables/words) - 15.59. Lower FK grade = more accessible spoken content.",
+      "Repetition/redundancy: repeated n-gram rate = count of bigrams/trigrams occurring > k times / total; immediate-repeat rate = adjacent duplicate tokens / total. Complements filler counting for 'crutch phrase' detection.",
+      "Hedging/confidence-from-text: hedge_density = hedge_phrase_hits / total_words against a lexicon ('I think','kind of','sort of','maybe','just','probably','I guess'). Lower hedging + steady prosody -> higher confidence sub-score.",
+      "Composite confidence (audio+text): z-score and weight-blend = w1*(-jitter) + w2*(-shimmer) + w3*(energy_SD_norm) + w4*(-hesitation_pause_rate) + w5*(-hedge_density) + w6*(-filler_rate). Calibrate weights to human ratings (e.g., POM-style labels).",
+      "Eye-contact %: frames with gaze_yaw,pitch within +/- threshold of camera direction / total frames (L2CS-Net or OpenFace gaze). Report % on-camera + longest look-away streak.",
+      "Gesture rate: detected distinct hand-gesture events / minute (MediaPipe Hands landmark motion peaks); pair with amplitude (bounding-box displacement) for 'expressive vs static'.",
+      "Overall/composite score (Speeko/Poised pattern): normalize each dimension to 0-100 vs personal+population baseline, then weighted average -> single score + radar chart; track session-over-session deltas for the progress dimension."
+    ],
+    "recommendations": [
+      "Make a verbatim, word-timestamped ASR front-end the non-negotiable foundation: it is a prerequisite for fillers AND for pacing/pause/rate/repetition/question-latency. For a commercial product, pick a permissive engine (WhisperX or whisper-timestamped, BSD/MIT) and reserve CrisperWhisper (CC BY-NC) for research/eval benchmarking only.",
+      "Ship in value-vs-effort tiers. TIER 1 (highest value, lowest effort, audio+transcript only): pace/WPM + consistency, pause quality, filler rate, intonation/monotone (F0 SD), energy dynamics, readability/sentence-complexity, lexical diversity, repetition, hedging, inclusive language. All from Parselmouth/librosa + Silero-VAD + textstat + LexicalRichness + alex — a few hundred lines, no training, no GPU.",
+      "TIER 2 (high value, medium effort, pretrained models): speech emotion/tone (emotion2vec, MIT), pronunciation/enunciation scoring (GOPT + speechocean762), composite confidence and energy/charisma blends. Pretrained weights exist; mostly inference + calibration to human ratings.",
+      "TIER 3 (high perceived value, high effort + privacy/UX cost, video): eye contact (L2CS-Net), facial expressiveness (MediaPipe/OpenFace), gesture/posture (MediaPipe). Gate behind explicit opt-in and on-device processing; prefer MediaPipe(Apache)+L2CS-Net(MIT) over OpenFace to avoid the academic-only license.",
+      "Treat structure (intro/body/close, signposting, opener/closer strength) and question-handling as an LLM-rubric pass over the transcript rather than classical NLP — far less brittle than discourse-marker heuristics and lets you emit human-readable coaching, mirroring unruli's Whisper+Llama-3 blueprint.",
+      "Build progress-over-time and personal-baseline normalization in from day one — it is the retention engine for Poised and Yoodli, is nearly free once you persist per-session scores, and prevents unfair penalties for naturally deep/quiet/accented voices (normalize to the user's own history + offer population bands as context).",
+      "Correct the working assumption on openSMILE/eGeMAPS: it is source-available with a dual license and is NOT free for use inside a commercial product, and OpenFace is non-commercial too. Default to the permissive stack (librosa, Silero-VAD, emotion2vec, L2CS-Net, MediaPipe, textstat, LexicalRichness, alex) and only pull GPL/NC tools into research/eval paths.",
+      "Avoid double-counting and false precision: fillers, hesitation pauses, hedging, and repetition all proxy 'low confidence/fluency' — blend them into one fluency/confidence index rather than penalizing four times, and always show the timestamped evidence (the highlighted moment) next to every score so feedback is actionable, not just a number."
+    ]
+  }
+]

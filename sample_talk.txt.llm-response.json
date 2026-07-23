@@ -1,0 +1,6 @@
+﻿{ "findings": [
+  {"word_index": 8,  "issue_type": "weak",       "original": "really",  "suggestion": null,    "rationale": "really is an empty intensifier; cut it and let the number carry the weight.", "confidence": 0.7},
+  {"word_index": 9,  "issue_type": "weak",       "original": "good.",   "suggestion": "strong","rationale": "good is vague; name the magnitude or impact.", "confidence": 0.6},
+  {"word_index": 20, "issue_type": "weak",       "original": "utilize", "suggestion": "use",   "rationale": "utilize is corporate filler; use is cleaner.", "confidence": 0.85},
+  {"word_index": 30, "issue_type": "tripped_up", "original": "maybe",   "suggestion": "will",  "rationale": "the could/maybe hedge-stack signals reaching for certainty; commit to it.", "confidence": 0.62}
+] }

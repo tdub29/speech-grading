@@ -1,0 +1,745 @@
+{
+  "productName": "orator",
+  "overview": "orator is a maximal, open-source, commercially-licensable speech-grading system in Python that runs on Windows/CPU. It grades a spoken sample on delivery (pace, pauses, fillers, monotone, energy) and content (vocabulary richness, readability, weak/hedging words, repetitions/false-starts), and — its signature feature — flags \"got-tripped-up\" moments where a speaker hesitated and reached for a worse word, suggesting a stronger one. The architecture is decoupled in two ways that satisfy the build constraints: (1) ASR is a pluggable backend behind an interface, and ALL analysis/scoring operates on a canonical in-memory `Transcript` schema (words with start/end/confidence), so the analysis modules are unit-testable from a JSON fixture with no model download or network; (2) the word-choice \"better word + tripped-up\" pass uses the Anthropic Claude API (model `claude-opus-4-8`) but has a deterministic offline lexicon-based fallback implementing the identical interface and emitting the identical schema, so the whole pipeline runs offline. The default ASR is faster-whisper (MIT) with a verbatim/disfluency-priming prompt + word_timestamps; CrisperWhisper (CC-BY-NC) is an opt-in high-accuracy backend gated behind a non-commercial flag. Optional acoustic prosody (Parselmouth/librosa) adds monotone/energy/pause metrics that need no transcript. Output is a 0-100 weighted score with per-dimension breakdown plus an HTML+JSON report that highlights fillers and trip-up moments inline in the transcript. The key preserved research insight: standard Whisper/Google STT delete fillers by design, so a verbatim-tuned decode (or a transcript-free acoustic detector) is mandatory before any filler counting — orator handles this at the ASR-backend layer, keeping the analysis layer engine-agnostic.",
+  "asrRecommendation": "DEFAULT (commercial, offline-capable): faster-whisper (MIT) as the recognizer, configured for verbatim/filler retention — word_timestamps=True (gives word.start/.end/.probability), condition_on_previous_text=False (stops cross-window \"cleanup\"), and a filler-laden initial_prompt (\"Umm, uh, like, you know, I mean...\") to prime verbatim style and prevent suppression of um/uh. This is the safe-license, CPU-capable, GPU-optional core and exposes per-word confidence natively (correcting the common belief it doesn't). OPT-IN HIGH-ACCURACY: CrisperWhisper (nyrahealth) as a pluggable backend — it is purpose-built to emit explicit [UM]/[UH] tokens with disfluency-robust timestamps and beats Whisper large-v3 on WER (6.66% vs 7.7%). HARD LICENSE FLAG: CrisperWhisper weights are CC BY-NC 4.0 (non-commercial) — gate it behind an explicit `--allow-noncommercial` flag and a config warning; never use it as the shipped default in a paid product. SECONDARY/REAL-TIME (optional): Vosk (Apache-2.0) for streaming/embedded CPU-only word+conf+timestamps, and whisper-timestamped (AGPL-3.0 — flag for SaaS) only as an eval/benchmark backend for its detect_disfluencies=True [*] gap markers. VERBATIM-FILLERS STRATEGY (two complementary tracks, fused on a shared time axis): TRACK A (lexical, default): a verbatim transcript source (faster-whisper verbatim prompt, or CrisperWhisper) -> normalize confidence -> lexicon+rule match for fillers/hedges/repetitions, with pause-gating (a lexicon hit preceded by an above-threshold inter-word gap = high-confidence filler). TRACK B (acoustic, optional, transcript-free): OpenOPAF-style filled-pause detection via Parselmouth (prolonged syllables with minimal spectral contrast) and inter-word silent-gap detection — robust even when ASR strips a filler. Reconcile A and B by timestamp for a robust count. NEVER count fillers off vanilla Whisper/Google output; gate the pipeline on a verbatim engine and add a regression test that transcribes a known clip and asserts the fillers reappear.",
+  "features": [
+    {
+      "name": "Filler-word detection (um/uh/like/you know)",
+      "dimension": "delivery-disfluency",
+      "measures": "Count, rate, and timeline of filled pauses and discourse-marker fillers",
+      "howToCompute": "Lexicon+rule match over verbatim word-timestamped transcript; context-sensitive rules for like/so/well/right (POS/position/collocation); pause-gate each hit (gap before word > speaker_median+~0.3s = high-confidence). filler_rate = fillers/total_words*100; also fillers_per_minute",
+      "needs": "pure-text-timestamp",
+      "priority": "must"
+    },
+    {
+      "name": "Acoustic filled-pause detection (transcript-free)",
+      "dimension": "delivery-disfluency",
+      "measures": "Filled pauses detected from the waveform when ASR stripped them",
+      "howToCompute": "Parselmouth/PRAAT: flag prolonged syllables with minimal spectral contrast over rolling 5s windows; reconcile with Track A by timestamp",
+      "needs": "acoustic-model",
+      "priority": "should"
+    },
+    {
+      "name": "Silent-hesitation / pause detection",
+      "dimension": "delivery-fluency",
+      "measures": "Count, duration, placement of silent pauses; long/awkward (mid-clause) pauses",
+      "howToCompute": "Inter-word gap = word[i+1].start - word[i].end; classify micro(<0.2s)/normal(0.2-0.7s)/long(>0.7s); flag long pauses mid-clause (not at punctuation/sentence boundary). Per-speaker-normalized threshold",
+      "needs": "pure-text-timestamp",
+      "priority": "must"
+    },
+    {
+      "name": "Pace / WPM and consistency",
+      "dimension": "delivery-fluency",
+      "measures": "Words per minute overall and over rolling windows; pace stability",
+      "howToCompute": "WPM = total_words/(speaking_seconds/60). Rolling-window WPM time series; consistency = stdev of windowed WPM. Configurable ideal band default 130-160 (presets per type)",
+      "needs": "pure-text-timestamp",
+      "priority": "must"
+    },
+    {
+      "name": "Repetitions & false-starts (text)",
+      "dimension": "delivery-disfluency",
+      "measures": "Immediate word/phrase repeats, partial words, self-corrections",
+      "howToCompute": "Repeated-token heuristic (token[i].lower()==token[i-1]; n-gram repeats); partial-word heuristic (token ends in hyphen or is non-dict prefix of next); revision/edit-term heuristic (no/sorry/I mean as interregnum)",
+      "needs": "pure-text-timestamp",
+      "priority": "should"
+    },
+    {
+      "name": "Vocabulary richness (length-robust)",
+      "dimension": "content-lexical",
+      "measures": "Lexical diversity / crutch-word reliance",
+      "howToCompute": "Primary MATTR (window=50) and MTLD via lexicalrichness; report TTR only for fixed-length context. Do NOT use raw TTR as an absolute cross-length score",
+      "needs": "pure-text-timestamp",
+      "priority": "must"
+    },
+    {
+      "name": "Weak / hedging / intensifier word detection",
+      "dimension": "content-confidence",
+      "measures": "Vague qualifiers, hedges, weasel words, overused boosters",
+      "howToCompute": "Merged tagged lexicon (filler|hedge|weasel|intensifier) + rule linter (proselint/write-good/retext-style offline rules); hedge_density, intensifier_density per total_words",
+      "needs": "pure-text-timestamp",
+      "priority": "must"
+    },
+    {
+      "name": "Got-tripped-up / word-finding moments",
+      "dimension": "content-confidence",
+      "measures": "Per-moment events where the speaker hesitated and reached for a worse word",
+      "howToCompute": "FUSION: event_score = w1*hedge_flag + w2*vague_flag + w3*pause_norm + w4*(1-asr_word_confidence) + w5*filled_pause + w6*repair_span. Rank moments; per-speaker pause normalization. Lexical flag alone is NOT sufficient — must co-occur with pause/low-conf/repair",
+      "needs": "pure-text-timestamp",
+      "priority": "must"
+    },
+    {
+      "name": "Better-word suggestion",
+      "dimension": "content-confidence",
+      "measures": "A stronger replacement for a flagged weak/vague word",
+      "howToCompute": "OFFLINE: phrase->replacement dict + WordNet synonyms ranked by concreteness(Brysbaert)/specificity(SUBTLEX freq). LLM: Claude API (claude-opus-4-8) via client.messages.parse() into a Pydantic WordChoiceFinding list (output_format=); deterministic offline fallback emits same schema",
+      "needs": "llm",
+      "priority": "must"
+    },
+    {
+      "name": "Readability / sentence complexity",
+      "dimension": "content-clarity",
+      "measures": "Spoken-text grade level / accessibility (relative tracking)",
+      "howToCompute": "textstat: Flesch Reading Ease, Flesch-Kincaid Grade, Gunning Fog, SMOG. Treat absolute grade cautiously (formulas built for prose); use change-over-sessions as the signal",
+      "needs": "pure-text-timestamp",
+      "priority": "should"
+    },
+    {
+      "name": "Monotone / pitch variation",
+      "dimension": "delivery-prosody",
+      "measures": "Intonation range; monotone delivery flag",
+      "howToCompute": "Parselmouth to_pitch() voiced frames; convert Hz->semitones (12*log2(f0/ref)); monotone = stdev(f0_semitones) or pitch range p95-p5; energy-weight F0 by intensity to ignore breathy frames",
+      "needs": "acoustic-model",
+      "priority": "should"
+    },
+    {
+      "name": "Loudness / energy dynamics",
+      "dimension": "delivery-prosody",
+      "measures": "Flat/under-projected delivery; volume consistency",
+      "howToCompute": "librosa RMS or Parselmouth intensity; flatness = std(RMS)/mean(RMS); range p95-p5 dB; composite flat-delivery flag = low F0_CV AND low energy_dynamics",
+      "needs": "acoustic-model",
+      "priority": "nice"
+    },
+    {
+      "name": "Articulation rate vs speech rate",
+      "dimension": "delivery-fluency",
+      "measures": "Rushing inside fluent stretches vs over-pausing",
+      "howToCompute": "Speech rate = syllables/total_time; Articulation rate = syllables/phonation_time (pauses excluded). Syllable nuclei via de Jong-Wempe Praat script (no transcript needed). balance = speaking/total",
+      "needs": "acoustic-model",
+      "priority": "nice"
+    },
+    {
+      "name": "Voice quality (jitter/shimmer/HNR)",
+      "dimension": "delivery-prosody",
+      "measures": "Shaky/strained/nervous voice (secondary signal)",
+      "howToCompute": "Parselmouth PointProcess + to_harmonicity; elevated jitter/shimmer + low HNR -> strained-voice flag",
+      "needs": "acoustic-model",
+      "priority": "nice"
+    },
+    {
+      "name": "Composite confidence/fluency index",
+      "dimension": "content-confidence",
+      "measures": "Single blended low-confidence signal (avoids double-counting)",
+      "howToCompute": "z-score and weight-blend fillers + hesitation pauses + hedging + repetitions into ONE fluency/confidence index rather than penalizing four times; show timestamped evidence per score",
+      "needs": "pure-text-timestamp",
+      "priority": "should"
+    },
+    {
+      "name": "Eye contact / gesture / posture (video, opt-in tier)",
+      "dimension": "visual-multimodal",
+      "measures": "Gaze-on-camera %, gesture rate, posture/sway",
+      "howToCompute": "MediaPipe (Apache-2.0) pose/face mesh + L2CS-Net (MIT) gaze; gate behind explicit opt-in + on-device. Avoid OpenFace (academic-only) and YOLO (AGPL) in commercial builds",
+      "needs": "video",
+      "priority": "nice"
+    }
+  ],
+  "dataSchemas": [
+    {
+      "name": "Word",
+      "description": "One recognized token with timing and confidence — the atomic unit all analysis consumes. Loadable from a JSON fixture so analysis is testable without ASR.",
+      "fields": [
+        "text: str — surface form of the token (verbatim, fillers retained)",
+        "start: float — start time in seconds",
+        "end: float — end time in seconds",
+        "confidence: float | None — per-word confidence 0-1 (normalized across engines; None if unavailable)",
+        "is_filled_pause: bool — True if engine emitted an explicit filler token (e.g. CrisperWhisper [UM]); default False",
+        "normalized: str — lowercased/punct-stripped form for lexicon matching (derived)"
+      ]
+    },
+    {
+      "name": "Transcript",
+      "description": "Canonical in-memory representation of one speech sample. Carries the full word list plus derived sentence/segment groupings and audio metadata. The single contract every analysis module depends on.",
+      "fields": [
+        "words: list[Word] — ordered words for the whole sample",
+        "audio_path: str | None — path to source audio if available (enables acoustic track); None for fixtures",
+        "sample_rate: int | None — audio sample rate if known",
+        "duration_sec: float — total sample duration",
+        "speaking_sec: float — total phonation time (sum of word spans / VAD speech), pauses excluded",
+        "language: str — ISO code, default 'en'",
+        "engine: str — ASR backend id that produced this ('faster-whisper'|'crisper-whisper'|'vosk'|'fixture')",
+        "speaker_median_gap: float — median inter-word gap, for per-speaker pause normalization (derived)",
+        "sentences: list[tuple[int,int]] — (start_word_idx, end_word_idx) spans for sentence/clause grouping (derived)"
+      ]
+    },
+    {
+      "name": "Finding",
+      "description": "One flagged item from any analysis module — a filler, a hedge, a repetition, or a tripped-up moment. Uniform shape so the report renderer and scorer treat all modules identically.",
+      "fields": [
+        "kind: str — 'filler'|'hedge'|'weasel'|'intensifier'|'repetition'|'false_start'|'long_pause'|'tripped_up'|'weak_word'",
+        "word_index: int — index into Transcript.words (or first word of a span)",
+        "span: tuple[int,int] — (start_word_idx, end_word_idx) inclusive for multi-word findings",
+        "start: float — start time seconds (for timeline/highlight)",
+        "end: float — end time seconds",
+        "original: str — the offending text",
+        "suggestion: str | None — stronger replacement if applicable",
+        "rationale: str — human-readable why-flagged (for report + coaching)",
+        "score: float — confidence/severity of this finding 0-1",
+        "source: str — 'lexicon'|'rule'|'acoustic'|'llm' (provenance, esp. for tripped_up fusion)"
+      ]
+    },
+    {
+      "name": "DimensionScore",
+      "description": "Score for one rubric dimension with its evidence, produced by the scorer.",
+      "fields": [
+        "dimension: str — e.g. 'fillers'|'pace'|'pauses'|'vocabulary'|'word_choice'|'readability'|'prosody'",
+        "raw: float — raw metric value (e.g. filler_rate, WPM)",
+        "band: str — 'excellent'|'good'|'fair'|'poor'",
+        "points: float — 0-100 sub-score for this dimension",
+        "weight: float — weight in the composite (post-redistribution if a dimension was disabled)",
+        "findings: list[Finding] — supporting evidence (timestamped)",
+        "detail: dict — metric-specific extras (e.g. {'wpm':142,'consistency':18})"
+      ]
+    },
+    {
+      "name": "Report",
+      "description": "Top-level graded result. Serializes to JSON and drives the HTML renderer. Contains the composite score, per-dimension breakdown, all findings, and enough to render the inline-highlighted transcript.",
+      "fields": [
+        "overall_score: float — weighted 0-100",
+        "dimensions: list[DimensionScore] — per-dimension breakdown",
+        "findings: list[Finding] — all findings across modules, time-sorted",
+        "transcript: Transcript — the analyzed transcript (for inline highlighting)",
+        "metrics: dict — flat metric bag (filler_rate, wpm, mattr, mtld, flesch_kincaid, hedge_density, pause_count, etc.)",
+        "metadata: dict — engine, word-choice mode ('claude-opus-4-8'|'offline-lexicon'), config, version, timestamps",
+        "summary: str — short natural-language coaching summary"
+      ]
+    },
+    {
+      "name": "WordChoiceFinding",
+      "description": "Pydantic model shared by BOTH the Claude API word-choice pass and the offline lexicon fallback, so they are interchangeable. Used as the output_format= for client.messages.parse(); schema obeys structured-output limits (additionalProperties:false, no numeric/string constraints, no recursion).",
+      "fields": [
+        "word_index: int — index into Transcript.words",
+        "issue_type: str — 'weak'|'hedge'|'filler'|'tripped_up' (enum)",
+        "original: str — flagged text",
+        "suggestion: str | None — stronger word/phrase",
+        "rationale: str — why it is weak and why the suggestion is stronger",
+        "confidence: float — 0-1"
+      ]
+    }
+  ],
+  "modules": [
+    {
+      "path": "speech_grading/__init__.py",
+      "responsibility": "Package marker; exports version and the top-level grade() convenience function.",
+      "publicFunctions": [
+        "grade(audio_or_transcript: str, config: Config) -> Report — end-to-end convenience entrypoint used by the CLI"
+      ],
+      "dependsOn": [
+        "speech_grading/pipeline.py",
+        "speech_grading/config.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/config.py",
+      "responsibility": "Typed config: ASR backend choice, license gates (allow_noncommercial), online/offline LLM toggle, model id, effort level, scoring weights, thresholds (WPM band, pause cutoffs), feature toggles (acoustic/video).",
+      "publicFunctions": [
+        "load_config(path: str | None) -> Config — load from YAML/JSON or defaults",
+        "class Config — dataclass with fields: asr_backend:str, allow_noncommercial:bool, use_llm:bool, llm_model:str='claude-opus-4-8', llm_effort:str='high', weights:dict, thresholds:dict, enable_acoustic:bool, enable_video:bool"
+      ],
+      "dependsOn": [],
+      "externalDeps": [
+        "pydantic"
+      ]
+    },
+    {
+      "path": "speech_grading/schema.py",
+      "responsibility": "Defines Word, Transcript, Finding, DimensionScore, Report, WordChoiceFinding (Pydantic) models + JSON (de)serialization and fixture loading. WordChoiceFinding is constrained to satisfy structured-output limits (additionalProperties false, enum issue_type, no min/max).",
+      "publicFunctions": [
+        "load_transcript_json(path: str) -> Transcript — load a canonical Transcript fixture (no ASR/network)",
+        "dump_report_json(report: Report, path: str) -> None",
+        "derive_transcript_fields(t: Transcript) -> Transcript — fill speaker_median_gap, sentences, normalized, speaking_sec"
+      ],
+      "dependsOn": [],
+      "externalDeps": [
+        "pydantic"
+      ]
+    },
+    {
+      "path": "speech_grading/asr/base.py",
+      "responsibility": "ASRBackend abstract interface; confidence normalization helper. Decouples recognition from analysis.",
+      "publicFunctions": [
+        "class ASRBackend(ABC) — abstract; method transcribe(audio_path:str)->Transcript",
+        "normalize_confidence(values: list[float], engine: str) -> list[float] — map engine-specific scores to comparable 0-1"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/asr/faster_whisper_backend.py",
+      "responsibility": "DEFAULT MIT backend. Verbatim decode: word_timestamps=True, condition_on_previous_text=False, filler-laden initial_prompt; maps Word.probability -> Word.confidence.",
+      "publicFunctions": [
+        "class FasterWhisperBackend(ASRBackend) — transcribe(audio_path)->Transcript; __init__(model_size='large-v3', device='cpu', compute_type='int8')"
+      ],
+      "dependsOn": [
+        "speech_grading/asr/base.py",
+        "speech_grading/schema.py"
+      ],
+      "externalDeps": [
+        "faster-whisper"
+      ]
+    },
+    {
+      "path": "speech_grading/asr/crisper_whisper_backend.py",
+      "responsibility": "OPT-IN non-commercial high-accuracy backend emitting [UM]/[UH]. Refuses to load unless config.allow_noncommercial is True; logs CC-BY-NC warning.",
+      "publicFunctions": [
+        "class CrisperWhisperBackend(ASRBackend) — transcribe(audio_path)->Transcript; raises LicenseError if not allow_noncommercial"
+      ],
+      "dependsOn": [
+        "speech_grading/asr/base.py",
+        "speech_grading/schema.py",
+        "speech_grading/config.py"
+      ],
+      "externalDeps": [
+        "transformers (nyrahealth fork)",
+        "torch"
+      ]
+    },
+    {
+      "path": "speech_grading/asr/vosk_backend.py",
+      "responsibility": "Optional Apache-2.0 streaming/CPU backend; SetWords(True) gives word/start/end/conf.",
+      "publicFunctions": [
+        "class VoskBackend(ASRBackend) — transcribe(audio_path)->Transcript"
+      ],
+      "dependsOn": [
+        "speech_grading/asr/base.py",
+        "speech_grading/schema.py"
+      ],
+      "externalDeps": [
+        "vosk"
+      ]
+    },
+    {
+      "path": "speech_grading/lexicons.py",
+      "responsibility": "Canonical merged, tagged lexicons (filler|hedge|weasel|intensifier|weak) and the phrase->replacement map. Pure data + lookup helpers. No external deps so it is offline/test-safe.",
+      "publicFunctions": [
+        "FILLERS:set[str]; HEDGES:set[str]; WEASEL:set[str]; INTENSIFIERS:set[str]; WEAK:set[str]",
+        "REPLACEMENTS:dict[str,str] — weak phrase -> stronger phrase",
+        "classify_token(tok:str)->set[str] — returns tags for a normalized token",
+        "is_context_filler(words:list, i:int)->bool — context-sensitive like/so/well/right rules"
+      ],
+      "dependsOn": [],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/analysis/fillers.py",
+      "responsibility": "Filler detection with pause-gating and context rules.",
+      "publicFunctions": [
+        "detect_fillers(t: Transcript, thresholds: dict) -> list[Finding] — pause-gated, context-aware filler Findings + filler_rate metric"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/lexicons.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/analysis/pace.py",
+      "responsibility": "WPM overall + rolling-window time series + consistency.",
+      "publicFunctions": [
+        "compute_pace(t: Transcript, thresholds: dict) -> DimensionScore — wpm, windowed series, consistency, band"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/analysis/pauses.py",
+      "responsibility": "Silent-pause detection and classification from inter-word gaps; per-speaker normalization.",
+      "publicFunctions": [
+        "detect_pauses(t: Transcript, thresholds: dict) -> list[Finding] — micro/normal/long, mid-clause long-pause flags"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/analysis/repetitions.py",
+      "responsibility": "Immediate repeats, n-gram repeats, partial-word/false-start, revision detection.",
+      "publicFunctions": [
+        "detect_repetitions(t: Transcript) -> list[Finding]"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/lexicons.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/analysis/vocabulary.py",
+      "responsibility": "Length-robust lexical diversity (MATTR/MTLD) + crutch-word reliance.",
+      "publicFunctions": [
+        "compute_vocabulary(t: Transcript) -> DimensionScore — mattr, mtld, ttr(fixed-len only)"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py"
+      ],
+      "externalDeps": [
+        "lexicalrichness"
+      ]
+    },
+    {
+      "path": "speech_grading/analysis/readability.py",
+      "responsibility": "Spoken-text readability/grade level (relative tracking).",
+      "publicFunctions": [
+        "compute_readability(t: Transcript) -> DimensionScore — flesch_reading_ease, fk_grade, smog, gunning_fog"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py"
+      ],
+      "externalDeps": [
+        "textstat"
+      ]
+    },
+    {
+      "path": "speech_grading/analysis/weak_words.py",
+      "responsibility": "Hedge/weasel/intensifier/weak-word flagging via merged lexicon + offline rule linter; densities.",
+      "publicFunctions": [
+        "detect_weak_words(t: Transcript) -> list[Finding] — hedge_density, intensifier_density"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/lexicons.py"
+      ],
+      "externalDeps": [
+        "proselint"
+      ]
+    },
+    {
+      "path": "speech_grading/analysis/prosody.py",
+      "responsibility": "OPTIONAL acoustic track: monotone (semitone F0 stdev, energy-weighted), energy dynamics, articulation vs speech rate, voice quality, acoustic filled-pause detection. Skipped gracefully if no audio or enable_acoustic=False.",
+      "publicFunctions": [
+        "compute_prosody(t: Transcript, cfg: Config) -> tuple[DimensionScore | None, list[Finding]] — monotone/energy/rate + acoustic filled-pause Findings; returns (None, []) if no audio/disabled so the scorer can redistribute weight"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/config.py"
+      ],
+      "externalDeps": [
+        "praat-parselmouth",
+        "librosa",
+        "numpy"
+      ]
+    },
+    {
+      "path": "speech_grading/wordchoice/base.py",
+      "responsibility": "WordChoiceAnalyzer interface + dispatcher that tries the LLM analyzer then falls back to the offline analyzer, guaranteeing identical WordChoiceFinding schema.",
+      "publicFunctions": [
+        "analyze_word_choice(t: Transcript, cfg: Config) -> list[WordChoiceFinding] — online-then-offline dispatch",
+        "class WordChoiceAnalyzer(ABC) — analyze(t)->list[WordChoiceFinding]"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/config.py",
+        "speech_grading/wordchoice/llm.py",
+        "speech_grading/wordchoice/offline.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/wordchoice/llm.py",
+      "responsibility": "Claude API word-choice analyzer. Uses client.messages.parse(model='claude-opus-4-8', output_format=WordChoiceFindingList Pydantic model) reading response.parsed_output; thinking={'type':'adaptive'}; output_config={'effort': cfg.llm_effort}. NO assistant prefill (400 on Opus 4.8) and NO citations (incompatible with structured outputs). Raises on any error so dispatcher falls back.",
+      "publicFunctions": [
+        "class LLMWordChoice(WordChoiceAnalyzer) — analyze(t)->list[WordChoiceFinding]; build_user_message(t)->str (user-turn only; constraints go in the system prompt, not a prefill)"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/config.py"
+      ],
+      "externalDeps": [
+        "anthropic",
+        "pydantic"
+      ]
+    },
+    {
+      "path": "speech_grading/wordchoice/offline.py",
+      "responsibility": "Deterministic offline word-choice + tripped-up detector. Fusion scoring (hedge/vague/pause/low-conf/filled-pause/repair); suggestions via REPLACEMENTS + WordNet ranked by concreteness/frequency. No network/model. This is the source of record for counts; the LLM pass is enrichment only.",
+      "publicFunctions": [
+        "class OfflineWordChoice(WordChoiceAnalyzer) — analyze(t)->list[WordChoiceFinding]",
+        "detect_tripped_up(t: Transcript, findings: list[Finding], weights: dict) -> list[Finding] — fusion event scoring",
+        "rank_replacement(word:str)->str|None — WordNet synonyms ranked by Brysbaert concreteness / SUBTLEX freq"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/lexicons.py",
+        "speech_grading/norms.py"
+      ],
+      "externalDeps": [
+        "nltk (wordnet)"
+      ]
+    },
+    {
+      "path": "speech_grading/norms.py",
+      "responsibility": "Loads Brysbaert concreteness + SUBTLEX frequency CSV norm tables; lookup for replacement ranking. Bundled CSVs so offline.",
+      "publicFunctions": [
+        "concreteness(word:str)->float|None",
+        "frequency(word:str)->float|None",
+        "specificity_gain(orig:str, cand:str)->float"
+      ],
+      "dependsOn": [],
+      "externalDeps": [
+        "pandas"
+      ]
+    },
+    {
+      "path": "speech_grading/scorer.py",
+      "responsibility": "Construct-driven 0-100 composite: each module produces a DimensionScore; weights + bands applied; blends fillers/pauses/hedging/repetitions into one fluency index to avoid double-counting; when prosody is None (acoustic disabled) its weight is redistributed proportionally across the remaining dimensions.",
+      "publicFunctions": [
+        "score(t: Transcript, all_findings: list[Finding], dim_scores: list[DimensionScore], cfg: Config) -> Report — applies rubric weights + bands -> overall_score + Report; redistributes weight of any absent DimensionScore"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/config.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/report.py",
+      "responsibility": "Render Report -> JSON and self-contained HTML with the transcript inline-highlighted (fillers, hedges, trip-up moments color-coded, hover rationale), per-dimension radar/bars, and timeline.",
+      "publicFunctions": [
+        "render_html(report: Report, out_path: str) -> None",
+        "render_json(report: Report, out_path: str) -> None",
+        "highlight_transcript_html(report: Report) -> str — inline span-wrapped transcript"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py"
+      ],
+      "externalDeps": [
+        "jinja2"
+      ]
+    },
+    {
+      "path": "speech_grading/pipeline.py",
+      "responsibility": "Orchestrates end-to-end: (transcribe OR load fixture) -> derive fields -> run analysis modules -> word-choice dispatch -> prosody (optional) -> scorer -> report. Pure wiring; each step swappable.",
+      "publicFunctions": [
+        "run_pipeline(input_path: str, cfg: Config) -> Report — full run",
+        "run_on_transcript(t: Transcript, cfg: Config) -> Report — analysis-only path (no ASR), used by tests"
+      ],
+      "dependsOn": [
+        "speech_grading/schema.py",
+        "speech_grading/config.py",
+        "speech_grading/asr/base.py",
+        "speech_grading/analysis/fillers.py",
+        "speech_grading/analysis/pace.py",
+        "speech_grading/analysis/pauses.py",
+        "speech_grading/analysis/repetitions.py",
+        "speech_grading/analysis/vocabulary.py",
+        "speech_grading/analysis/readability.py",
+        "speech_grading/analysis/weak_words.py",
+        "speech_grading/analysis/prosody.py",
+        "speech_grading/wordchoice/base.py",
+        "speech_grading/scorer.py",
+        "speech_grading/report.py"
+      ],
+      "externalDeps": []
+    },
+    {
+      "path": "speech_grading/cli.py",
+      "responsibility": "argparse CLI: `orator grade <audio|transcript.json> [--offline] [--backend faster-whisper] [--allow-noncommercial] [--effort high] [--html out.html] [--json out.json]`. Picks ASR backend, builds Config, calls pipeline, writes report.",
+      "publicFunctions": [
+        "main(argv: list[str] | None = None) -> int"
+      ],
+      "dependsOn": [
+        "speech_grading/pipeline.py",
+        "speech_grading/config.py",
+        "speech_grading/asr/faster_whisper_backend.py",
+        "speech_grading/asr/crisper_whisper_backend.py",
+        "speech_grading/asr/vosk_backend.py"
+      ],
+      "externalDeps": []
+    }
+  ],
+  "pipeline": [
+    "Input resolution: CLI receives either an audio file or a canonical Transcript JSON. If JSON, load via schema.load_transcript_json and SKIP ASR entirely (this is the offline/test path).",
+    "ASR (audio only): select backend from Config (default faster-whisper, MIT). Transcribe with verbatim settings (word_timestamps=True, condition_on_previous_text=False, filler initial_prompt). CrisperWhisper only if allow_noncommercial. Produce a Transcript with per-word start/end/confidence.",
+    "Derive: schema.derive_transcript_fields fills normalized forms, speaker_median_gap, sentence/clause spans, speaking_sec — everything downstream needs.",
+    "Lexical analysis (no model/network): run fillers, pauses, pace, repetitions, weak_words, vocabulary, readability modules -> Findings + DimensionScores.",
+    "Acoustic track (optional, audio + enable_acoustic): prosody module adds monotone/energy/articulation-rate + transcript-free acoustic filled-pause Findings; reconcile acoustic fillers with lexical fillers on the time axis. Returns (None, []) cleanly if no audio so the scorer can redistribute its weight.",
+    "Word-choice + tripped-up: wordchoice.base.analyze_word_choice tries LLMWordChoice (claude-opus-4-8 via messages.parse, output_format=Pydantic model, adaptive thinking, effort from config, no prefill); on any failure or use_llm=False, falls back to OfflineWordChoice (deterministic fusion + WordNet/concreteness suggestions). Both emit identical WordChoiceFinding lists -> mapped to Findings.",
+    "Fuse tripped-up moments: combine lexical hedge/weak flags + pause findings + low word.confidence + repair spans into ranked tripped_up Findings (offline.detect_tripped_up); per-speaker pause normalization.",
+    "Score: scorer applies the weighted rubric and bands, blending fillers/pauses/hedging/repetitions into one fluency/confidence sub-score to avoid quadruple-penalizing, redistributing the weight of any disabled dimension (e.g. prosody) proportionally across the rest, producing overall_score 0-100 + per-dimension breakdown.",
+    "Report: render_json writes the machine-readable Report; render_html writes a self-contained page with the transcript inline-highlighted (fillers, hedges, trip-up moments color-coded with hover rationale), a per-dimension breakdown, and a metric timeline.",
+    "Optional accomplishment logging: on a notable run, the wrapper appends an evidence-linked row to job-search/live/accomplishments-inbox.md (per workspace standing rule)."
+  ],
+  "scoringRubric": [
+    {
+      "dimension": "Fillers",
+      "weight": 0.18,
+      "formula": "filler_rate = fillers/total_words*100; also fillers_per_minute",
+      "bands": "excellent <2/100 (Bortfeld baseline ~2.6); good 2-4; fair 4-6; poor >6 elevated, >10 distracting. Maps to 100/80/60/30 points."
+    },
+    {
+      "dimension": "Pace",
+      "weight": 0.12,
+      "formula": "WPM = words/(speaking_sec/60); penalty for deviation from band AND high windowed-WPM stdev",
+      "bands": "excellent within 130-160 (configurable; presets technical 130-140, persuasive 150-160) & consistent; fair 110-130 or 160-180; poor <110 or >180. Consistency stdev <15 full, >35 docked."
+    },
+    {
+      "dimension": "Pauses/Fluency",
+      "weight": 0.12,
+      "formula": "long_pause_rate = long_pauses/minutes; weight mid-clause (awkward) pauses more than boundary pauses",
+      "bands": "excellent few mid-clause long pauses + healthy phonation ratio; poor many >0.7s mid-clause pauses / very low balance ratio."
+    },
+    {
+      "dimension": "WordChoice/TrippedUp",
+      "weight": 0.18,
+      "formula": "penalty from count & severity of tripped_up + weak_word findings; tripped_up weighted by event_score",
+      "bands": "excellent ~0 high-severity trip-ups; good a few low-severity; fair several; poor many high-severity (strong pause+low-conf+hedge co-occurrences)."
+    },
+    {
+      "dimension": "Vocabulary",
+      "weight": 0.12,
+      "formula": "MATTR (window 50) primary; MTLD secondary; map to richness band",
+      "bands": "excellent high MATTR/MTLD; poor low diversity / heavy crutch-word repetition. Length-robust — never raw TTR across lengths."
+    },
+    {
+      "dimension": "Hedging/Confidence",
+      "weight": 0.1,
+      "formula": "hedge_density + intensifier_density per total_words (context-filtered)",
+      "bands": "excellent low hedge+booster density; poor high density of 'I think/kind of/maybe' + 'very/really'."
+    },
+    {
+      "dimension": "Readability",
+      "weight": 0.06,
+      "formula": "Flesch-Kincaid grade + Flesch Reading Ease; used for relative tracking",
+      "bands": "scored gently/relatively — spoken language normally lower density; reward improvement over sessions, don't hard-penalize short clauses."
+    },
+    {
+      "dimension": "Prosody (acoustic, optional)",
+      "weight": 0.12,
+      "formula": "monotone = stdev(F0 semitones) energy-weighted; energy_dynamics = std(RMS)/mean(RMS); composite flat-delivery flag",
+      "bands": "excellent good pitch range + energy variation; poor low F0 stdev AND low energy dynamics (monotone+flat). If acoustic disabled, scorer redistributes this 0.12 weight proportionally across the other dimensions so the composite stays on a 0-100 scale."
+    }
+  ],
+  "fillerLexicon": [
+    "um",
+    "uh",
+    "er",
+    "ah",
+    "erm",
+    "hmm",
+    "mm",
+    "uhh",
+    "umm",
+    "like",
+    "you know",
+    "i mean",
+    "sort of",
+    "kind of",
+    "kinda",
+    "sorta",
+    "so",
+    "well",
+    "basically",
+    "actually",
+    "literally",
+    "right",
+    "okay",
+    "ok",
+    "anyway",
+    "i guess",
+    "you see",
+    "i suppose",
+    "you know what i mean",
+    "let me see",
+    "let's see"
+  ],
+  "weakWordLexicon": [
+    "maybe",
+    "perhaps",
+    "possibly",
+    "probably",
+    "might",
+    "could",
+    "may",
+    "seems",
+    "seemingly",
+    "apparently",
+    "i think",
+    "i guess",
+    "i suppose",
+    "i believe",
+    "i feel like",
+    "kind of",
+    "sort of",
+    "somewhat",
+    "fairly",
+    "quite",
+    "rather",
+    "a bit",
+    "a little",
+    "more or less",
+    "to some extent",
+    "arguably",
+    "presumably",
+    "many",
+    "some",
+    "several",
+    "various",
+    "a number of",
+    "most",
+    "few",
+    "stuff",
+    "things",
+    "very",
+    "really",
+    "extremely",
+    "totally",
+    "absolutely",
+    "completely",
+    "super",
+    "definitely",
+    "incredibly",
+    "highly",
+    "so",
+    "just",
+    "actually",
+    "basically",
+    "essentially",
+    "literally",
+    "honestly",
+    "truly",
+    "simply",
+    "surprisingly",
+    "particularly",
+    "utilize",
+    "in order to",
+    "due to the fact that",
+    "at this point in time",
+    "a lot of"
+  ],
+  "dependencies": [
+    "anthropic — Claude API client for the LLM word-choice pass (model claude-opus-4-8); structured output via client.messages.parse(output_format=WordChoiceFinding-list Pydantic model) reading response.parsed_output. Use thinking={'type':'adaptive'} and output_config={'effort': 'high'}; do NOT pass budget_tokens/temperature/top_p (400 on Opus 4.8), do NOT use assistant prefill (400 on Opus 4.8), do NOT enable citations (incompatible with structured outputs)",
+    "pydantic — typed Config + WordChoiceFinding schema validation + the structured-output model passed to messages.parse (additionalProperties false, enum issue_type, no numeric/string constraints)",
+    "faster-whisper — DEFAULT MIT ASR backend; verbatim decode with word_timestamps + per-word probability (CPU int8 / GPU float16)",
+    "transformers (nyrahealth crisper_whisper fork) — OPT-IN CrisperWhisper backend (CC-BY-NC; non-commercial gate)",
+    "torch — required by CrisperWhisper / any neural ASR or video backend; CPU build for Windows",
+    "vosk — OPTIONAL Apache-2.0 streaming CPU ASR backend (word/start/end/conf, embedded/real-time)",
+    "lexicalrichness — MATTR/MTLD/HD-D length-robust vocabulary diversity (MIT)",
+    "textstat — Flesch/FK/SMOG/Gunning-Fog readability (MIT)",
+    "proselint — offline rule linter for weasel/hedging/redundancy flags (BSD-3, Python)",
+    "nltk — WordNet synonym expansion for offline better-word suggestions (permissive)",
+    "pandas — load Brysbaert concreteness + SUBTLEX frequency norm CSVs for replacement ranking",
+    "praat-parselmouth — OPTIONAL acoustic prosody: F0/intensity/jitter/shimmer/HNR + acoustic filled-pause detection (GPL-3.0 — isolate for distributed binaries; fine for internal/SaaS)",
+    "librosa — OPTIONAL acoustic I/O + RMS energy + pyin pitch (ISC, permissive)",
+    "numpy — numeric backbone for the acoustic track",
+    "jinja2 — HTML report templating (BSD)",
+    "mediapipe — OPTIONAL video tier: pose/face mesh (Apache-2.0) — only if visual grading enabled",
+    "l2cs-net — OPTIONAL video tier: gaze/eye-contact (MIT) — preferred over OpenFace (academic-only) and YOLO (AGPL)"
+  ],
+  "risks": [
+    "LICENSE TRAPS (commercial blocker): CrisperWhisper weights = CC-BY-NC 4.0; whisper-timestamped = AGPL-3.0; torchaudio MMS_FA align weights = CC-BY-NC; openSMILE/eGeMAPS = dual-license (not free for products); OpenFace = academic-only; YOLO = AGPL; amritkromana disfluency repo = no license (research-only). Mitigation: default to MIT/BSD/Apache/ISC stack (faster-whisper, librosa, Vosk, textstat, lexicalrichness, proselint, MediaPipe, L2CS-Net), gate NC/copyleft backends behind explicit flags, and note Parselmouth is GPL-3.0 (fine for SaaS, a consideration for shipped binaries).",
+    "Filler under-counting if ASR not verbatim: vanilla Whisper/Google strip um/uh by design. Mitigation: verbatim decode settings are mandatory at the backend; add a regression test that asserts known fillers reappear; offer the transcript-free acoustic track as a cross-check.",
+    "Confidence scores are NOT comparable across engines (Whisper logprob vs Vosk lattice vs alignment frame prob). Mitigation: normalize_confidence per engine before any thresholding in tripped-up fusion; Word.confidence is None-safe (the fusion term degrades gracefully when confidence is unavailable).",
+    "Raw TTR is length-confounded — using it as an absolute cross-length richness score is a correctness bug. Mitigation: MATTR/MTLD primary; TTR only at fixed length.",
+    "WPM 'ideal' band is context-dependent; hardcoding 111-140 is one tool's choice. Mitigation: configurable band defaulting ~130-160 with presentation-type presets, source cited in the rubric.",
+    "Over-counting like/so/well/right as fillers when used as legitimate content words. Mitigation: context-sensitive rules (POS/position/collocation), not raw substring match.",
+    "Double-counting low-confidence: fillers, hesitation pauses, hedging, repetitions all proxy the same thing. Mitigation: blend into one fluency/confidence index in the scorer; always show timestamped evidence next to each score.",
+    "Claude API drift / wrong call shape on Opus 4.8: budget_tokens, temperature, top_p, and last-assistant-turn prefills all 400; citations are incompatible with structured outputs. Mitigation: the LLM analyzer uses client.messages.parse with output_format= (a Pydantic model) + thinking={'type':'adaptive'} + output_config={'effort':...}, no prefill, no sampling params, no citations; constraints go in the system prompt; first call with a new schema pays a one-time compilation cost (24h cached). The deterministic offline lexicon fallback is the source of record for counts; the LLM is enrichment only, so any API error/non-determinism cannot corrupt the score.",
+    "Acoustic track fragility on Windows: numba/numpy version conflicts across librosa + parselmouth; my-voice-analysis/myprosody are unmaintained. Mitigation: pin environment, vendor only the de Jong-Wempe .praat script and call via Parselmouth rather than depending on the stale wrappers; acoustic track is optional and degrades gracefully (prosody returns None and the scorer redistributes its weight).",
+    "Per-speaker pause threshold: a global constant misfires across mics/rooms/speakers. Mitigation: normalize pause cutoff to speaker_median_gap + k; calibrate fusion weights (w1..w6) and k against a small human-annotated set of real stumbles.",
+    "Large-model download / offline requirement: ASR models are big and CrisperWhisper/Torch are heavy. Mitigation: analysis layer is fully decoupled and testable from a JSON Transcript fixture; ASR is pluggable; CI runs the offline path with no model download or network."
+  ]
+}

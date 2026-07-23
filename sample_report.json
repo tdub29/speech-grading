@@ -1,0 +1,1244 @@
+{
+  "overall_score": 53.0,
+  "dimensions": [
+    {
+      "dimension": "fillers",
+      "raw": 14.04,
+      "band": "poor",
+      "points": 28.0,
+      "weight": 0.2045,
+      "findings": [
+        {
+          "kind": "filler",
+          "word_index": 0,
+          "span": null,
+          "start": 0.0,
+          "end": 0.25,
+          "original": "So,",
+          "suggestion": "",
+          "rationale": "Discourse marker used as filler: 'So,'.",
+          "score": 0.7,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 1,
+          "span": null,
+          "start": 0.55,
+          "end": 1.0,
+          "original": "um,",
+          "suggestion": "",
+          "rationale": "Filled pause: 'um,'.",
+          "score": 0.95,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 8,
+          "span": null,
+          "start": 3.25,
+          "end": 3.65,
+          "original": "uh,",
+          "suggestion": "",
+          "rationale": "Filled pause: 'uh,'. Preceded by a hesitation pause.",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 28,
+          "span": null,
+          "start": 11.19,
+          "end": 11.61,
+          "original": "um,",
+          "suggestion": "",
+          "rationale": "Filled pause: 'um,'.",
+          "score": 0.95,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 37,
+          "span": null,
+          "start": 15.17,
+          "end": 15.72,
+          "original": "Basically,",
+          "suggestion": "",
+          "rationale": "Discourse filler: 'Basically,'. Preceded by a hesitation pause.",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 44,
+          "span": null,
+          "start": 17.57,
+          "end": 18.02,
+          "original": "uh,",
+          "suggestion": "",
+          "rationale": "Filled pause: 'uh,'. Preceded by a hesitation pause.",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 49,
+          "span": [
+            49,
+            50
+          ],
+          "start": 21.85,
+          "end": 22.28,
+          "original": "You know,",
+          "suggestion": "",
+          "rationale": "Filler phrase: 'you know'. Preceded by a hesitation pause.",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "filler",
+          "word_index": 51,
+          "span": [
+            51,
+            52
+          ],
+          "start": 22.53,
+          "end": 22.99,
+          "original": "I guess",
+          "suggestion": "",
+          "rationale": "Filler phrase: 'i guess'.",
+          "score": 0.7,
+          "source": "lexicon"
+        }
+      ],
+      "detail": {
+        "filler_count": 8,
+        "filler_rate_per_100w": 14.04,
+        "fillers_per_minute": 19.7
+      }
+    },
+    {
+      "dimension": "pace",
+      "raw": 140.33647927780058,
+      "band": "good",
+      "points": 50.0,
+      "weight": 0.1364,
+      "findings": [],
+      "detail": {
+        "wpm": 140.33647927780058,
+        "articulation_wpm": 220.07722007722006,
+        "consistency": 36.98648401781386,
+        "n_windows": 3
+      }
+    },
+    {
+      "dimension": "pauses",
+      "raw": 5.91,
+      "band": "poor",
+      "points": 28.0,
+      "weight": 0.1364,
+      "findings": [
+        {
+          "kind": "long_pause",
+          "word_index": 45,
+          "span": null,
+          "start": 18.02,
+          "end": 19.37,
+          "original": "(pause 1.35s)",
+          "suggestion": null,
+          "rationale": "Long mid-clause pause (awkward)",
+          "score": 1.0,
+          "source": "rule"
+        },
+        {
+          "kind": "repetition",
+          "word_index": 20,
+          "span": [
+            20,
+            21
+          ],
+          "start": 8.66,
+          "end": 9.12,
+          "original": "We, we",
+          "suggestion": null,
+          "rationale": "Immediate repetition of 'we'",
+          "score": 1.0,
+          "source": "rule"
+        },
+        {
+          "kind": "repetition",
+          "word_index": 30,
+          "span": [
+            30,
+            31
+          ],
+          "start": 12.88,
+          "end": 13.28,
+          "original": "The the",
+          "suggestion": null,
+          "rationale": "Immediate repetition of 'the'",
+          "score": 1.0,
+          "source": "rule"
+        }
+      ],
+      "detail": {
+        "long_pauses": 1,
+        "repetitions": 2,
+        "disfluency_per_minute": 5.91
+      }
+    },
+    {
+      "dimension": "word_choice",
+      "raw": 0.54,
+      "band": "good",
+      "points": 82.0,
+      "weight": 0.2045,
+      "findings": [
+        {
+          "kind": "tripped_up",
+          "word_index": 45,
+          "span": null,
+          "start": 19.37,
+          "end": 19.99,
+          "original": "utilize",
+          "suggestion": "use",
+          "rationale": "Stumble around 'utilize': a vague word choice, a long hesitation pause before it, a filler right before it.",
+          "score": 0.536,
+          "source": "wordchoice"
+        }
+      ],
+      "detail": {
+        "tripped_up": 1,
+        "high_severity": 0,
+        "severity_sum": 0.54,
+        "suggestions_offered": 7
+      }
+    },
+    {
+      "dimension": "vocabulary",
+      "raw": 0.795,
+      "band": "good",
+      "points": 82.0,
+      "weight": 0.1364,
+      "findings": [],
+      "detail": {
+        "mattr": 0.795,
+        "mtld": 75.81000000000002,
+        "ttr": 0.7894736842105263,
+        "unique": 45,
+        "total": 57
+      }
+    },
+    {
+      "dimension": "hedging",
+      "raw": 14.04,
+      "band": "poor",
+      "points": 28.0,
+      "weight": 0.1136,
+      "findings": [
+        {
+          "kind": "hedge",
+          "word_index": 12,
+          "span": [
+            12,
+            13
+          ],
+          "start": 5.47,
+          "end": 5.91,
+          "original": "I think",
+          "suggestion": "",
+          "rationale": "filler/booster — cut it",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "weak_word",
+          "word_index": 19,
+          "span": null,
+          "start": 7.91,
+          "end": 8.26,
+          "original": "good.",
+          "suggestion": "(use a precise adjective)",
+          "rationale": "weak word — prefer '(use a precise adjective)'",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "intensifier",
+          "word_index": 24,
+          "span": null,
+          "start": 9.58,
+          "end": 9.84,
+          "original": "really",
+          "suggestion": "",
+          "rationale": "filler/booster — cut it",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "weasel",
+          "word_index": 39,
+          "span": null,
+          "start": 15.99,
+          "end": 16.25,
+          "original": "thing",
+          "suggestion": "(be specific)",
+          "rationale": "weak word — prefer '(be specific)'",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "weak_word",
+          "word_index": 45,
+          "span": null,
+          "start": 19.37,
+          "end": 19.99,
+          "original": "utilize",
+          "suggestion": "use",
+          "rationale": "weak word — prefer 'use'",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "hedge",
+          "word_index": 51,
+          "span": [
+            51,
+            52
+          ],
+          "start": 22.53,
+          "end": 22.99,
+          "original": "I guess",
+          "suggestion": "",
+          "rationale": "filler/booster — cut it",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "hedge",
+          "word_index": 54,
+          "span": null,
+          "start": 23.21,
+          "end": 23.43,
+          "original": "could",
+          "suggestion": null,
+          "rationale": "weak/hedging word — tighten or cut",
+          "score": 1.0,
+          "source": "lexicon"
+        },
+        {
+          "kind": "hedge",
+          "word_index": 55,
+          "span": null,
+          "start": 23.51,
+          "end": 23.85,
+          "original": "maybe",
+          "suggestion": "",
+          "rationale": "filler/booster — cut it",
+          "score": 1.0,
+          "source": "lexicon"
+        }
+      ],
+      "detail": {
+        "hedge_count": 8,
+        "hedge_density_per_100w": 14.04
+      }
+    },
+    {
+      "dimension": "readability",
+      "raw": 4.055350877192982,
+      "band": "fair",
+      "points": 80.0,
+      "weight": 0.0682,
+      "findings": [],
+      "detail": {
+        "flesch_reading_ease": 82.90828947368422,
+        "flesch_kincaid_grade": 4.055350877192982,
+        "smog_index": 7.793537801064561,
+        "gunning_fog": 6.60701754385965
+      }
+    }
+  ],
+  "findings": [
+    {
+      "kind": "filler",
+      "word_index": 0,
+      "span": null,
+      "start": 0.0,
+      "end": 0.25,
+      "original": "So,",
+      "suggestion": "",
+      "rationale": "Discourse marker used as filler: 'So,'.",
+      "score": 0.7,
+      "source": "lexicon"
+    },
+    {
+      "kind": "filler",
+      "word_index": 1,
+      "span": null,
+      "start": 0.55,
+      "end": 1.0,
+      "original": "um,",
+      "suggestion": "",
+      "rationale": "Filled pause: 'um,'.",
+      "score": 0.95,
+      "source": "lexicon"
+    },
+    {
+      "kind": "filler",
+      "word_index": 8,
+      "span": null,
+      "start": 3.25,
+      "end": 3.65,
+      "original": "uh,",
+      "suggestion": "",
+      "rationale": "Filled pause: 'uh,'. Preceded by a hesitation pause.",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 12,
+      "span": [
+        12,
+        13
+      ],
+      "start": 5.47,
+      "end": 5.91,
+      "original": "I think",
+      "suggestion": "",
+      "rationale": "filler/booster — cut it",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 12,
+      "span": null,
+      "start": 5.47,
+      "end": 5.61,
+      "original": "I think",
+      "suggestion": "",
+      "rationale": "'i think' is filler/hedging that weakens the point; cut it.",
+      "score": 0.6,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 19,
+      "span": null,
+      "start": 7.91,
+      "end": 8.26,
+      "original": "good.",
+      "suggestion": "(use a precise adjective)",
+      "rationale": "weak word — prefer '(use a precise adjective)'",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 19,
+      "span": null,
+      "start": 7.91,
+      "end": 8.26,
+      "original": "good.",
+      "suggestion": "(use a precise adjective)",
+      "rationale": "'good' is vague; a stronger word like '(use a precise adjective)' lands harder.",
+      "score": 0.6,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "repetition",
+      "word_index": 20,
+      "span": [
+        20,
+        21
+      ],
+      "start": 8.66,
+      "end": 9.12,
+      "original": "We, we",
+      "suggestion": null,
+      "rationale": "Immediate repetition of 'we'",
+      "score": 1.0,
+      "source": "rule"
+    },
+    {
+      "kind": "intensifier",
+      "word_index": 24,
+      "span": null,
+      "start": 9.58,
+      "end": 9.84,
+      "original": "really",
+      "suggestion": "",
+      "rationale": "filler/booster — cut it",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 24,
+      "span": null,
+      "start": 9.58,
+      "end": 9.84,
+      "original": "really",
+      "suggestion": "",
+      "rationale": "'really' is filler/hedging that weakens the point; cut it.",
+      "score": 0.6,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "filler",
+      "word_index": 28,
+      "span": null,
+      "start": 11.19,
+      "end": 11.61,
+      "original": "um,",
+      "suggestion": "",
+      "rationale": "Filled pause: 'um,'.",
+      "score": 0.95,
+      "source": "lexicon"
+    },
+    {
+      "kind": "repetition",
+      "word_index": 30,
+      "span": [
+        30,
+        31
+      ],
+      "start": 12.88,
+      "end": 13.28,
+      "original": "The the",
+      "suggestion": null,
+      "rationale": "Immediate repetition of 'the'",
+      "score": 1.0,
+      "source": "rule"
+    },
+    {
+      "kind": "filler",
+      "word_index": 37,
+      "span": null,
+      "start": 15.17,
+      "end": 15.72,
+      "original": "Basically,",
+      "suggestion": "",
+      "rationale": "Discourse filler: 'Basically,'. Preceded by a hesitation pause.",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "weasel",
+      "word_index": 39,
+      "span": null,
+      "start": 15.99,
+      "end": 16.25,
+      "original": "thing",
+      "suggestion": "(be specific)",
+      "rationale": "weak word — prefer '(be specific)'",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 39,
+      "span": null,
+      "start": 15.99,
+      "end": 16.25,
+      "original": "thing",
+      "suggestion": "(be specific)",
+      "rationale": "'thing' is vague; a stronger word like '(be specific)' lands harder.",
+      "score": 0.6,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "filler",
+      "word_index": 44,
+      "span": null,
+      "start": 17.57,
+      "end": 18.02,
+      "original": "uh,",
+      "suggestion": "",
+      "rationale": "Filled pause: 'uh,'. Preceded by a hesitation pause.",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "long_pause",
+      "word_index": 45,
+      "span": null,
+      "start": 18.02,
+      "end": 19.37,
+      "original": "(pause 1.35s)",
+      "suggestion": null,
+      "rationale": "Long mid-clause pause (awkward)",
+      "score": 1.0,
+      "source": "rule"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 45,
+      "span": null,
+      "start": 19.37,
+      "end": 19.99,
+      "original": "utilize",
+      "suggestion": "use",
+      "rationale": "weak word — prefer 'use'",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "tripped_up",
+      "word_index": 45,
+      "span": null,
+      "start": 19.37,
+      "end": 19.99,
+      "original": "utilize",
+      "suggestion": "use",
+      "rationale": "Stumble around 'utilize': a vague word choice, a long hesitation pause before it, a filler right before it.",
+      "score": 0.536,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "weak_word",
+      "word_index": 45,
+      "span": null,
+      "start": 19.37,
+      "end": 19.99,
+      "original": "utilize",
+      "suggestion": "use",
+      "rationale": "'utilize' is vague; a stronger word like 'use' lands harder.",
+      "score": 0.6,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "filler",
+      "word_index": 49,
+      "span": [
+        49,
+        50
+      ],
+      "start": 21.85,
+      "end": 22.28,
+      "original": "You know,",
+      "suggestion": "",
+      "rationale": "Filler phrase: 'you know'. Preceded by a hesitation pause.",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "filler",
+      "word_index": 51,
+      "span": [
+        51,
+        52
+      ],
+      "start": 22.53,
+      "end": 22.99,
+      "original": "I guess",
+      "suggestion": "",
+      "rationale": "Filler phrase: 'i guess'.",
+      "score": 0.7,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 51,
+      "span": [
+        51,
+        52
+      ],
+      "start": 22.53,
+      "end": 22.99,
+      "original": "I guess",
+      "suggestion": "",
+      "rationale": "filler/booster — cut it",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 51,
+      "span": null,
+      "start": 22.53,
+      "end": 22.65,
+      "original": "I guess",
+      "suggestion": "",
+      "rationale": "'i guess' is filler/hedging that weakens the point; cut it.",
+      "score": 0.6,
+      "source": "wordchoice"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 54,
+      "span": null,
+      "start": 23.21,
+      "end": 23.43,
+      "original": "could",
+      "suggestion": null,
+      "rationale": "weak/hedging word — tighten or cut",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 55,
+      "span": null,
+      "start": 23.51,
+      "end": 23.85,
+      "original": "maybe",
+      "suggestion": "",
+      "rationale": "filler/booster — cut it",
+      "score": 1.0,
+      "source": "lexicon"
+    },
+    {
+      "kind": "hedge",
+      "word_index": 55,
+      "span": null,
+      "start": 23.51,
+      "end": 23.85,
+      "original": "maybe",
+      "suggestion": "",
+      "rationale": "'maybe' is filler/hedging that weakens the point; cut it.",
+      "score": 0.6,
+      "source": "wordchoice"
+    }
+  ],
+  "transcript": {
+    "words": [
+      {
+        "text": "So,",
+        "start": 0.0,
+        "end": 0.25,
+        "confidence": 0.97,
+        "is_filled_pause": false,
+        "normalized": "so"
+      },
+      {
+        "text": "um,",
+        "start": 0.55,
+        "end": 1.0,
+        "confidence": 0.55,
+        "is_filled_pause": false,
+        "normalized": "um"
+      },
+      {
+        "text": "today",
+        "start": 1.2,
+        "end": 1.55,
+        "confidence": 0.98,
+        "is_filled_pause": false,
+        "normalized": "today"
+      },
+      {
+        "text": "I",
+        "start": 1.67,
+        "end": 1.79,
+        "confidence": 0.99,
+        "is_filled_pause": false,
+        "normalized": "i"
+      },
+      {
+        "text": "want",
+        "start": 1.84,
+        "end": 2.06,
+        "confidence": 0.98,
+        "is_filled_pause": false,
+        "normalized": "want"
+      },
+      {
+        "text": "to",
+        "start": 2.1,
+        "end": 2.22,
+        "confidence": 0.99,
+        "is_filled_pause": false,
+        "normalized": "to"
+      },
+      {
+        "text": "talk",
+        "start": 2.27,
+        "end": 2.55,
+        "confidence": 0.98,
+        "is_filled_pause": false,
+        "normalized": "talk"
+      },
+      {
+        "text": "about,",
+        "start": 2.6,
+        "end": 2.9,
+        "confidence": 0.96,
+        "is_filled_pause": false,
+        "normalized": "about"
+      },
+      {
+        "text": "uh,",
+        "start": 3.25,
+        "end": 3.65,
+        "confidence": 0.5,
+        "is_filled_pause": false,
+        "normalized": "uh"
+      },
+      {
+        "text": "our",
+        "start": 3.83,
+        "end": 4.01,
+        "confidence": 0.97,
+        "is_filled_pause": false,
+        "normalized": "our"
+      },
+      {
+        "text": "quarterly",
+        "start": 4.07,
+        "end": 4.55,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "quarterly"
+      },
+      {
+        "text": "results.",
+        "start": 4.6,
+        "end": 5.02,
+        "confidence": 0.97,
+        "is_filled_pause": false,
+        "normalized": "results"
+      },
+      {
+        "text": "I",
+        "start": 5.47,
+        "end": 5.61,
+        "confidence": 0.98,
+        "is_filled_pause": false,
+        "normalized": "i"
+      },
+      {
+        "text": "think",
+        "start": 5.65,
+        "end": 5.91,
+        "confidence": 0.97,
+        "is_filled_pause": false,
+        "normalized": "think"
+      },
+      {
+        "text": "the",
+        "start": 5.96,
+        "end": 6.08,
+        "confidence": 0.98,
+        "is_filled_pause": false,
+        "normalized": "the"
+      },
+      {
+        "text": "numbers",
+        "start": 6.13,
+        "end": 6.53,
+        "confidence": 0.96,
+        "is_filled_pause": false,
+        "normalized": "numbers"
+      },
+      {
+        "text": "are,",
+        "start": 6.58,
+        "end": 6.8,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "are"
+      },
+      {
+        "text": "like,",
+        "start": 7.08,
+        "end": 7.38,
+        "confidence": 0.6,
+        "is_filled_pause": false,
+        "normalized": "like"
+      },
+      {
+        "text": "pretty",
+        "start": 7.58,
+        "end": 7.86,
+        "confidence": 0.93,
+        "is_filled_pause": false,
+        "normalized": "pretty"
+      },
+      {
+        "text": "good.",
+        "start": 7.91,
+        "end": 8.26,
+        "confidence": 0.94,
+        "is_filled_pause": false,
+        "normalized": "good"
+      },
+      {
+        "text": "We,",
+        "start": 8.66,
+        "end": 8.86,
+        "confidence": 0.9,
+        "is_filled_pause": false,
+        "normalized": "we"
+      },
+      {
+        "text": "we",
+        "start": 8.96,
+        "end": 9.12,
+        "confidence": 0.66,
+        "is_filled_pause": false,
+        "normalized": "we"
+      },
+      {
+        "text": "saw",
+        "start": 9.17,
+        "end": 9.41,
+        "confidence": 0.97,
+        "is_filled_pause": false,
+        "normalized": "saw"
+      },
+      {
+        "text": "a",
+        "start": 9.45,
+        "end": 9.53,
+        "confidence": 0.98,
+        "is_filled_pause": false,
+        "normalized": "a"
+      },
+      {
+        "text": "really",
+        "start": 9.58,
+        "end": 9.84,
+        "confidence": 0.92,
+        "is_filled_pause": false,
+        "normalized": "really"
+      },
+      {
+        "text": "big",
+        "start": 9.89,
+        "end": 10.11,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "big"
+      },
+      {
+        "text": "increase",
+        "start": 10.16,
+        "end": 10.62,
+        "confidence": 0.96,
+        "is_filled_pause": false,
+        "normalized": "increase"
+      },
+      {
+        "text": "in,",
+        "start": 10.67,
+        "end": 10.85,
+        "confidence": 0.93,
+        "is_filled_pause": false,
+        "normalized": "in"
+      },
+      {
+        "text": "um,",
+        "start": 11.19,
+        "end": 11.61,
+        "confidence": 0.52,
+        "is_filled_pause": false,
+        "normalized": "um"
+      },
+      {
+        "text": "revenue.",
+        "start": 11.83,
+        "end": 12.38,
+        "confidence": 0.96,
+        "is_filled_pause": false,
+        "normalized": "revenue"
+      },
+      {
+        "text": "The",
+        "start": 12.88,
+        "end": 13.04,
+        "confidence": 0.88,
+        "is_filled_pause": false,
+        "normalized": "the"
+      },
+      {
+        "text": "the",
+        "start": 13.14,
+        "end": 13.28,
+        "confidence": 0.58,
+        "is_filled_pause": false,
+        "normalized": "the"
+      },
+      {
+        "text": "team",
+        "start": 13.33,
+        "end": 13.63,
+        "confidence": 0.97,
+        "is_filled_pause": false,
+        "normalized": "team"
+      },
+      {
+        "text": "did",
+        "start": 13.68,
+        "end": 13.86,
+        "confidence": 0.98,
+        "is_filled_pause": false,
+        "normalized": "did"
+      },
+      {
+        "text": "a",
+        "start": 13.9,
+        "end": 13.98,
+        "confidence": 0.98,
+        "is_filled_pause": false,
+        "normalized": "a"
+      },
+      {
+        "text": "great",
+        "start": 14.03,
+        "end": 14.33,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "great"
+      },
+      {
+        "text": "job.",
+        "start": 14.38,
+        "end": 14.72,
+        "confidence": 0.96,
+        "is_filled_pause": false,
+        "normalized": "job"
+      },
+      {
+        "text": "Basically,",
+        "start": 15.17,
+        "end": 15.72,
+        "confidence": 0.9,
+        "is_filled_pause": false,
+        "normalized": "basically"
+      },
+      {
+        "text": "the",
+        "start": 15.82,
+        "end": 15.94,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "the"
+      },
+      {
+        "text": "thing",
+        "start": 15.99,
+        "end": 16.25,
+        "confidence": 0.8,
+        "is_filled_pause": false,
+        "normalized": "thing"
+      },
+      {
+        "text": "is",
+        "start": 16.3,
+        "end": 16.46,
+        "confidence": 0.96,
+        "is_filled_pause": false,
+        "normalized": "is"
+      },
+      {
+        "text": "we",
+        "start": 16.51,
+        "end": 16.67,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "we"
+      },
+      {
+        "text": "need",
+        "start": 16.72,
+        "end": 16.96,
+        "confidence": 0.97,
+        "is_filled_pause": false,
+        "normalized": "need"
+      },
+      {
+        "text": "to,",
+        "start": 17.01,
+        "end": 17.17,
+        "confidence": 0.92,
+        "is_filled_pause": false,
+        "normalized": "to"
+      },
+      {
+        "text": "uh,",
+        "start": 17.57,
+        "end": 18.02,
+        "confidence": 0.48,
+        "is_filled_pause": false,
+        "normalized": "uh"
+      },
+      {
+        "text": "utilize",
+        "start": 19.37,
+        "end": 19.99,
+        "confidence": 0.41,
+        "is_filled_pause": false,
+        "normalized": "utilize"
+      },
+      {
+        "text": "our",
+        "start": 20.17,
+        "end": 20.33,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "our"
+      },
+      {
+        "text": "budget",
+        "start": 20.39,
+        "end": 20.79,
+        "confidence": 0.96,
+        "is_filled_pause": false,
+        "normalized": "budget"
+      },
+      {
+        "text": "better.",
+        "start": 20.85,
+        "end": 21.3,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "better"
+      },
+      {
+        "text": "You",
+        "start": 21.85,
+        "end": 22.01,
+        "confidence": 0.93,
+        "is_filled_pause": false,
+        "normalized": "you"
+      },
+      {
+        "text": "know,",
+        "start": 22.06,
+        "end": 22.28,
+        "confidence": 0.85,
+        "is_filled_pause": false,
+        "normalized": "know"
+      },
+      {
+        "text": "I",
+        "start": 22.53,
+        "end": 22.65,
+        "confidence": 0.96,
+        "is_filled_pause": false,
+        "normalized": "i"
+      },
+      {
+        "text": "guess",
+        "start": 22.69,
+        "end": 22.99,
+        "confidence": 0.78,
+        "is_filled_pause": false,
+        "normalized": "guess"
+      },
+      {
+        "text": "it",
+        "start": 23.04,
+        "end": 23.16,
+        "confidence": 0.97,
+        "is_filled_pause": false,
+        "normalized": "it"
+      },
+      {
+        "text": "could",
+        "start": 23.21,
+        "end": 23.43,
+        "confidence": 0.9,
+        "is_filled_pause": false,
+        "normalized": "could"
+      },
+      {
+        "text": "maybe",
+        "start": 23.51,
+        "end": 23.85,
+        "confidence": 0.72,
+        "is_filled_pause": false,
+        "normalized": "maybe"
+      },
+      {
+        "text": "work.",
+        "start": 23.95,
+        "end": 24.37,
+        "confidence": 0.95,
+        "is_filled_pause": false,
+        "normalized": "work"
+      }
+    ],
+    "audio_path": null,
+    "sample_rate": null,
+    "duration_sec": 24.37,
+    "speaking_sec": 15.54,
+    "language": "en",
+    "engine": "fixture",
+    "speaker_median_gap": 0.05,
+    "sentences": [
+      [
+        0,
+        11
+      ],
+      [
+        12,
+        19
+      ],
+      [
+        20,
+        29
+      ],
+      [
+        30,
+        36
+      ],
+      [
+        37,
+        48
+      ],
+      [
+        49,
+        56
+      ]
+    ]
+  },
+  "metrics": {
+    "total_words": 57,
+    "duration_sec": 24.37,
+    "speaking_sec": 15.54,
+    "filler_count": 8,
+    "filler_rate_per_100w": 14.04,
+    "fillers_per_minute": 19.7,
+    "wpm": 140.33647927780058,
+    "articulation_wpm": 220.07722007722006,
+    "consistency": 36.98648401781386,
+    "n_windows": 3,
+    "long_pauses": 1,
+    "repetitions": 2,
+    "disfluency_per_minute": 5.91,
+    "tripped_up": 1,
+    "high_severity": 0,
+    "severity_sum": 0.54,
+    "suggestions_offered": 7,
+    "mattr": 0.795,
+    "mtld": 75.81000000000002,
+    "ttr": 0.7894736842105263,
+    "unique": 45,
+    "total": 57,
+    "hedge_count": 8,
+    "hedge_density_per_100w": 14.04,
+    "flesch_reading_ease": 82.90828947368422,
+    "flesch_kincaid_grade": 4.055350877192982,
+    "smog_index": 7.793537801064561,
+    "gunning_fog": 6.60701754385965
+  },
+  "metadata": {
+    "engine": "fixture",
+    "word_choice_mode": "offline-lexicon",
+    "weights": {
+      "fillers": 0.2045,
+      "pace": 0.1364,
+      "pauses": 0.1364,
+      "word_choice": 0.2045,
+      "vocabulary": 0.1364,
+      "hedging": 0.1136,
+      "readability": 0.0682
+    },
+    "version": "0.1.0"
+  },
+  "summary": "Overall 53.0/100 (developing). Biggest opportunities: fillers, pauses."
+}

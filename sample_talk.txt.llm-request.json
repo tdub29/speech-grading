@@ -1,0 +1,212 @@
+{
+  "instructions": "You are a precise speech-coaching analyst. You are given a verbatim transcript of spoken words, each tagged with its index, timing, and the silent gap before it. Identify moments where the speaker:\n  - used a WEAK or vague word where a stronger, more specific one existed (issue_type \"weak\"),\n  - HEDGED unnecessarily (issue_type \"hedge\"),\n  - used a FILLER / discourse crutch (issue_type \"filler\"),\n  - or clearly GOT TRIPPED UP: a long gap or repetition right before a word, where they seemed to reach for a worse word (issue_type \"tripped_up\").\n\nFor each, return the word_index it applies to, the original text, a stronger suggestion when one exists (else leave it null), a one-sentence rationale, and a confidence 0-1. Favor precision over volume: only flag genuinely improvable moments. For tripped_up, the long gap or repetition must actually be present in the timing data.",
+  "response_schema": {
+    "findings": [
+      {
+        "word_index": "int (index into words below)",
+        "issue_type": "weak | hedge | filler | tripped_up",
+        "original": "str",
+        "suggestion": "str or null (a stronger word, or null to just cut it)",
+        "rationale": "one sentence",
+        "confidence": "float 0-1"
+      }
+    ]
+  },
+  "has_timing": false,
+  "total_words": 32,
+  "duration_sec": 0.0,
+  "words": [
+    {
+      "index": 0,
+      "text": "So,",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 1,
+      "text": "um,",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 2,
+      "text": "I",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 3,
+      "text": "think",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 4,
+      "text": "the",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 5,
+      "text": "results",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 6,
+      "text": "were,",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 7,
+      "text": "like,",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 8,
+      "text": "really",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 9,
+      "text": "good.",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 10,
+      "text": "We",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 11,
+      "text": "we",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 12,
+      "text": "saw",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 13,
+      "text": "a",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 14,
+      "text": "big",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 15,
+      "text": "increase.",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 16,
+      "text": "Basically,",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 17,
+      "text": "we",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 18,
+      "text": "need",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 19,
+      "text": "to",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 20,
+      "text": "utilize",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 21,
+      "text": "the",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 22,
+      "text": "budget",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 23,
+      "text": "better.",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 24,
+      "text": "You",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 25,
+      "text": "know,",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 26,
+      "text": "I",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 27,
+      "text": "guess",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 28,
+      "text": "it",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 29,
+      "text": "could",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 30,
+      "text": "maybe",
+      "gap_before": null,
+      "confidence": null
+    },
+    {
+      "index": 31,
+      "text": "work.",
+      "gap_before": null,
+      "confidence": null
+    }
+  ]
+}
