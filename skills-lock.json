@@ -1,5 +1,25 @@
 {
   "skills": {
+    "anti-slop-design-law": {
+      "computedHash": "4921bbd76f1adbf3c2adbf9d3055c06767b6a6fad2ed222e925100490b450a65",
+      "source": "https://pols.dev/slop.md",
+      "sourceType": "url"
+    },
+    "de-slop": {
+      "computedHash": "07465f495943f82cb6f7af82e3b9d542e41b4afdabbebd3203e3f8dd749f1c0f",
+      "source": "local/self",
+      "sourceType": "local"
+    },
+    "no-ai-slop": {
+      "computedHash": "4d25b59a76256f996d86ae7b0bc66f4971fae4410fd2b6b7e9eaad6d86e77bf8",
+      "source": "petergyang/no-ai-slop",
+      "sourceType": "github"
+    },
+    "ai-writing-detection": {
+      "computedHash": "bb2eb759461cff1812d62002f2d2a9744e022ba857600a128213eed5af33bf7a",
+      "source": "local/self",
+      "sourceType": "local"
+    },
     "anti-slop-design": {
       "source": "https://pols.dev/slop.md",
       "sourceType": "url",

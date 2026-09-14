@@ -23,20 +23,9 @@ Thumbs.db
 
 # --- added by repo-prep (safe defaults) ---
 node_modules/
-.venv/
-venv/
-__pycache__/
-*.pyc
-.pytest_cache/
 repos/
 *.zip
-.env
-.env.*
 !.env.example
-*.pem
-*.key
-secrets.json
-credentials.json
 auth_state.json
 storage_state.json
 seen.json
