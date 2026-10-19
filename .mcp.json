@@ -49,11 +49,6 @@
         "mcp_excalidraw"
       ]
     },
-    "codebase-memory": {
-      "type": "stdio",
-      "command": "C:/Users/TrevorWhite/tools/codebase-memory-mcp/codebase-memory-mcp.exe",
-      "args": []
-    },
     "fal": {
       "type": "stdio",
       "command": "uvx",
@@ -103,14 +98,6 @@
         "-y",
         "@modelcontextprotocol/server-filesystem",
         "C:/Users/TrevorWhite/Downloads/Big Projects/speech-grading"
-      ],
-      "type": "stdio"
-    },
-    "caveman-shrink-codebase-memory": {
-      "command": "node",
-      "args": [
-        "C:/Users/TrevorWhite/Downloads/Big Projects/.agents/vendor/JuliusBrussee-caveman/src/mcp-servers/caveman-shrink/index.js",
-        "C:/Users/TrevorWhite/tools/codebase-memory-mcp/codebase-memory-mcp.exe"
       ],
       "type": "stdio"
     }
