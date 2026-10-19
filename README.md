@@ -71,7 +71,7 @@ orator answer.txt --emit-request --html report.html
 orator answer.txt --wordchoice-json answer.txt.llm-response.json --html report.html
 ```
 
-Open `report.html` to view the overall score, dimension breakdown, and inline-highlighted transcript. A static sample output is checked in at [sample_report.html](sample_report.html).
+Open `report.html` to view the overall score, dimension breakdown, and inline-highlighted transcript. A static sample output is checked in at [sample report](examples/sample_report.html).
 
 ## What it measures
 
@@ -102,7 +102,7 @@ A weak word surfaces as a stumble only when it co-occurs with a hesitation signa
 - **Core transcript mode (`pip install -e .`):** Runs 100% locally and offline.
 - **ASR mode (`pip install -e ".[asr]"`):** Downloads `faster-whisper` model weights on first run, then transcribes locally.
 - **LLM mode (`--llm`):** Sends transcript text to the Anthropic API.
-- **Data hygiene:** `tests/fixtures/sample_transcript.json` and `sample_report.html` are synthetic fixtures. Keep personal audio recordings and private transcripts outside the repository.
+- **Data hygiene:** `tests/fixtures/sample_transcript.json` and `examples/sample_report.html` are synthetic fixtures. Keep personal audio recordings and private transcripts outside the repository.
 
 ## Development
 
@@ -127,3 +127,12 @@ Open-source projects that informed the design:
 - [SharathKumar787/AI-Transcript-Scoring-Tool](https://github.com/SharathKumar787/AI-Transcript-Scoring-Tool): filler-rate, WPM-band, and lexical diversity rubrics
 - [unruli/Real-Time-Feedback-System-for-Student-Presentations](https://github.com/unruli/Real-Time-Feedback-System-for-Student-Presentations): presentation feedback pipeline design
 - [Averylamp/SpeakEZ](https://github.com/Averylamp/SpeakEZ): spoken word-choice and complexity scoring
+
+## Repository layout
+
+- `speech_grading/`: transcript schema, analysis, ASR adapters, and report rendering.
+- `tests/`: offline tests and synthetic fixtures.
+- [examples/](examples/README.md): synthetic transcript, sample reports, and word-choice request/response packets.
+- `orate.ps1`: optional PowerShell wrapper for local grading.
+
+Install and test with `pip install -e ".[dev]"` and `python -m pytest`.

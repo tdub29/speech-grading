@@ -33,3 +33,24 @@ seen.json
 *.log
 .DS_Store
 
+
+# Local workspace state is not public project source.
+/.agents/
+/.claude/
+/.codex/
+/.cursor/
+/.impeccable/
+/.vscode/
+/.mcp.json
+/skills-lock.json
+**/AGENTS.md
+**/CLAUDE.md
+*.bak
+*.err
+tmp_*
+/_design/
+/graded-log.md
+/*.orator.html
+/*.orator.json
+/*.llm-request.json
+/*.llm-response.json
