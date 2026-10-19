@@ -58,7 +58,7 @@ orator talk.wav --backend faster-whisper --acoustic --html report.html
 
 ### 3. Optional word-choice enrichment (`llm` extra or agent handoff)
 
-The offline lexicon pass is always the source of record, so every score is valid without an API key. For deeper word-choice suggestions, use either the Anthropic API (`--llm`, which sends transcript text to Anthropic) or a two-step local JSON handoff:
+Core scoring runs locally without an API key. For deeper word-choice suggestions, use either the Anthropic API (`--llm`, which sends transcript text to Anthropic) or a two-step local JSON handoff:
 
 ```bash
 # Option A: Anthropic API (requires ANTHROPIC_API_KEY)
