@@ -4,6 +4,22 @@ Orator is a Python CLI that grades spoken transcripts and audio on delivery (fil
 
 Core transcript analysis runs offline on CPU with no model download. Optional extras add verbatim speech-to-text, acoustic prosody analysis, and LLM word-choice enrichment. Scores are deterministic heuristics for practice and review, not clinical assessments.
 
+## From recording to feedback
+
+```mermaid
+flowchart LR
+    A["Audio recording"] --> B["Optional local speech-to-text"]
+    B --> D["Transcript analysis"]
+    C["Text or timestamped transcript"] --> D
+    A --> E["Optional acoustic analysis"]
+    D --> F["Scores and highlighted HTML report"]
+    E --> F
+    D -.-> G["Optional word-choice enrichment"]
+    G -.-> F
+```
+
+Text-only grading runs offline. Timestamps unlock pace and pause measures; audio adds optional prosody analysis.
+
 ## Why verbatim ASR matters
 
 Standard speech-to-text engines delete filler words by default. If a recognizer strips "um" and "uh" during transcription, downstream code cannot count them. Orator configures its ASR backend with a verbatim decode prompt and word-level timestamps so the analysis layer stays engine-agnostic.
