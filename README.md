@@ -136,3 +136,7 @@ Open-source projects that informed the design:
 - `orate.ps1`: optional PowerShell wrapper for local grading.
 
 Install and test with `pip install -e ".[dev]"` and `python -m pytest`.
+
+## More projects
+
+More of my work and contact details are at [twhite.dev](https://twhite.dev).
