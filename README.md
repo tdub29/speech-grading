@@ -4,6 +4,12 @@ Orator is a Python CLI that grades spoken transcripts and audio on delivery (fil
 
 Core transcript analysis runs offline on CPU with no model download. Optional extras add verbatim speech-to-text, acoustic prosody analysis, and LLM word-choice enrichment. Scores are deterministic heuristics for practice and review, not clinical assessments.
 
+## Sample speech report
+
+![Orator report showing seven scoring dimensions and highlighted synthetic transcript](docs/images/orator-synthetic-report.jpg)
+
+A synthetic timestamped transcript, analyzed with the offline lexicon. The report shows dimension scores and highlights fillers, hedges, repetitions, and hesitation-linked word choices. [Open the sample HTML report](examples/sample_report.html).
+
 ## From recording to feedback
 
 ```mermaid
