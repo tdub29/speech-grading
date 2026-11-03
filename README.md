@@ -8,7 +8,7 @@ Core transcript analysis runs offline on CPU with no model download. Optional ex
 
 ![Orator report showing seven scoring dimensions and highlighted synthetic transcript](docs/images/orator-synthetic-report.jpg)
 
-A synthetic timestamped transcript, analyzed with the offline lexicon. The report shows dimension scores and highlights fillers, hedges, repetitions, and hesitation-linked word choices. [Open the sample HTML report](examples/sample_report.html).
+A synthetic timestamped transcript, analyzed with the offline lexicon. The report shows dimension scores and highlights fillers, hedges, repetitions, and hesitation-linked word choices. The rendered report is [examples/sample_report.html](examples/sample_report.html); GitHub shows its source, so download it and open it in a browser.
 
 ## From recording to feedback
 
