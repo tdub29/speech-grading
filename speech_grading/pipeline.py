@@ -107,9 +107,37 @@ def load_input(input_path: str, cfg: Config) -> Transcript:
     return derive_transcript_fields(t)
 
 
+def add_visual(report: Report, t: Transcript, input_path: str, cfg: Config) -> Report:
+    """Video input: run the visual tier and attach findings + rates to the report.
+
+    Degrades gracefully: any VisualUnavailable becomes a note in report.metrics.
+    """
+    from .analysis import visual, visual_events
+
+    if not (cfg.enable_video and visual.is_video(input_path)):
+        return report
+    try:
+        frames = visual.extract_frames(input_path)
+    except visual.VisualUnavailable as e:
+        report.metrics["visual"] = {"skipped": str(e)}
+        return report
+    ends = [t.words[e].end for _, e in t.sentences if 0 <= e < len(t.words)]
+    res = visual_events.summarize(frames, ends, cfg.mode)
+    report.findings += res.pop("findings")
+    report.metrics["visual"] = res
+    if cfg.visual_rows:
+        import json
+
+        with open(cfg.visual_rows, "w", encoding="utf-8") as fh:
+            for row in visual_events.feature_rows(frames, mode=cfg.mode):
+                fh.write(json.dumps(row) + "\n")
+    return report
+
+
 def run_pipeline(input_path: str, cfg: Config) -> Report:
     """Full run. If ``input_path`` is a Transcript JSON/text, skip ASR; else transcribe."""
-    return run_on_transcript(load_input(input_path, cfg), cfg)
+    t = load_input(input_path, cfg)
+    return add_visual(run_on_transcript(t, cfg), t, input_path, cfg)
 
 
 def _make_backend(cfg: Config):

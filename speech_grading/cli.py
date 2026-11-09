@@ -20,7 +20,7 @@ from .report import render_html, render_json
 
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="orator", description="Grade a speech sample.")
-    p.add_argument("input", help="audio (.wav/.mp3/...), Transcript JSON (.json), or text (.txt/.md/.vtt/.srt)")
+    p.add_argument("input", help="audio (.wav/.mp3/...), video (.mp4/.mov/...), Transcript JSON (.json), or text (.txt/.md/.vtt/.srt)")
     p.add_argument("--config", help="YAML/JSON config file", default=None)
     p.add_argument("--backend", default=None,
                    choices=["faster-whisper", "crisper-whisper", "vosk"],
@@ -45,6 +45,11 @@ def _build_parser() -> argparse.ArgumentParser:
     p.add_argument("--log", default=None,
                    help="append a one-line summary row to this markdown ledger "
                         "(circles every grade back to one place)")
+    p.add_argument("--mode", default=None,
+                   choices=["default", "zoom", "phone", "stage", "interview"],
+                   help="video speaking mode: sets which visual cues and thresholds apply")
+    p.add_argument("--visual-rows", default=None,
+                   help="video only: write windowed visual feature JSONL here (training data)")
     p.set_defaults(use_llm=None)
     return p
 
@@ -63,6 +68,10 @@ def _config_from_args(args) -> Config:
         cfg.enable_acoustic = True
     if args.wordchoice_json:
         cfg.wordchoice_json = args.wordchoice_json
+    if args.mode:
+        cfg.mode = args.mode
+    if args.visual_rows:
+        cfg.visual_rows = args.visual_rows
     return cfg
 
 
@@ -122,7 +131,13 @@ def main(argv: Optional[list[str]] = None) -> int:
         print("  (an agent fills {\"findings\": [...]} -> save as a response JSON, "
               "then re-run with --wordchoice-json <response>)")
 
-    report = run_on_transcript(t, cfg)
+    from .pipeline import add_visual
+
+    report = add_visual(run_on_transcript(t, cfg), t, args.input, cfg)
+    vis = report.metrics.get("visual")
+    if vis:
+        print("visual:", vis.get("skipped") or f"{vis['mode']} mode, rates/min {vis['rates_per_min']}, "
+              f"face visible {vis['quality']['face_visible_pct']:.0f}%")
 
     if args.json_out:
         render_json(report, args.json_out)

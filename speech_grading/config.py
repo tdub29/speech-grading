@@ -73,7 +73,9 @@ class Config(BaseModel):
     weights: dict[str, float] = Field(default_factory=lambda: dict(DEFAULT_WEIGHTS))
     thresholds: dict[str, Any] = Field(default_factory=lambda: json.loads(json.dumps(DEFAULT_THRESHOLDS)))
     enable_acoustic: bool = False        # prosody track (needs audio + parselmouth/librosa)
-    enable_video: bool = False           # visual tier (needs video + mediapipe/l2cs)
+    enable_video: bool = True            # visual tier runs automatically for video input if deps+models exist
+    mode: str = "default"                # visual profile: default|zoom|phone|stage|interview
+    visual_rows: str = ""                # if set, write windowed visual feature JSONL here (training export)
     asr_model_size: str = "large-v3"
     asr_device: str = "cpu"
     asr_compute_type: str = "int8"
