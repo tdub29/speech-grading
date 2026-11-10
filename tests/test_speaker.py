@@ -32,7 +32,7 @@ def test_transcript_filter_by_speaker_success():
     assert alice.words[-1].text == "Thanks!"
     assert alice.duration_sec == round(0.9 + 0.4, 4)
 
-    # Calling filter_by_speaker again with same speaker is a no-op
+    # Re-filtering by the same speaker changes nothing
     alice_again = alice.filter_by_speaker("Alice")
     assert alice_again.total_words == 3
 
@@ -109,3 +109,37 @@ def test_filter_other_speaker_turn_is_not_a_pause_or_pace_time():
     a = derive_transcript_fields(Transcript(words=words)).filter_by_speaker("A")
     assert a.gap_before(1) == 0.0
     assert a.duration_sec == 1.0
+
+
+def test_pace_ignores_time_spent_listening():
+    from speech_grading.analysis.pace import _window_wpms
+
+    words = [Word(text=f"a{i}", start=i * 0.4, end=i * 0.4 + 0.3, speaker="A") for i in range(25)]
+    words += [Word(text="b", start=20.0, end=59.0, speaker="B")]
+    words += [Word(text=f"a{i}", start=60 + i * 0.4, end=60 + i * 0.4 + 0.3, speaker="A") for i in range(25)]
+    a = derive_transcript_fields(Transcript(words=words)).filter_by_speaker("A")
+    assert 0.0 not in _window_wpms(a, 10.0)
+
+
+def test_text_transcript_speaker_labels(tmp_path):
+    from speech_grading.schema import load_transcript_text
+
+    f = tmp_path / "pod.txt"
+    f.write_text("Note: intro\nAlice: hi there\nBob: hey\nAlice: so um yeah\nBob: right\n", encoding="utf-8")
+    t = load_transcript_text(str(f))
+    assert [w.speaker for w in t.words][:1] == [None]  # "Note:" appears once, not a speaker
+    assert t.filter_by_speaker("Bob").total_words == 2
+
+    vtt = tmp_path / "c.vtt"
+    vtt.write_text("WEBVTT\n\n00:00.000 --> 00:01.000\n<v Ann>Hello you</v>\n", encoding="utf-8")
+    assert load_transcript_text(str(vtt)).filter_by_speaker("Ann").total_words == 2
+
+
+def test_prosody_skips_video_audio_path(tmp_path):
+    from speech_grading.analysis.prosody import compute_prosody
+    from speech_grading.config import Config
+
+    vid = tmp_path / "talk.mp4"
+    vid.write_bytes(b"x")
+    t = Transcript(words=[Word(text="hi", start=0.0, end=0.5)], audio_path=str(vid))
+    assert compute_prosody(t, Config(enable_acoustic=True)) == (None, [])

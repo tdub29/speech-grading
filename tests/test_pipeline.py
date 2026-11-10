@@ -63,37 +63,47 @@ def test_pipeline_speaker_filter(sample_transcript):
         w.speaker = "speaker_a" if i % 2 == 0 else "speaker_b"
     cfg = Config(speaker="speaker_a")
     report = run_on_transcript(sample_transcript, cfg)
-    assert all(w.speaker == "speaker_a" for w in report.transcript.words)
-    assert len(report.transcript.words) > 0
+    words = report.transcript.words
+    assert words and all(w.speaker == "speaker_a" for w in words)
+    # every kept word opens a turn, so no gap may score as a pause
+    assert not [f for f in report.findings if f.kind == "long_pause"]
+    assert report.transcript.duration_sec == round(sum(w.end - w.start for w in words), 4)
 
 
-def test_video_asr_fallback(monkeypatch, tmp_path):
-    import pytest
+def test_video_input_always_transcribes_extracted_wav(monkeypatch, tmp_path):
     from speech_grading import pipeline
     from speech_grading.schema import Transcript, Word
 
     vid = tmp_path / "test.mp4"
     vid.write_bytes(b"dummy video content")
+    wav = str(tmp_path / "extracted.wav")
+    calls = []
 
-    class MockRejectingBackend:
-        def __init__(self):
-            self.calls = []
-
+    class Backend:
         def transcribe(self, path):
-            self.calls.append(str(path))
-            if path.endswith(".mp4"):
-                raise ValueError("cannot transcribe video directly")
-            return Transcript(words=[Word(text="hello", start=0.0, end=1.0)], audio_path=path)
+            calls.append(path)
+            return Transcript(words=[Word(text="hello", start=0.0, end=1.0)])
 
-    mock = MockRejectingBackend()
-    monkeypatch.setattr(pipeline, "_make_backend", lambda cfg: mock)
-    monkeypatch.setattr(pipeline, "extract_audio_from_video", lambda p: str(tmp_path / "extracted.wav"))
-
+    monkeypatch.setattr(pipeline, "_make_backend", lambda cfg: Backend())
+    monkeypatch.setattr(pipeline, "find_ffmpeg", lambda: "ffmpeg")
+    monkeypatch.setattr(pipeline, "extract_audio_from_video", lambda p: wav)
     t = pipeline.load_input(str(vid), Config())
-    assert len(mock.calls) == 2
-    assert mock.calls[0] == str(vid)
-    assert mock.calls[1] == str(tmp_path / "extracted.wav")
-    assert t.audio_path == str(tmp_path / "extracted.wav")
+    assert calls == [wav]  # never the .mp4: prosody must get a WAV
+    assert t.audio_path == wav
+
+
+def test_asr_error_is_not_swallowed(monkeypatch, tmp_path):
+    import pytest
+    from speech_grading import pipeline
+
+    class Boom:
+        def transcribe(self, path):
+            raise MemoryError("oom")
+
+    monkeypatch.setattr(pipeline, "_make_backend", lambda cfg: Boom())
+    monkeypatch.setattr(pipeline, "find_ffmpeg", lambda: None)
+    with pytest.raises(MemoryError):
+        pipeline.load_input(str(tmp_path / "talk.mp4"), Config())
 
 
 def test_video_asr_missing_ffmpeg(monkeypatch, tmp_path):
@@ -106,3 +116,20 @@ def test_video_asr_missing_ffmpeg(monkeypatch, tmp_path):
     with pytest.raises(RuntimeError) as exc_info:
         pipeline.extract_audio_from_video(str(vid))
     assert "ffmpeg not found" in str(exc_info.value)
+
+
+def test_add_visual_merges_findings_and_writes_rows(monkeypatch, tmp_path, sample_transcript):
+    import json
+    from speech_grading import pipeline
+    from speech_grading.analysis import visual
+
+    frames = [dict(t=i / 10, face_visible=True, smile=0.1, brow_raise=0.0, brow_furrow=0.0,
+                   jaw_open=0.0, gaze_off=0.0, pitch_deg=0.0, hand_face_dist=None,
+                   wrist_y_rel=None, hands_visible=False) for i in range(300)]
+    monkeypatch.setattr(visual, "extract_frames", lambda p: frames)
+    rows = tmp_path / "rows.jsonl"
+    cfg = Config(mode="zoom", visual_rows=str(rows))
+    rep = pipeline.add_visual(run_on_transcript(sample_transcript, cfg), sample_transcript, "x.mp4", cfg)
+    assert rep.metrics["visual"]["mode"] == "zoom"
+    assert rows.read_text().strip()
+    json.loads(rows.read_text().splitlines()[0])

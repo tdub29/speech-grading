@@ -86,8 +86,6 @@ class Transcript(BaseModel):
         available = {w.speaker for w in self.words if w.speaker is not None}
         if not available:
             raise ValueError(f"Speaker {speaker!r} requested, but transcript has no speaker labels.")
-        if available == {speaker} or (len(available) == 1 and next(iter(available)).lower() == speaker.lower()):
-            return self
         want = speaker if any(w.speaker == speaker for w in self.words) else None
         if want is None:
             want = next((a for a in available if a.lower() == speaker.lower()), None)
@@ -104,7 +102,7 @@ class Transcript(BaseModel):
             prev_mine = mine
         filtered = self.model_copy(deep=True)
         filtered.words = [w.model_copy() for w in matching]
-        filtered.turn_starts = turns[1:]
+        filtered.turn_starts = turns  # includes 0: marks the transcript as speaker-filtered
         # Pace counts only this speaker's turns, not the wall clock spent listening.
         bounds = turns + [len(matching)]
         filtered.duration_sec = round(sum(
@@ -206,9 +204,36 @@ def load_transcript_text(source: str) -> Transcript:
     if os.path.exists(source):
         with open(source, "r", encoding="utf-8-sig") as fh:  # tolerate a BOM
             text = fh.read()
-    words = [Word(text=tok, start=0.0, end=0.0) for tok in text.split() if tok.strip()]
+    words = _text_words(text)
     t = Transcript(words=words, engine="text", has_timing=False)
     return derive_transcript_fields(t)
+
+
+_VTT_VOICE = re.compile(r"^<v(?:\.[^ >]*)?\s+([^>]+)>\s*")
+_NAME_PREFIX = re.compile(r"^([A-Z][\w.'-]*(?: [A-Z0-9][\w.'-]*){0,2}):\s+")
+
+
+def _text_words(text: str) -> list[Word]:
+    """Split text into Words, carrying speaker labels from VTT ``<v Name>`` tags or
+    ``Name:`` line prefixes. A ``Name:`` prefix only counts when the same name opens
+    at least two lines, so a stray "Note: ..." does not invent a speaker."""
+    lines = text.splitlines()
+    names = [m.group(1) for ln in lines if (m := _NAME_PREFIX.match(ln.strip()))]
+    repeated = {n for n in names if names.count(n) >= 2}
+    words: list[Word] = []
+    speaker: Optional[str] = None
+    for ln in lines:
+        ln = ln.strip()
+        m = _VTT_VOICE.match(ln)
+        if m:
+            speaker, ln = m.group(1).strip(), ln[m.end():]
+            ln = ln.replace("</v>", "")
+        else:
+            m = _NAME_PREFIX.match(ln)
+            if m and m.group(1) in repeated:
+                speaker, ln = m.group(1), ln[m.end():]
+        words += [Word(text=tok, start=0.0, end=0.0, speaker=speaker) for tok in ln.split()]
+    return words
 
 
 def dump_report_json(report: Report, path: str) -> None:

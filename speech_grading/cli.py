@@ -119,6 +119,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     from .pipeline import load_input
 
     t = load_input(args.input, cfg)
+    if cfg.speaker:  # filter once so word-choice handoff, scoring and visual share one index space
+        t = t.filter_by_speaker(cfg.speaker)
 
     if args.emit_request is not None:
         import json as _json

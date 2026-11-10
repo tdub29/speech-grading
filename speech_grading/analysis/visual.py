@@ -38,7 +38,7 @@ def face_features(lms, blend: dict, matrix) -> dict:
     gaze = [_bs(blend, f"eyeLook{d}Left", f"eyeLook{d}Right") for d in ("Out", "In", "Up", "Down")]
     gaze = [g for g in gaze if g is not None]
     pitch = None
-    if matrix is not None:
+    if matrix is not None and getattr(matrix, "size", 0) >= 16:  # empty array when no matrix
         # MediaPipe metric 3D space: right-handed, camera looks down -Z, Y is up, face looks towards +Z.
         # Chin up tilts head back (negative rotation around X), so -matrix[2][1] > 0 and pitch_deg is positive.
         pitch = math.degrees(math.atan2(-matrix[2][1], matrix[2][2]))
@@ -88,12 +88,14 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
     last_ms = -1
     try:
         while True:
-            ok, bgr = cap.read()
-            if not ok:
+            if not cap.grab():  # grab-only for skipped frames: no decode cost
                 break
             t = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000.0
             if t < next_t:
                 continue
+            ok, bgr = cap.retrieve()
+            if not ok:
+                break
             next_t = t + step
             img = mp.Image(image_format=mp.ImageFormat.SRGB, data=cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
             ms = int(t * 1000)

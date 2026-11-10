@@ -83,7 +83,7 @@ orator answer.txt --wordchoice-json answer.txt.llm-response.json --html report.h
 orator talk.mp4 --mode zoom --html report.html
 ```
 
-Video inputs extract audio automatically for ASR and track facial features (smile, gaze, chin pitch) and hand-to-face contact.
+For video, orator pulls a 16 kHz WAV out with ffmpeg (PATH, else `Fantasy Golf App/tools/video/bin`) for ASR and prosody, and tracks smile, gaze, chin pitch and hand-to-face contact.
 
 Open `report.html` to view the overall score, dimension breakdown, and inline-highlighted transcript. A static sample output is checked in at [sample report](examples/sample_report.html).
 
@@ -93,12 +93,12 @@ Orator accepts text transcripts, audio recordings, or video files:
 
 - **Text transcripts (`.txt`, `.md`, `.vtt`, `.srt`):** Runs offline text analysis (fillers, weak words, vocabulary, readability). Skips timing dimensions automatically.
 - **Timed transcripts (`.json`):** Canonical word-timestamp fixtures that enable pace and pause measures offline without model dependencies.
-- **Audio recordings (`.wav`, `.mp3`):** Transcribed locally via ASR. Adding `--acoustic` measures pitch dynamics (F0 variation) and energy contour.
-- **Video recordings (`.mp4`, `.mov`, `.mkv`, `.webm`, `.avi`):** Transcribed via ASR (extracting audio via ffmpeg automatically if needed) and analyzed for visual behavior.
+- **Audio recordings (`.wav`, `.mp3`, any other extension):** Transcribed locally via ASR. Adding `--acoustic` measures pitch dynamics (F0 variation) and energy contour.
+- **Video recordings (`.mp4`, `.mov`, `.mkv`, `.webm`, `.avi`, `.m4v`):** Audio extracted with ffmpeg, transcribed via ASR, and analyzed for visual behavior. Without ffmpeg, ASR reads the video directly where the backend can, and prosody is skipped.
 
 ### Multi-speaker transcripts
 
-Filter to a single speaker using `--speaker`:
+Grade one speaker with `--speaker`. The labels must already be in the input: a `speaker` field per word in `.json`, VTT `<v Name>` tags, or `Name:` line prefixes in text (a name must open at least two lines). No ASR backend diarizes yet. Other speakers' turns never count as pauses, pace time, or prosody.
 
 ```bash
 orator podcast.json --speaker SPEAKER_00 --html report.html
@@ -108,11 +108,13 @@ orator podcast.json --speaker SPEAKER_00 --html report.html
 
 Different settings require different cue thresholds:
 
-- `default`: general presentation setup.
-- `zoom`: seated video call; screen sits below lens, relaxing gaze checks.
-- `phone`: handheld selfie recording; closer distance and adjusted face-touch gates.
-- `stage`: wide audience view; sweeps and broad movements expected.
-- `interview`: conversational setting focused on interviewer interaction.
+Each mode picks which cues run and how strict they are (see `PROFILES` in `speech_grading/analysis/visual_events.py`):
+
+- `default`: face touch, chin up, smile after sentence, gaze check after sentence.
+- `zoom`: drops the gaze check (screen sits below the lens).
+- `phone`: all cues; looser face-touch distance (0.20) and chin threshold (10 deg) for a close camera.
+- `stage`: face touch and chin up only; tighter face-touch distance (0.12); scanning the audience is normal.
+- `interview`: drops the gaze check (speaker looks at the interviewer).
 
 ### Visual models location
 

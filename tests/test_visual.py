@@ -49,50 +49,27 @@ def test_pitch_deg_sign_convention():
     assert round(f["pitch_deg"], 1) == 15.0
 
 
-def test_extract_frames_synthetic_video(tmp_path):
-    import math
-    import struct
-    import subprocess
-    import wave
-    import cv2
+def test_empty_matrix_does_not_crash():
     import numpy as np
-    from speech_grading.pipeline import find_ffmpeg
 
-    vid_raw = tmp_path / "raw.mp4"
-    audio_raw = tmp_path / "audio.wav"
-    muxed_mp4 = tmp_path / "synthetic.mp4"
+    assert v.face_features(None, {}, np.empty((0,)))["pitch_deg"] is None
 
-    # 15 frames at 10 fps with moving shape
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-    writer = cv2.VideoWriter(str(vid_raw), fourcc, 10.0, (320, 240))
-    for i in range(15):
-        frame = np.zeros((240, 320, 3), dtype=np.uint8)
-        cv2.circle(frame, (40 + i * 15, 120), 20, (0, 255, 0), -1)
+
+def test_extract_frames_synthetic_video_has_no_face(tmp_path):
+    cv2 = pytest.importorskip("cv2")
+    import numpy as np
+
+    vid = tmp_path / "shapes.mp4"
+    writer = cv2.VideoWriter(str(vid), cv2.VideoWriter_fourcc(*"mp4v"), 30.0, (160, 120))
+    for i in range(30):
+        frame = np.zeros((120, 160, 3), dtype=np.uint8)
+        cv2.circle(frame, (20 + i * 4, 60), 15, (0, 255, 0), -1)
         writer.write(frame)
     writer.release()
-
-    # Audio sine wave
-    with wave.open(str(audio_raw), "w") as wf:
-        wf.setnchannels(1)
-        wf.setsampwidth(2)
-        wf.setframerate(16000)
-        for i in range(24000):  # 1.5s
-            val = int(32767.0 * 0.3 * math.sin(2.0 * math.pi * 440.0 * i / 16000))
-            wf.writeframes(struct.pack("<h", val))
-
-    ffmpeg = find_ffmpeg()
-    target_video = vid_raw
-    if ffmpeg:
-        cmd = [ffmpeg, "-y", "-loglevel", "error", "-i", str(vid_raw), "-i", str(audio_raw),
-               "-c:v", "copy", "-c:a", "aac", str(muxed_mp4)]
-        res = subprocess.run(cmd, capture_output=True, text=True)
-        if res.returncode == 0:
-            target_video = muxed_mp4
-
     try:
-        frames = v.extract_frames(target_video)
-        assert len(frames) > 0
-        assert "face_visible" in frames[0]
-        assert "t" in frames[0]
+        frames = v.extract_frames(vid)
     except v.VisualUnavailable:
-        pytest.skip("Visual dependencies or models not available in this environment")
+        pytest.skip("mediapipe models not installed")
+    assert 8 <= len(frames) <= 12  # 1s at 30fps sampled to 10fps
+    assert all(f["face_visible"] is False for f in frames)
+    assert [f["t"] for f in frames] == sorted(f["t"] for f in frames)

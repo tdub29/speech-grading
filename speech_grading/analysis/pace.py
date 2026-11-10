@@ -38,20 +38,23 @@ def _window_wpms(t: Transcript, window_sec: float) -> list[float]:
     if not t.words or window_sec <= 0:
         return []
 
-    span_start = min(w.start for w in t.words)
-    span_end = max(w.end for w in t.words)
-    if span_end <= span_start:
-        return []
-
-    starts = [w.start for w in t.words if not w.is_filled_pause]
-
+    # Tile each of this speaker's turns separately (one turn when unfiltered), so time
+    # spent listening to another speaker never reads as a 0-WPM window.
+    bounds = sorted({0, *t.turn_starts}) + [len(t.words)]
     wpms: list[float] = []
-    lo = span_start
-    while lo < span_end:
-        hi = lo + window_sec
-        count = sum(1 for s in starts if lo <= s < hi)
-        wpms.append(_rate(count, window_sec))
-        lo = hi
+    for a, b in zip(bounds, bounds[1:]):
+        seg = t.words[a:b]
+        if not seg:
+            continue
+        span_start = min(w.start for w in seg)
+        span_end = max(w.end for w in seg)
+        starts = [w.start for w in seg if not w.is_filled_pause]
+        lo = span_start
+        while lo < span_end:
+            hi = lo + window_sec
+            count = sum(1 for s in starts if lo <= s < hi)
+            wpms.append(_rate(count, window_sec))
+            lo = hi
     return wpms
 
 

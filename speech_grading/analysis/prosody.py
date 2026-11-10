@@ -155,6 +155,14 @@ def _acoustic_filled_pauses(t: Transcript, rms, flux, frame_times, np) -> list[F
     return findings
 
 
+def _speaker_spans(t: Transcript) -> Optional[list[tuple[float, float]]]:
+    """(start, end) seconds of each kept turn after a speaker filter; None = whole file."""
+    if not t.turn_starts or not t.words:
+        return None
+    bounds = sorted({0, *t.turn_starts}) + [len(t.words)]
+    return [(t.words[a].start, t.words[b - 1].end) for a, b in zip(bounds, bounds[1:]) if b > a]
+
+
 def _nearest_word_index(t: Transcript, time_sec: float) -> int:
     """Index of the transcript word whose midpoint is closest to ``time_sec``."""
     if not t.words:
@@ -185,6 +193,10 @@ def compute_prosody(t: Transcript, cfg: Config) -> tuple[Optional[DimensionScore
         return None, []
     if not t.audio_path or not os.path.exists(t.audio_path):
         return None, []
+    from .visual import is_video
+
+    if is_video(t.audio_path):  # parselmouth cannot read a video container; skip, never score 0
+        return None, []
 
     # --- Lazy heavy imports; absence == "dimension does not apply" ---------- #
     try:
@@ -194,14 +206,22 @@ def compute_prosody(t: Transcript, cfg: Config) -> tuple[Optional[DimensionScore
     except ImportError:
         return None, []
 
+    spans = _speaker_spans(t)
+
+    def _in_spans(times):
+        if spans is None:
+            return np.ones(len(times), dtype=bool)
+        times = np.asarray(times)
+        return np.any([(times >= a) & (times <= b) for a, b in spans], axis=0)
+
     # --- Pitch (F0) variation in semitones via parselmouth ------------------ #
     try:
         sound = parselmouth.Sound(t.audio_path)
         pitch = sound.to_pitch()
-        pitch_values = pitch.selected_array["frequency"]
+        pitch_values = pitch.selected_array["frequency"][_in_spans(pitch.xs())]
         monotone, median_f0 = _f0_semitone_stdev(pitch_values, np)
-    except Exception:  # pragma: no cover - defensive: bad/short audio
-        monotone, median_f0 = 0.0, 0.0
+    except Exception:  # unreadable audio: dimension does not apply rather than "monotone"
+        return None, []
 
     # --- Energy dynamics + spectral flux via librosa ------------------------ #
     energy_dynamics = 0.0
@@ -209,7 +229,8 @@ def compute_prosody(t: Transcript, cfg: Config) -> tuple[Optional[DimensionScore
     acoustic_findings: list[Finding] = []
     try:
         y, sr = librosa.load(t.audio_path, sr=None, mono=True)
-        rms = librosa.feature.rms(y=y)[0]
+        rms_all = librosa.feature.rms(y=y)[0]
+        rms = rms_all[_in_spans(librosa.frames_to_time(np.arange(rms_all.size), sr=sr))]
         mean_rms = float(np.mean(rms)) if rms.size else 0.0
         if mean_rms > 0:
             energy_dynamics = float(np.std(rms) / mean_rms)
@@ -222,7 +243,7 @@ def compute_prosody(t: Transcript, cfg: Config) -> tuple[Optional[DimensionScore
 
         hop = 512  # librosa default hop length for rms/onset_strength
         frame_times = librosa.frames_to_time(
-            np.arange(max(rms.size, flux.size)), sr=sr, hop_length=hop
+            np.arange(max(rms_all.size, flux.size)), sr=sr, hop_length=hop
         )
 
         # Articulation-rate proxy: estimated syllables (onset-strength peaks) over
@@ -230,11 +251,15 @@ def compute_prosody(t: Transcript, cfg: Config) -> tuple[Optional[DimensionScore
         peaks = librosa.util.peak_pick(
             flux, pre_max=3, post_max=3, pre_avg=3, post_avg=5, delta=0.1, wait=3
         )
-        n_syllables = int(peaks.size) if hasattr(peaks, "size") else len(peaks)
+        peaks = np.asarray(peaks, dtype=int)
+        n_syllables = int(np.count_nonzero(_in_spans(frame_times[peaks]))) if peaks.size else 0
         if t.speaking_sec > 0:
             articulation_rate = n_syllables / t.speaking_sec
 
-        acoustic_findings = _acoustic_filled_pauses(t, rms, flux, frame_times, np)
+        acoustic_findings = [
+            f for f in _acoustic_filled_pauses(t, rms_all, flux, frame_times, np)
+            if spans is None or any(a <= (f.start + f.end) / 2.0 <= b for a, b in spans)
+        ]
     except Exception:  # pragma: no cover - defensive: decode/feature failure
         pass
 

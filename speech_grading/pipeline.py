@@ -165,19 +165,15 @@ def load_input(input_path: str, cfg: Config) -> Transcript:
         from .analysis import visual
 
         backend = _make_backend(cfg)
-        is_vid = visual.is_video(input_path)
-        try:
-            t = backend.transcribe(input_path)
-            if not t.audio_path:
-                t.audio_path = input_path
-        except Exception:
-            if is_vid:
-                audio_path = extract_audio_from_video(input_path)
-                t = backend.transcribe(audio_path)
-                if not t.audio_path:
-                    t.audio_path = audio_path
-            else:
-                raise
+        audio_path = input_path
+        # Video: always hand ASR and prosody a WAV. Backends that read video directly
+        # (faster-whisper via PyAV) still leave audio_path on the .mp4, which parselmouth
+        # cannot open, and prosody would silently score the speaker as monotone.
+        if visual.is_video(input_path) and find_ffmpeg():
+            audio_path = extract_audio_from_video(input_path)
+        t = backend.transcribe(audio_path)
+        if not t.audio_path:
+            t.audio_path = audio_path
         t = derive_transcript_fields(t)
     return t
 
@@ -212,6 +208,8 @@ def add_visual(report: Report, t: Transcript, input_path: str, cfg: Config) -> R
 def run_pipeline(input_path: str, cfg: Config) -> Report:
     """Full run. If ``input_path`` is a Transcript JSON/text, skip ASR; else transcribe."""
     t = load_input(input_path, cfg)
+    if cfg.speaker:
+        t = t.filter_by_speaker(cfg.speaker)
     return add_visual(run_on_transcript(t, cfg), t, input_path, cfg)
 
 
