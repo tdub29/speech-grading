@@ -39,8 +39,8 @@ def face_features(lms, blend: dict, matrix) -> dict:
     gaze = [g for g in gaze if g is not None]
     pitch = None
     if matrix is not None:
-        # ponytail: sign convention unverified on real footage; baseline-relative so only
-        # the direction of "chin up" matters. Flip here if a nod-up reads negative.
+        # MediaPipe metric 3D space: right-handed, camera looks down -Z, Y is up, face looks towards +Z.
+        # Chin up tilts head back (negative rotation around X), so -matrix[2][1] > 0 and pitch_deg is positive.
         pitch = math.degrees(math.atan2(-matrix[2][1], matrix[2][2]))
     return dict(
         smile=_bs(blend, "mouthSmileLeft", "mouthSmileRight"),
@@ -85,6 +85,7 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
     if not cap.isOpened():
         raise VisualUnavailable(f"cannot open video: {path}")
     frames, next_t, step = [], 0.0, 1.0 / fps
+    last_ms = -1
     try:
         while True:
             ok, bgr = cap.read()
@@ -96,6 +97,9 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
             next_t = t + step
             img = mp.Image(image_format=mp.ImageFormat.SRGB, data=cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
             ms = int(t * 1000)
+            if ms <= last_ms:
+                ms = last_ms + 1
+            last_ms = ms
             fr, hr = face.detect_for_video(img, ms), hand.detect_for_video(img, ms)
             row = dict(t=t, smile=None, brow_raise=None, brow_furrow=None, jaw_open=None,
                        gaze_off=None, pitch_deg=None, hand_face_dist=None, wrist_y_rel=None,

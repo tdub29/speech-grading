@@ -42,6 +42,7 @@ class Word(BaseModel):
     confidence: Optional[float] = None
     is_filled_pause: bool = False
     normalized: str = ""
+    speaker: Optional[str] = None
 
     @property
     def duration(self) -> float:
@@ -61,6 +62,9 @@ class Transcript(BaseModel):
     has_timing: bool = True  # False for text-only transcripts (no word timestamps)
     speaker_median_gap: float = 0.0
     sentences: list[tuple[int, int]] = Field(default_factory=list)
+    # Word indices that open a new turn after another speaker talked (set by filter_by_speaker).
+    # gap_before() reads 0 there, so the other speaker's turn never scores as a pause.
+    turn_starts: list[int] = Field(default_factory=list)
 
     @property
     def total_words(self) -> int:
@@ -73,9 +77,40 @@ class Transcript(BaseModel):
 
     def gap_before(self, i: int) -> float:
         """Silent gap (seconds) immediately before word ``i`` (0 for the first word)."""
-        if i <= 0 or i >= len(self.words):
+        if i <= 0 or i >= len(self.words) or i in self.turn_starts:
             return 0.0
         return max(0.0, self.words[i].start - self.words[i - 1].end)
+
+    def filter_by_speaker(self, speaker: str) -> Transcript:
+        """Return a new Transcript containing only words for the given speaker."""
+        available = {w.speaker for w in self.words if w.speaker is not None}
+        if not available:
+            raise ValueError(f"Speaker {speaker!r} requested, but transcript has no speaker labels.")
+        if available == {speaker} or (len(available) == 1 and next(iter(available)).lower() == speaker.lower()):
+            return self
+        want = speaker if any(w.speaker == speaker for w in self.words) else None
+        if want is None:
+            want = next((a for a in available if a.lower() == speaker.lower()), None)
+        if want is None:
+            sorted_avail = ", ".join(sorted(available))
+            raise ValueError(f"Speaker {speaker!r} not found in transcript. Available speakers: {sorted_avail}")
+        matching, turns, prev_mine = [], [], False
+        for w in self.words:
+            mine = w.speaker == want
+            if mine:
+                if not prev_mine:
+                    turns.append(len(matching))
+                matching.append(w)
+            prev_mine = mine
+        filtered = self.model_copy(deep=True)
+        filtered.words = [w.model_copy() for w in matching]
+        filtered.turn_starts = turns[1:]
+        # Pace counts only this speaker's turns, not the wall clock spent listening.
+        bounds = turns + [len(matching)]
+        filtered.duration_sec = round(sum(
+            matching[b - 1].end - matching[a].start for a, b in zip(bounds, bounds[1:])), 4) or 0.0
+        filtered.sentences = []
+        return derive_transcript_fields(filtered)
 
 
 class Finding(BaseModel):

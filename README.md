@@ -77,7 +77,57 @@ orator answer.txt --emit-request --html report.html
 orator answer.txt --wordchoice-json answer.txt.llm-response.json --html report.html
 ```
 
+### 4. Grade a video file (visual cues + audio ASR)
+
+```bash
+orator talk.mp4 --mode zoom --html report.html
+```
+
+Video inputs extract audio automatically for ASR and track facial features (smile, gaze, chin pitch) and hand-to-face contact.
+
 Open `report.html` to view the overall score, dimension breakdown, and inline-highlighted transcript. A static sample output is checked in at [sample report](examples/sample_report.html).
+
+## Input formats and video analysis
+
+Orator accepts text transcripts, audio recordings, or video files:
+
+- **Text transcripts (`.txt`, `.md`, `.vtt`, `.srt`):** Runs offline text analysis (fillers, weak words, vocabulary, readability). Skips timing dimensions automatically.
+- **Timed transcripts (`.json`):** Canonical word-timestamp fixtures that enable pace and pause measures offline without model dependencies.
+- **Audio recordings (`.wav`, `.mp3`):** Transcribed locally via ASR. Adding `--acoustic` measures pitch dynamics (F0 variation) and energy contour.
+- **Video recordings (`.mp4`, `.mov`, `.mkv`, `.webm`, `.avi`):** Transcribed via ASR (extracting audio via ffmpeg automatically if needed) and analyzed for visual behavior.
+
+### Multi-speaker transcripts
+
+Filter to a single speaker using `--speaker`:
+
+```bash
+orator podcast.json --speaker SPEAKER_00 --html report.html
+```
+
+### Video speaking modes (`--mode`)
+
+Different settings require different cue thresholds:
+
+- `default`: general presentation setup.
+- `zoom`: seated video call; screen sits below lens, relaxing gaze checks.
+- `phone`: handheld selfie recording; closer distance and adjusted face-touch gates.
+- `stage`: wide audience view; sweeps and broad movements expected.
+- `interview`: conversational setting focused on interviewer interaction.
+
+### Visual models location
+
+The visual tier loads MediaPipe models from `~/.orator/models` (or the `$ORATOR_MODELS` environment variable):
+
+- `face_landmarker.task`: 478 face landmarks, blendshapes, and transformation matrix.
+- `hand_landmarker.task`: 21 hand landmarks for face-touch detection.
+
+### Feature export for training
+
+To export windowed visual feature records for training or calibration:
+
+```bash
+orator talk.mp4 --visual-rows features.jsonl
+```
 
 ## What it measures
 

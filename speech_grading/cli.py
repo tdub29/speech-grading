@@ -50,6 +50,8 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="video speaking mode: sets which visual cues and thresholds apply")
     p.add_argument("--visual-rows", default=None,
                    help="video only: write windowed visual feature JSONL here (training data)")
+    p.add_argument("--speaker", default=None,
+                   help="grade words for this speaker label only (e.g. SPEAKER_00 or Alice)")
     p.set_defaults(use_llm=None)
     return p
 
@@ -72,6 +74,8 @@ def _config_from_args(args) -> Config:
         cfg.mode = args.mode
     if args.visual_rows:
         cfg.visual_rows = args.visual_rows
+    if args.speaker:
+        cfg.speaker = args.speaker
     return cfg
 
 

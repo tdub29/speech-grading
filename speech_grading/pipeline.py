@@ -60,6 +60,8 @@ def _wordchoice_to_findings(t: Transcript, wcs: list[WordChoiceFinding]) -> list
 
 def run_on_transcript(t: Transcript, cfg: Config) -> Report:
     """Run the full analysis + scoring stack over an already-built Transcript."""
+    if cfg.speaker:
+        t = t.filter_by_speaker(cfg.speaker)
     findings: list[Finding] = []
     findings += detect_fillers(t, cfg.thresholds)
     findings += detect_repetitions(t)
@@ -89,6 +91,65 @@ def run_on_transcript(t: Transcript, cfg: Config) -> Report:
     return score(t, findings, dim_scores, cfg, word_choice_mode=wc_mode)
 
 
+def find_ffmpeg() -> str | None:
+    """Locate ffmpeg binary on PATH or known local install paths."""
+    import shutil
+    from pathlib import Path
+
+    w = shutil.which("ffmpeg")
+    if w:
+        return w
+    fg = Path(__file__).resolve().parents[2] / "Fantasy Golf App" / "tools" / "video" / "bin" / ("ffmpeg.exe" if os.name == "nt" else "ffmpeg")
+    if fg.is_file():
+        return str(fg)
+    return None
+
+
+def extract_audio_from_video(video_path: str) -> str:
+    """Extract 16kHz mono WAV audio from a video container using ffmpeg."""
+    import atexit
+    import subprocess
+    import tempfile
+
+    ffmpeg = find_ffmpeg()
+    if not ffmpeg:
+        raise RuntimeError(
+            f"ffmpeg not found: cannot extract audio from {video_path} "
+            "(checked PATH and Fantasy Golf App tools/video/bin)"
+        )
+    fd, out_path = tempfile.mkstemp(suffix=".wav", prefix="orator_audio_")
+    os.close(fd)
+    cmd = [
+        ffmpeg,
+        "-y",
+        "-loglevel", "error",
+        "-i", str(video_path),
+        "-vn",
+        "-acodec", "pcm_s16le",
+        "-ar", "16000",
+        "-ac", "1",
+        out_path,
+    ]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        if os.path.exists(out_path):
+            try:
+                os.remove(out_path)
+            except OSError:
+                pass
+        raise RuntimeError(f"ffmpeg audio extraction failed (code {res.returncode}): {res.stderr.strip()}")
+
+    def _cleanup():
+        if os.path.exists(out_path):
+            try:
+                os.remove(out_path)
+            except OSError:
+                pass
+
+    atexit.register(_cleanup)
+    return out_path
+
+
 def load_input(input_path: str, cfg: Config) -> Transcript:
     """Resolve an input path to a canonical Transcript.
 
@@ -97,14 +158,28 @@ def load_input(input_path: str, cfg: Config) -> Transcript:
     """
     ext = os.path.splitext(input_path)[1].lower()
     if ext == ".json":
-        return load_transcript_json(input_path)
-    if ext in (".txt", ".md", ".vtt", ".srt"):
-        return load_transcript_text(input_path)
-    backend = _make_backend(cfg)
-    t = backend.transcribe(input_path)
-    if not t.audio_path:
-        t.audio_path = input_path
-    return derive_transcript_fields(t)
+        t = load_transcript_json(input_path)
+    elif ext in (".txt", ".md", ".vtt", ".srt"):
+        t = load_transcript_text(input_path)
+    else:
+        from .analysis import visual
+
+        backend = _make_backend(cfg)
+        is_vid = visual.is_video(input_path)
+        try:
+            t = backend.transcribe(input_path)
+            if not t.audio_path:
+                t.audio_path = input_path
+        except Exception:
+            if is_vid:
+                audio_path = extract_audio_from_video(input_path)
+                t = backend.transcribe(audio_path)
+                if not t.audio_path:
+                    t.audio_path = audio_path
+            else:
+                raise
+        t = derive_transcript_fields(t)
+    return t
 
 
 def add_visual(report: Report, t: Transcript, input_path: str, cfg: Config) -> Report:

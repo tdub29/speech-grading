@@ -55,3 +55,54 @@ def test_prosody_weight_redistribution_keeps_scale(sample_transcript):
     cfg = Config(enable_acoustic=True)
     report = run_on_transcript(sample_transcript, cfg)
     assert 0.0 <= report.overall_score <= 100.0
+
+
+def test_pipeline_speaker_filter(sample_transcript):
+    # Label half words with A, half with B
+    for i, w in enumerate(sample_transcript.words):
+        w.speaker = "speaker_a" if i % 2 == 0 else "speaker_b"
+    cfg = Config(speaker="speaker_a")
+    report = run_on_transcript(sample_transcript, cfg)
+    assert all(w.speaker == "speaker_a" for w in report.transcript.words)
+    assert len(report.transcript.words) > 0
+
+
+def test_video_asr_fallback(monkeypatch, tmp_path):
+    import pytest
+    from speech_grading import pipeline
+    from speech_grading.schema import Transcript, Word
+
+    vid = tmp_path / "test.mp4"
+    vid.write_bytes(b"dummy video content")
+
+    class MockRejectingBackend:
+        def __init__(self):
+            self.calls = []
+
+        def transcribe(self, path):
+            self.calls.append(str(path))
+            if path.endswith(".mp4"):
+                raise ValueError("cannot transcribe video directly")
+            return Transcript(words=[Word(text="hello", start=0.0, end=1.0)], audio_path=path)
+
+    mock = MockRejectingBackend()
+    monkeypatch.setattr(pipeline, "_make_backend", lambda cfg: mock)
+    monkeypatch.setattr(pipeline, "extract_audio_from_video", lambda p: str(tmp_path / "extracted.wav"))
+
+    t = pipeline.load_input(str(vid), Config())
+    assert len(mock.calls) == 2
+    assert mock.calls[0] == str(vid)
+    assert mock.calls[1] == str(tmp_path / "extracted.wav")
+    assert t.audio_path == str(tmp_path / "extracted.wav")
+
+
+def test_video_asr_missing_ffmpeg(monkeypatch, tmp_path):
+    import pytest
+    from speech_grading import pipeline
+
+    vid = tmp_path / "test.mp4"
+    vid.write_bytes(b"dummy video")
+    monkeypatch.setattr(pipeline, "find_ffmpeg", lambda: None)
+    with pytest.raises(RuntimeError) as exc_info:
+        pipeline.extract_audio_from_video(str(vid))
+    assert "ffmpeg not found" in str(exc_info.value)

@@ -76,6 +76,7 @@ class Config(BaseModel):
     enable_video: bool = True            # visual tier runs automatically for video input if deps+models exist
     mode: str = "default"                # visual profile: default|zoom|phone|stage|interview
     visual_rows: str = ""                # if set, write windowed visual feature JSONL here (training export)
+    speaker: Optional[str] = None        # filter transcript to this speaker label only
     asr_model_size: str = "large-v3"
     asr_device: str = "cpu"
     asr_compute_type: str = "int8"
