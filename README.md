@@ -110,11 +110,13 @@ Different settings require different cue thresholds:
 
 Each mode picks which cues run and how strict they are (see `PROFILES` in `speech_grading/analysis/visual_events.py`):
 
-- `default`: face touch, chin up, smile after sentence, gaze check after sentence.
-- `zoom`: drops the gaze check (screen sits below the lens).
-- `phone`: all cues; looser face-touch distance (0.20) and chin threshold (10 deg) for a close camera.
-- `stage`: face touch and chin up only; tighter face-touch distance (0.12); scanning the audience is normal.
-- `interview`: drops the gaze check (speaker looks at the interviewer).
+- `default`: self-touch, chin up, smile right after a sentence; on-camera gaze share at 0.5.
+- `zoom`: same cues; gaze share threshold 0.6 (screen sits below the lens).
+- `phone`: same cues; looser self-touch distance (0.20) and chin threshold (10 deg) for a close camera.
+- `stage`: self-touch and chin up only; tighter self-touch distance (0.12); gaze share threshold 0.8.
+- `interview`: same as default with gaze share threshold 0.7 (speaker looks at the interviewer).
+
+Chin up runs only with `--camera-level`, since camera height alone changes how head angle reads. None of these cues is evidence of confidence or nerves: the research behind that call is the `nonverbal-confidence-cues` skill. Glancing away when a sentence ends is normal turn-taking and is never flagged.
 
 Video cues are reported as counts, plus per-minute rates for clips of 60s or more. They do not change the overall score. Chin up and smile are measured against the speaker's own first 30 seconds, so a habit held from the start is never flagged. The visual tier tracks one face; `--speaker` does not choose which face.
 

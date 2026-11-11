@@ -197,7 +197,8 @@ def add_visual(report: Report, t: Transcript, input_path: str, cfg: Config) -> R
         return report
     ends = [t.words[e].end for _, e in t.sentences if 0 <= e < len(t.words)]
     res = visual_events.summarize(frames, ends, cfg.mode,
-                                  speaking_sec=t.duration_sec if cfg.speaker else None)
+                                  speaking_sec=t.duration_sec if cfg.speaker else None,
+                                  camera_level=cfg.camera_level)
     report.findings += res.pop("findings")
     report.metrics["visual"] = res
     if cfg.visual_rows:

@@ -41,13 +41,12 @@ def test_chin_up_vs_baseline_and_none_pitch():
     assert v.detect_chin_up([fr(0, pitch_deg=None)], {"pitch_deg": 0.0}) == []
 
 
-def test_auto_smile_and_reaction_check():
+def test_end_sentence_smile():
     frames = [fr(i * 0.1, smile=0.1 if i < 10 else 0.6, gaze_off=0.9 if i >= 10 else 0.0)
               for i in range(30)]
     assert len(v.smile_after_sentence(frames, [1.0], {"smile": 0.1})) == 1
     assert v.smile_after_sentence(frames, [0.0], {"smile": 0.1}) == []
-    assert len(v.gaze_check_after_sentence(frames, [1.0])) == 1
-    assert v.gaze_check_after_sentence(frames, [0.0]) == []
+    assert v.smile_after_sentence(frames, [1.0], {"smile": 0.1})[0].kind == "end_sentence_smile"
 
 
 def test_summarize_modes_and_gates():
@@ -59,8 +58,9 @@ def test_summarize_modes_and_gates():
     nohands = v.summarize(series(100), [], "phone")
     assert "face_touch" in nohands["skipped"]
     gaze_away = [fr(i * 0.1, gaze_off=0.9 if i >= 10 else 0.0) for i in range(700)]
-    assert v.summarize(gaze_away, [1.0], "default")["counts"].get("reaction_check") == 1
-    assert "reaction_check" not in v.summarize(gaze_away, [1.0], "zoom")["counts"]
+    s = v.summarize(gaze_away, [1.0], "default")
+    assert "reaction_check" not in s["counts"]  # glancing away at turn end is never a fault
+    assert s["gaze_on_camera_pct"] == round(100 * 10 / 700, 1)
     dark = v.summarize([fr(i * 0.1, face_visible=False) for i in range(50)], [], "stage")
     assert dark["findings"] == [] and dark["skipped"]
 
@@ -74,7 +74,15 @@ def test_feature_rows_windows():
 def test_baseline_needs_ten_seconds_of_face():
     assert v.baseline(series(50, pitch_deg=2.0)) == {}  # 5s of face
     s = v.summarize(series(50, pitch_deg=2.0), [], "default")
-    assert "chin_up" in s["skipped"] and "auto_smile" in s["skipped"]
+    assert "end_sentence_smile" in s["skipped"]
+    assert "camera height" in s["skipped"]["chin_up"]
+    assert "baseline" in v.summarize(series(50, pitch_deg=2.0), [], "default", camera_level=True)["skipped"]["chin_up"]
+
+
+def test_chin_up_runs_only_with_camera_level():
+    frames = [fr(i * 0.1, pitch_deg=0.0 if i < 300 else 15.0) for i in range(700)]
+    assert "chin_up" not in v.summarize(frames, [], "default")["counts"]
+    assert v.summarize(frames, [], "default", camera_level=True)["counts"]["chin_up"] == 1
 
 
 def test_baseline_median_ignores_early_spike():
