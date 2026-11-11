@@ -89,3 +89,24 @@ def test_hand_face_dist_turned_head_and_wide_frame():
 def test_gaze_pairs_by_direction():
     looking_right = {"eyeLookOutRight": 0.9, "eyeLookInLeft": 0.9, "eyeLookInRight": 0.0, "eyeLookOutLeft": 0.0}
     assert v.face_features(None, looking_right, None)["gaze_off"] == 0.9
+
+
+def test_av_offset_shifts_sentence_ends(monkeypatch, sample_transcript):
+    from speech_grading import pipeline
+    from speech_grading.analysis import visual_events
+    from speech_grading.cli import _build_parser, _config_from_args
+
+    cfg = _config_from_args(_build_parser().parse_args(["x.mp4", "--av-offset", "1.5"]))
+    assert cfg.av_offset_sec == 1.5
+    seen = {}
+
+    def fake(frames, ends, *a, **k):
+        seen["ends"] = ends
+        return {"findings": []}
+    monkeypatch.setattr(v, "extract_frames", lambda p: [])
+    monkeypatch.setattr(visual_events, "summarize", fake)
+    rep = pipeline.run_on_transcript(sample_transcript, cfg)
+    pipeline.add_visual(rep, sample_transcript, "x.mp4", cfg)
+    t = sample_transcript
+    assert seen["ends"] == [t.words[e].end + 1.5 for _, e in t.sentences if 0 <= e < len(t.words)]
+    assert seen["ends"]

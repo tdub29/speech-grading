@@ -125,7 +125,7 @@ def test_add_visual_merges_findings_and_writes_rows(monkeypatch, tmp_path, sampl
 
     frames = [dict(t=i / 10, face_visible=True, smile=0.1, brow_raise=0.0, brow_furrow=0.0,
                    jaw_open=0.0, gaze_off=0.0, pitch_deg=0.0,
-                   hand_face_dist=0.05 if 100 <= i < 120 else 0.5, wrist_y_rel=None)
+                   hand_face_dist=0.05 if 100 <= i < 120 else 0.5)
               for i in range(300)]
     monkeypatch.setattr(visual, "extract_frames", lambda p: frames)
     rows = tmp_path / "rows.jsonl"

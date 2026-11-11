@@ -75,6 +75,7 @@ class Config(BaseModel):
     enable_acoustic: bool = False        # prosody track (needs audio + parselmouth/librosa)
     enable_video: bool = True            # visual tier runs automatically for video input if deps+models exist
     mode: str = "default"                # visual profile: default|zoom|phone|stage|interview
+    av_offset_sec: float = 0.0           # added to transcript times to align with video (separate audio/transcript)
     camera_level: bool = False           # camera at eye level: enables the chin-up cue
     visual_rows: str = ""                # if set, write windowed visual feature JSONL here (training export)
     speaker: Optional[str] = None        # filter transcript to this speaker label only

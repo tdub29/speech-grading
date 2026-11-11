@@ -52,6 +52,11 @@ _ENERGY_DYNAMIC = 0.35      # RMS coefficient-of-variation considered "dynamic"
 _FP_MIN_DURATION = 0.6      # a sustained voiced stretch must last at least this long
 _FP_MAX_FLUX = 0.04         # mean spectral flux below this = "low spectral change"
 
+# Human speech F0 range; frames outside it (or an octave+ off the median) are tracker errors.
+_F0_MIN_HZ = 50.0
+_F0_MAX_HZ = 800.0
+_OCTAVE_JUMP_ST = 12.0
+
 
 def _band(monotone: float, energy_dynamics: float) -> str:
     """Combine pitch variation and energy dynamics into a rubric band.
@@ -84,16 +89,21 @@ def _f0_semitone_stdev(pitch_values, np) -> tuple[float, float]:
     """Std-dev of voiced F0 in semitones relative to the median voiced F0.
 
     ``pitch_values`` is the per-frame F0 array from parselmouth (0 == unvoiced).
+    Frames outside 50-800 Hz, or more than an octave from the median, are dropped.
     Returns ``(stdev_semitones, median_f0_hz)``; ``(0.0, 0.0)`` if there is not
     enough voiced material to be meaningful.
     """
-    voiced = pitch_values[pitch_values > 0]
+    pitch_values = np.asarray(pitch_values, dtype=float)
+    voiced = pitch_values[(pitch_values >= _F0_MIN_HZ) & (pitch_values <= _F0_MAX_HZ)]
     if voiced.size < 2:
         return 0.0, 0.0
     median_f0 = float(np.median(voiced))
-    if median_f0 <= 0:
-        return 0.0, 0.0
     semitones = 12.0 * np.log2(voiced / median_f0)
+    # ponytail: octave-jump gate is a fixed +/-1 octave from the median; a
+    # continuity tracker would keep wide-range glides if that ever matters.
+    semitones = semitones[np.abs(semitones) <= _OCTAVE_JUMP_ST]
+    if semitones.size < 2:
+        return 0.0, 0.0
     return float(np.std(semitones)), median_f0
 
 
@@ -217,7 +227,7 @@ def compute_prosody(t: Transcript, cfg: Config) -> tuple[Optional[DimensionScore
     # --- Pitch (F0) variation in semitones via parselmouth ------------------ #
     try:
         sound = parselmouth.Sound(t.audio_path)
-        pitch = sound.to_pitch()
+        pitch = sound.to_pitch(pitch_floor=_F0_MIN_HZ, pitch_ceiling=_F0_MAX_HZ)
         pitch_values = pitch.selected_array["frequency"][_in_spans(pitch.xs())]
         monotone, median_f0 = _f0_semitone_stdev(pitch_values, np)
     except Exception:  # unreadable audio: dimension does not apply rather than "monotone"

@@ -112,9 +112,11 @@ Each mode picks which cues run and how strict they are (see `PROFILES` in `speec
 
 - `default`: self-touch, chin up, smile right after a sentence; on-camera gaze share at 0.5.
 - `zoom`: same cues; gaze share threshold 0.6 (screen sits below the lens).
-- `phone`: same cues; looser self-touch distance (0.20) and chin threshold (10 deg) for a close camera.
+- `phone`: same cues; looser self-touch distance (0.20), chin threshold (10 deg) and smile rise (0.30) for a close camera.
 - `stage`: self-touch and chin up only; tighter self-touch distance (0.12); gaze share threshold 0.8.
 - `interview`: same as default with gaze share threshold 0.7 (speaker looks at the interviewer).
+
+`--av-offset SEC` shifts transcript times by SEC before matching them to video frames; use it when the transcript or audio was supplied separately and is out of sync (audio extracted from the same video needs none).
 
 Chin up runs only with `--camera-level`, since camera height alone changes how head angle reads. None of these cues is evidence of confidence or nerves: the research behind that call is the `nonverbal-confidence-cues` skill. Glancing away when a sentence ends is normal turn-taking and is never flagged.
 

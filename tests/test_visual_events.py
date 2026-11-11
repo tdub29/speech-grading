@@ -3,7 +3,7 @@ from speech_grading.analysis import visual_events as v
 
 def fr(t, **kw):
     d = dict(t=t, smile=0.1, brow_raise=0, brow_furrow=0, jaw_open=0, gaze_off=0.0,
-             pitch_deg=0.0, hand_face_dist=None, wrist_y_rel=None, face_visible=True)
+             pitch_deg=0.0, hand_face_dist=None, face_visible=True)
     d.update(kw)
     return d
 
@@ -101,3 +101,10 @@ def test_speaking_sec_is_rate_denominator():
 
 def test_no_frames_reports_reason():
     assert "no video frames" in next(iter(v.summarize([], [], "default")["skipped"].values()))
+
+
+def test_smile_rise_is_per_mode():
+    # 0.28 rise after a sentence: counts under default (0.25), not under phone (0.30)
+    frames = [fr(i * 0.1, smile=0.38 if 50 <= i <= 55 else 0.1) for i in range(150)]
+    assert v.summarize(frames, [5.0], "default")["counts"].get("end_sentence_smile") == 1
+    assert "end_sentence_smile" not in v.summarize(frames, [5.0], "phone")["counts"]

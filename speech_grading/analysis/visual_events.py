@@ -2,7 +2,7 @@
 
 Pure functions: no mediapipe import, no IO. A frame is a dict with keys
 t, smile, brow_raise, brow_furrow, jaw_open, gaze_off, pitch_deg,
-hand_face_dist, wrist_y_rel, face_visible (any may be None when untracked).
+hand_face_dist, face_visible (any may be None when untracked).
 Events are behavior counts, not verdicts: the cues are tendencies, not
 reliable indicators of confidence or nervousness.
 """
@@ -108,11 +108,11 @@ def smile_after_sentence(frames, sentence_end_times, base, window=0.6, rise=0.25
 # crops hands and looks at a screen; a stage talk is wide, hands visible, gaze
 # sweeps the room; a phone selfie is close and handheld. Tune from labeled data.
 PROFILES: dict[str, dict] = {
-    "default":   dict(touch_dist=0.15, chin_thresh=8.0, gaze_off=0.5, need_hands=0.2, cues={"face_touch", "chin_up", "end_sentence_smile"}),
-    "zoom":      dict(touch_dist=0.15, chin_thresh=8.0, gaze_off=0.6, need_hands=0.2, cues={"face_touch", "chin_up", "end_sentence_smile"}),   # gaze unreliable: screen below lens
-    "phone":     dict(touch_dist=0.20, chin_thresh=10.0, gaze_off=0.5, need_hands=0.2, cues={"face_touch", "chin_up", "end_sentence_smile"}),
-    "stage":     dict(touch_dist=0.12, chin_thresh=8.0, gaze_off=0.8, need_hands=0.2, cues={"face_touch", "chin_up"}),                 # audience scan is normal
-    "interview": dict(touch_dist=0.15, chin_thresh=8.0, gaze_off=0.7, need_hands=0.2, cues={"face_touch", "chin_up", "end_sentence_smile"}),   # looks at interviewer
+    "default":   dict(touch_dist=0.15, chin_thresh=8.0, gaze_off=0.5, need_hands=0.2, smile_rise=0.25, cues={"face_touch", "chin_up", "end_sentence_smile"}),
+    "zoom":      dict(touch_dist=0.15, chin_thresh=8.0, gaze_off=0.6, need_hands=0.2, smile_rise=0.25, cues={"face_touch", "chin_up", "end_sentence_smile"}),   # gaze unreliable: screen below lens
+    "phone":     dict(touch_dist=0.20, chin_thresh=10.0, gaze_off=0.5, need_hands=0.2, smile_rise=0.30, cues={"face_touch", "chin_up", "end_sentence_smile"}),
+    "stage":     dict(touch_dist=0.12, chin_thresh=8.0, gaze_off=0.8, need_hands=0.2, smile_rise=0.25, cues={"face_touch", "chin_up"}),                 # audience scan is normal
+    "interview": dict(touch_dist=0.15, chin_thresh=8.0, gaze_off=0.7, need_hands=0.2, smile_rise=0.25, cues={"face_touch", "chin_up", "end_sentence_smile"}),   # looks at interviewer
 }
 
 
@@ -151,7 +151,7 @@ def summarize(frames: list[dict], sentence_ends: list[float], mode: str = "defau
         elif cue == "chin_up":
             found += detect_chin_up(frames, base, thresh_deg=p["chin_thresh"])
         elif cue == "end_sentence_smile":
-            found += smile_after_sentence(frames, sentence_ends, base)
+            found += smile_after_sentence(frames, sentence_ends, base, rise=p["smile_rise"])
     counts: dict[str, int] = {}
     for f in found:
         counts[f.kind] = counts.get(f.kind, 0) + 1

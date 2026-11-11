@@ -52,6 +52,8 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="video only: write windowed visual feature JSONL here (training data)")
     p.add_argument("--camera-level", action="store_true",
                    help="video only: camera sits at eye level, so head angle (chin up) is meaningful")
+    p.add_argument("--av-offset", type=float, default=None, metavar="SEC",
+                   help="video only: seconds added to transcript times so sentence ends line up with video frames")
     p.add_argument("--speaker", default=None,
                    help="grade words for this speaker label only (e.g. SPEAKER_00 or Alice)")
     p.set_defaults(use_llm=None)
@@ -80,6 +82,8 @@ def _config_from_args(args) -> Config:
         cfg.speaker = args.speaker
     if args.camera_level:
         cfg.camera_level = True
+    if args.av_offset is not None:
+        cfg.av_offset_sec = args.av_offset
     return cfg
 
 

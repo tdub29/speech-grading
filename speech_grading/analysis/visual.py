@@ -120,7 +120,7 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
             last_ms = ms
             fr, hr = face.detect_for_video(img, ms), hand.detect_for_video(img, ms)
             row = dict(t=t, smile=None, brow_raise=None, brow_furrow=None, jaw_open=None,
-                       gaze_off=None, pitch_deg=None, hand_face_dist=None, wrist_y_rel=None,
+                       gaze_off=None, pitch_deg=None, hand_face_dist=None,
                        face_visible=bool(fr.face_landmarks))
             if fr.face_landmarks:
                 blend = {c.category_name: c.score for c in (fr.face_blendshapes or [[]])[0]}
