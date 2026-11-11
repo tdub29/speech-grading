@@ -155,7 +155,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     vis = report.metrics.get("visual")
     if vis:
         print("visual:", vis["skipped"] if "mode" not in vis else f"{vis['mode']} mode, rates/min {vis['rates_per_min'] or vis.get('rates_note')}, "
-              f"face visible {vis['quality']['face_visible_pct']:.0f}%")
+              f"face visible {vis['quality']['face_visible_pct']:.0f}%, gaze on camera {vis.get('gaze_on_camera_pct')}%, "
+              f"posture {vis.get('posture')}")
 
     if args.json_out:
         render_json(report, args.json_out)

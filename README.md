@@ -120,6 +120,8 @@ Each mode picks which cues run and how strict they are (see `PROFILES` in `speec
 
 Chin up runs only with `--camera-level`, since camera height alone changes how head angle reads. None of these cues is evidence of confidence or nerves: the research behind that call is the `nonverbal-confidence-cues` skill. Glancing away when a sentence ends is normal turn-taking and is never flagged.
 
+Gaze on camera counts a frame only when the eyes face forward and the head is turned under 25 degrees. Posture (unscored) needs `pose_landmarker_lite.task` in the models folder ([download](https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task)): `gesture_pct` is the share of frames with a wrist moving over half a shoulder width per second, `sway_sw` the shoulder-midpoint spread in shoulder widths, `shoulder_tilt_deg` the median shoulder tilt. Model file hashes are pinned in `visual.MODEL_SHA256`.
+
 Video cues are reported as counts, plus per-minute rates for clips of 60s or more. They do not change the overall score. Chin up and smile are measured against the speaker's own first 30 seconds, so a habit held from the start is never flagged. The visual tier tracks one face; `--speaker` does not choose which face.
 
 ### Visual models location

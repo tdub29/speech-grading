@@ -13,6 +13,14 @@ from pathlib import Path
 
 VIDEO_EXT = {".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"}
 MODELS = ("face_landmarker.task", "hand_landmarker.task")
+POSE_MODEL = "pose_landmarker_lite.task"  # optional: posture measures run only when present
+# sha256 of the model files this was built against; download URLs say "latest", so check a swap
+MODEL_SHA256 = {
+    "face_landmarker.task": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+    "hand_landmarker.task": "fbc2a30080c3c557093b5ddfc334698132eb341044ccee322ccf8bcf3607cde1",
+    POSE_MODEL: "59929e1d1ee95287735ddd833b19cf4ac46d29bc7afddbbf6753c459690d574a",
+}
+_SHOULDERS, _WRISTS = (11, 12), (15, 16)  # BlazePose indices
 _NOSE, _CHIN, _LEFT_FACE, _RIGHT_FACE, _TOP = 1, 152, 234, 454, 10  # FaceMesh indices
 
 
@@ -40,11 +48,12 @@ def face_features(lms, blend: dict, matrix) -> dict:
     gaze = [_bs(blend, "eyeLookOutRight", "eyeLookInLeft"), _bs(blend, "eyeLookOutLeft", "eyeLookInRight"),
             _bs(blend, "eyeLookUpLeft", "eyeLookUpRight"), _bs(blend, "eyeLookDownLeft", "eyeLookDownRight")]
     gaze = [g for g in gaze if g is not None]
-    pitch = None
+    pitch = yaw = None
     if matrix is not None and getattr(matrix, "size", 0) >= 16:  # empty array when no matrix
         # MediaPipe metric 3D space: right-handed, camera looks down -Z, Y is up, face looks towards +Z.
         # Chin up tilts head back (negative rotation around X), so -matrix[2][1] > 0 and pitch_deg is positive.
         pitch = math.degrees(math.atan2(-matrix[2][1], matrix[2][2]))
+        yaw = math.degrees(math.atan2(matrix[0][2], matrix[2][2]))  # head turn left/right
     return dict(
         smile=_bs(blend, "mouthSmileLeft", "mouthSmileRight"),
         brow_raise=_bs(blend, "browInnerUp", "browOuterUpLeft", "browOuterUpRight"),
@@ -52,7 +61,33 @@ def face_features(lms, blend: dict, matrix) -> dict:
         jaw_open=_bs(blend, "jawOpen"),
         gaze_off=max(gaze) if gaze else None,
         pitch_deg=pitch,
+        yaw_deg=yaw,
     )
+
+
+def pose_features(lms, aspect: float = 1.0, min_vis: float = 0.5) -> dict | None:
+    """Shoulder line and wrists from one BlazePose result, x scaled to square pixels.
+
+    None when either shoulder is not visible (no torso to measure against).
+    """
+    def ok(p):
+        v = getattr(p, "visibility", None)
+        return v is None or v >= min_vis
+    ls, rs = lms[_SHOULDERS[0]], lms[_SHOULDERS[1]]
+    if not (ok(ls) and ok(rs)):
+        return None
+    lx, ly, rx, ry = ls.x * aspect, ls.y, rs.x * aspect, rs.y
+    width = math.dist((lx, ly), (rx, ry))
+    if width < 1e-6:
+        return None
+    tilt = math.degrees(math.atan2(ly - ry, lx - rx))
+    if tilt > 90:  # either shoulder order reads as the same line
+        tilt -= 180
+    elif tilt < -90:
+        tilt += 180
+    wrists = [(lms[i].x * aspect, lms[i].y) if ok(lms[i]) and 0 <= lms[i].x <= 1 and 0 <= lms[i].y <= 1 else None
+              for i in _WRISTS]
+    return dict(sh_mid_x=(lx + rx) / 2, sh_w=width, sh_tilt_deg=tilt, wrists=wrists)
 
 
 def _inside_face(face_lms, hand) -> bool:
@@ -138,6 +173,11 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
         base_options=mpt.BaseOptions(model_asset_path=str(md / MODELS[0])),
         running_mode=vision.RunningMode.IMAGE, output_face_blendshapes=True,
         output_facial_transformation_matrixes=True, num_faces=1))
+    pose = None
+    if (md / POSE_MODEL).is_file():
+        pose = vision.PoseLandmarker.create_from_options(vision.PoseLandmarkerOptions(
+            base_options=mpt.BaseOptions(model_asset_path=str(md / POSE_MODEL)),
+            running_mode=vision.RunningMode.VIDEO, num_poses=1))
     cap = cv2.VideoCapture(str(path))
     if not cap.isOpened():
         raise VisualUnavailable(f"cannot open video: {path}")
@@ -183,7 +223,11 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
                 box = None
             row = dict(t=t, smile=None, brow_raise=None, brow_furrow=None, jaw_open=None,
                        gaze_off=None, pitch_deg=None, hand_face_dist=None,
-                       face_visible=lms is not None)
+                       face_visible=lms is not None, pose=None)
+            if pose is not None:
+                pr = pose.detect_for_video(img, ms)
+                if pr.pose_landmarks:
+                    row["pose"] = pose_features(pr.pose_landmarks[0], aspect=bgr.shape[1] / bgr.shape[0])
             if lms is not None:
                 blend = {c.category_name: c.score for c in (fr.face_blendshapes or [[]])[0]}
                 m = fr.facial_transformation_matrixes[0] if fr.facial_transformation_matrixes else None
@@ -195,5 +239,7 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
         cap.release()
         face.close()
         face_crop.close()
+        if pose is not None:
+            pose.close()
         hand.close()
     return frames

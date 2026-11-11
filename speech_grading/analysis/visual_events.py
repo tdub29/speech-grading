@@ -2,12 +2,14 @@
 
 Pure functions: no mediapipe import, no IO. A frame is a dict with keys
 t, smile, brow_raise, brow_furrow, jaw_open, gaze_off, pitch_deg,
-hand_face_dist, face_visible (any may be None when untracked).
+yaw_deg, hand_face_dist, face_visible, pose (any may be None when untracked;
+pose is a visual.pose_features dict).
 Events are behavior counts, not verdicts: the cues are tendencies, not
 reliable indicators of confidence or nervousness.
 """
 from __future__ import annotations
 
+import math
 from statistics import mean, median
 from typing import Callable, Optional
 
@@ -116,6 +118,52 @@ PROFILES: dict[str, dict] = {
 }
 
 
+YAW_ON_CAMERA = 25.0  # head turned further than this is off camera whatever the eyes do
+
+
+def posture(frames: list[dict], move_sw_per_s: float = 0.5, min_pose_pct: float = 30.0) -> dict | None:
+    """Unscored body measures from pose frames, in shoulder widths (scale-free).
+
+    gesture_pct: share of pose frame pairs where a visible wrist moves faster than
+    `move_sw_per_s` shoulder widths per second. sway_sw: std of the shoulder midpoint.
+    shoulder_tilt_deg: median absolute shoulder-line tilt.
+    None when no pose model ran; a skip reason when the torso shows in under `min_pose_pct`.
+    ponytail: speed between consecutive sampled frames only; add a smoother if jitter shows.
+    """
+    if not frames or all("pose" not in f for f in frames):
+        return None
+    ps = [(f["t"], f["pose"]) for f in frames if f.get("pose")]
+    pct = 100 * len(ps) / len(frames)
+    if pct < min_pose_pct or len(ps) < 2:
+        return {"pose_visible_pct": round(pct, 1), "skipped": f"torso visible <{min_pose_pct:.0f}%"}
+    sw = median(p["sh_w"] for _, p in ps)
+    xs = [p["sh_mid_x"] / sw for _, p in ps]
+    mx = mean(xs)
+    moving = pairs = 0
+    for (t0, a), (t1, b) in zip(ps, ps[1:]):
+        dt = t1 - t0
+        if dt <= 0 or dt > 0.5:  # a gap in tracking is not motion
+            continue
+        pairs += 1
+        if any(wa and wb and math.dist(wa, wb) / sw / dt > move_sw_per_s
+               for wa, wb in zip(a["wrists"], b["wrists"])):
+            moving += 1
+    return {"pose_visible_pct": round(pct, 1),
+            "gesture_pct": round(100 * moving / pairs, 1) if pairs else None,
+            "sway_sw": round((sum((x - mx) ** 2 for x in xs) / len(xs)) ** 0.5, 3),
+            "shoulder_tilt_deg": round(median(abs(p["sh_tilt_deg"]) for _, p in ps), 1)}
+
+
+def gaze_on_camera_pct(frames: list[dict], off: float) -> float | None:
+    """Share of face frames looking at the lens: eyes forward and head not turned away."""
+    gz = [f for f in frames if f.get("face_visible") and f.get("gaze_off") is not None]
+    if not gz:
+        return None
+    on = sum(f["gaze_off"] < off and (f.get("yaw_deg") is None or abs(f["yaw_deg"]) <= YAW_ON_CAMERA)
+             for f in gz)
+    return round(100 * on / len(gz), 1)
+
+
 MIN_RATE_SEC = 60.0  # per-minute rates from shorter clips are mostly noise
 
 
@@ -137,7 +185,8 @@ def summarize(frames: list[dict], sentence_ends: list[float], mode: str = "defau
     skipped = {}
     if q["face_visible_pct"] < 60:
         return {"mode": mode, "quality": q, "findings": [], "rates_per_min": {},
-                "skipped": {c: "face visible <60%" for c in p["cues"]}}
+                "skipped": {c: "face visible <60%" for c in p["cues"]},
+                "gaze_on_camera_pct": gaze_on_camera_pct(frames, p["gaze_off"]), "posture": posture(frames)}
     found: list[Finding] = []
     for cue in sorted(p["cues"]):
         if cue == "face_touch":
@@ -156,10 +205,10 @@ def summarize(frames: list[dict], sentence_ends: list[float], mode: str = "defau
     for f in found:
         counts[f.kind] = counts.get(f.kind, 0) + 1
     secs = speaking_sec if speaking_sec else frames[-1]["t"] - frames[0]["t"]
-    gz = [f["gaze_off"] for f in frames if f.get("face_visible") and f.get("gaze_off") is not None]
     out = {"mode": mode, "quality": q, "findings": found, "skipped": skipped,
            "counts": counts, "rates_per_min": {},
-           "gaze_on_camera_pct": round(100 * sum(g < p["gaze_off"] for g in gz) / len(gz), 1) if gz else None}
+           "gaze_on_camera_pct": gaze_on_camera_pct(frames, p["gaze_off"]),
+           "posture": posture(frames)}
     if secs < MIN_RATE_SEC:
         out["rates_note"] = f"under {MIN_RATE_SEC:.0f}s: counts only, no per-minute rates"
     else:

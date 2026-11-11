@@ -108,3 +108,24 @@ def test_smile_rise_is_per_mode():
     frames = [fr(i * 0.1, smile=0.38 if 50 <= i <= 55 else 0.1) for i in range(150)]
     assert v.summarize(frames, [5.0], "default")["counts"].get("end_sentence_smile") == 1
     assert "end_sentence_smile" not in v.summarize(frames, [5.0], "phone")["counts"]
+
+
+def _pose(t, mid_x=0.5, wrist=None, tilt=0.0):
+    return {"t": t, "face_visible": True, "gaze_off": 0.1,
+            "pose": {"sh_mid_x": mid_x, "sh_w": 0.2, "sh_tilt_deg": tilt, "wrists": [wrist, None]}}
+
+
+def test_posture_gesture_sway_tilt():
+    still = [_pose(i * 0.1, wrist=(0.5, 0.8)) for i in range(50)]
+    p = v.posture(still)
+    assert p["gesture_pct"] == 0 and p["sway_sw"] == 0 and p["shoulder_tilt_deg"] == 0
+    waving = [_pose(i * 0.1, wrist=(0.5 + 0.05 * (i % 2), 0.8), tilt=-4.0) for i in range(50)]
+    p = v.posture(waving)  # 0.05 per 0.1s = 0.5/s = 2.5 shoulder widths per second
+    assert p["gesture_pct"] == 100 and p["shoulder_tilt_deg"] == 4.0
+    assert v.posture([{"t": 0.0}]) is None  # no pose model ran
+    assert "skipped" in v.posture([_pose(0.0)] + [{"t": i * 0.1, "pose": None} for i in range(1, 10)])
+
+
+def test_gaze_share_counts_head_turn_as_off_camera():
+    frames = [{"t": i * 0.1, "face_visible": True, "gaze_off": 0.1, "yaw_deg": 40.0 if i < 5 else 0.0} for i in range(10)]
+    assert v.gaze_on_camera_pct(frames, 0.5) == 50.0

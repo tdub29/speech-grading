@@ -124,3 +124,12 @@ def test_face_crops_and_box():
     x, y, w, h = v._box_around([lm(0.5, 0.5), lm(0.52, 0.54)], 1000, 1000)
     assert w == h == 120 and x <= 500 and x + w >= 520 and y <= 500 and y + h >= 540
     assert v._box_around([lm(0.0, 0.0), lm(0.01, 0.01)], 1000, 1000)[:2] == (0, 0)  # clamped to frame
+
+
+def test_pose_features_tilt_and_hidden_shoulder():
+    pts = [P(x=0.5, y=0.5, visibility=0.9) for _ in range(33)]
+    pts[11], pts[12] = P(x=0.6, y=0.5, visibility=0.9), P(x=0.4, y=0.5, visibility=0.9)
+    f = v.pose_features(pts)
+    assert abs(f["sh_w"] - 0.2) < 1e-9 and abs(f["sh_tilt_deg"]) < 1e-9 and f["sh_mid_x"] == 0.5
+    pts[12] = P(x=0.4, y=0.5, visibility=0.1)
+    assert v.pose_features(pts) is None
