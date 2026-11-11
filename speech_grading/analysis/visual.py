@@ -99,7 +99,7 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
     native_fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
     try:
         while True:
-            if not cap.grab():  # grab-only for skipped frames: no decode cost
+            if not cap.grab():  # skipped frames still decode (FFmpeg) but skip retrieve + colour convert
                 break
             idx += 1
             t = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000.0

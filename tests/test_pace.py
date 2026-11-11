@@ -45,3 +45,16 @@ def test_zero_duration_is_safe():
     assert ds.detail["consistency"] == 0.0
     assert ds.detail["n_windows"] == 0
     assert ds.band == "poor"
+
+
+
+def test_count_syllables_and_articulation_sps():
+    from speech_grading.analysis.pace import articulation_sps, count_syllables
+    from speech_grading.schema import Transcript, Word, derive_transcript_fields
+
+    assert [count_syllables(w) for w in ("cat", "table", "make", "beautiful", "the", "123")] == [1, 2, 1, 3, 1, 0]
+    words = [Word(text="hello", start=0.0, end=0.5), Word(text="world", start=0.5, end=1.0),
+             Word(text="again", start=2.0, end=2.5)]
+    t = derive_transcript_fields(Transcript(words=words))
+    # 5 syllables over 2.5s total minus the 1.0s pause = 1.5s
+    assert articulation_sps(t) == round(5 / 1.5, 3)

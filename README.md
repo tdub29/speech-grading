@@ -137,7 +137,7 @@ orator talk.mp4 --visual-rows features.jsonl
 
 | Dimension | What it catches | Inputs required |
 |---|---|---|
-| Fillers | um, uh, like, you know, basically (pause-gated, context-aware) | text + timestamps |
+| Fillers | um, uh, like, you know, basically (pause-gated, context-aware). Stock Whisper drops many fillers, so the rate is a lower bound | text + timestamps |
 | Pace | words per minute against a target band, plus consistency over time | text + timestamps |
 | Pauses and fluency | mid-clause pauses, repetitions, false starts | text + timestamps |
 | Word choice / tripped-up | hesitation co-occurring with a weak word, plus replacement candidates | text + timestamps (+ optional LLM) |

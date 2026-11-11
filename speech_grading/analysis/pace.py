@@ -17,6 +17,7 @@ Pure function, no external dependencies beyond the foundation modules and stdlib
 
 from __future__ import annotations
 
+import re
 import statistics
 
 from speech_grading.schema import DimensionScore, Transcript
@@ -56,6 +57,37 @@ def _window_wpms(t: Transcript, window_sec: float) -> list[float]:
             wpms.append(_rate(count, window_sec))
             lo = hi
     return wpms
+
+
+_VOWEL_RUN = re.compile(r"[aeiouy]+")
+
+
+def count_syllables(word: str) -> int:
+    """Rough English syllable count: vowel groups, silent final e dropped, min 1.
+
+    ponytail: heuristic (about 90% on common words); swap for a CMUdict lookup if
+    articulation rate ever drives a score rather than a detail metric.
+    """
+    w = re.sub(r"[^a-z]", "", word.lower())
+    if not w:
+        return 0
+    n = len(_VOWEL_RUN.findall(w))
+    if w.endswith("e") and not w.endswith(("le", "ee")) and n > 1:
+        n -= 1
+    return max(1, n)
+
+
+def articulation_sps(t: Transcript, pause_sec: float = 0.25) -> float:
+    """Syllables per second of speaking time: total time minus silent pauses >= pause_sec.
+
+    de Jong and Wempe 2009 definition (speech-fluency-measurement skill). Turn gaps after a
+    speaker filter already read 0 in gap_before, so they never count as speaking time
+    because duration_sec already excludes them.
+    """
+    syl = sum(count_syllables(w.text) for w in t.words if not w.is_filled_pause)
+    pauses = sum(g for i in range(1, len(t.words)) if (g := t.gap_before(i)) >= pause_sec)
+    speak = t.duration_sec - pauses
+    return round(syl / speak, 3) if speak > 0 else 0.0
 
 
 def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
@@ -126,6 +158,7 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
         detail={
             "wpm": overall_wpm,
             "articulation_wpm": articulation_wpm,
+            "articulation_sps": articulation_sps(t, thresholds.get("pause_micro", 0.25)),
             "consistency": consistency,
             "n_windows": k,
         },
