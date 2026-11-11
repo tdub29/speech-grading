@@ -21,7 +21,7 @@ def test_face_features_blend_and_none_matrix():
 def test_hand_face_dist_normalised():
     face = {v._NOSE: lm(0.5, 0.5), v._CHIN: lm(0.5, 0.7), v._LEFT_FACE: lm(0.4, 0.5), v._RIGHT_FACE: lm(0.6, 0.5), v._TOP: lm(0.5, 0.55)}
     assert v.hand_face_dist(face, []) is None
-    d = v.hand_face_dist(face, [[lm(0.5, 0.5)]])  # on the nose
+    d = v.hand_face_dist(face, [[lm(0.5, 0.9), lm(0.5, 0.5)]])  # wrist below chin, finger on the nose
     assert d == 0.0
     assert abs(v.hand_face_dist(face, [[lm(0.7, 0.5)]]) - 1.0) < 1e-9  # 0.2 away / 0.2 width
 
@@ -110,3 +110,17 @@ def test_av_offset_shifts_sentence_ends(monkeypatch, sample_transcript):
     t = sample_transcript
     assert seen["ends"] == [t.words[e].end + 1.5 for _, e in t.sentences if 0 <= e < len(t.words)]
     assert seen["ends"]
+
+
+def test_hand_entirely_inside_face_is_rejected():
+    face = {v._NOSE: lm(0.5, 0.5), v._CHIN: lm(0.5, 0.7), v._LEFT_FACE: lm(0.4, 0.5), v._RIGHT_FACE: lm(0.6, 0.5), v._TOP: lm(0.5, 0.3)}
+    assert v.hand_face_dist(face, [[lm(0.45, 0.4), lm(0.55, 0.6)]]) is None  # detector false positive on the face
+
+
+def test_face_crops_and_box():
+    assert list(v._face_crops(1920, 1080, (1, 2, 3, 3))) == [(1, 2, 3, 3)]
+    grid = list(v._face_crops(1920, 1080, None))
+    assert len(grid) == 9 and grid[-1] == (1920 - 540, 1080 - 540, 540, 540)
+    x, y, w, h = v._box_around([lm(0.5, 0.5), lm(0.52, 0.54)], 1000, 1000)
+    assert w == h == 120 and x <= 500 and x + w >= 520 and y <= 500 and y + h >= 540
+    assert v._box_around([lm(0.0, 0.0), lm(0.01, 0.01)], 1000, 1000)[:2] == (0, 0)  # clamped to frame

@@ -55,6 +55,47 @@ def face_features(lms, blend: dict, matrix) -> dict:
     )
 
 
+def _inside_face(face_lms, hand) -> bool:
+    """True for the hand model's false positive on a face (seen on real video): the
+    wrist and at least 75% of the hand landmarks sit inside the face box. A real
+    self-touch keeps the wrist below or beside the face.
+    ponytail: a palm flat over the whole face with the wrist at the chin is dropped too."""
+    pts = face_lms.values() if isinstance(face_lms, dict) else face_lms
+    xs, ys = [p.x for p in pts], [p.y for p in pts]
+    x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
+    inside = [x0 <= p.x <= x1 and y0 <= p.y <= y1 for p in hand]
+    return inside[0] and sum(inside) >= 0.75 * len(inside)
+
+
+def _face_crops(w: int, h: int, box):
+    """Crops to retry when the full frame finds no face (small or distant face).
+    Last known face box first, else a 3x3 grid of half-size squares."""
+    if box:
+        yield box
+        return
+    s = min(w, h) // 2
+    for y in (0, (h - s) // 2, h - s):
+        for x in (0, (w - s) // 2, w - s):
+            yield (x, y, s, s)
+
+
+def _box_around(lms, w: int, h: int):
+    """Square crop 3x the face size around landmarks (full-frame normalised)."""
+    xs, ys = [p.x * w for p in lms], [p.y * h for p in lms]
+    side = int(min(max(3 * max(max(xs) - min(xs), max(ys) - min(ys)), 64), w, h))
+    cx, cy = (min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2
+    x = int(min(max(cx - side / 2, 0), w - side))
+    y = int(min(max(cy - side / 2, 0), h - side))
+    return (x, y, side, side)
+
+
+class _Pt:
+    __slots__ = ("x", "y", "z")
+
+    def __init__(self, x, y, z=0.0):
+        self.x, self.y, self.z = x, y, z
+
+
 def hand_face_dist(face_lms, hands, aspect: float = 1.0) -> float | None:
     """Min hand-landmark to nose/chin distance, normalised by face size.
 
@@ -62,6 +103,7 @@ def hand_face_dist(face_lms, hands, aspect: float = 1.0) -> float | None:
     square pixels. Face size is max(width, height) so a head turn (width shrinks) does not
     inflate the distance. ponytail: 2D only; a hand in front of the face at depth still counts.
     """
+    hands = [h for h in hands if not _inside_face(face_lms, h)]
     if not hands:
         return None
     def xy(lm):
@@ -91,11 +133,16 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
     hand = vision.HandLandmarker.create_from_options(vision.HandLandmarkerOptions(
         base_options=mpt.BaseOptions(model_asset_path=str(md / MODELS[1])),
         running_mode=vision.RunningMode.VIDEO, num_hands=2))
+    # IMAGE mode: crops move between frames, so video tracking would be misled.
+    face_crop = vision.FaceLandmarker.create_from_options(vision.FaceLandmarkerOptions(
+        base_options=mpt.BaseOptions(model_asset_path=str(md / MODELS[0])),
+        running_mode=vision.RunningMode.IMAGE, output_face_blendshapes=True,
+        output_facial_transformation_matrixes=True, num_faces=1))
     cap = cv2.VideoCapture(str(path))
     if not cap.isOpened():
         raise VisualUnavailable(f"cannot open video: {path}")
     frames, next_t, step = [], 0.0, 1.0 / fps
-    last_ms, idx = -1, -1
+    last_ms, idx, box, n = -1, -1, None, 0
     native_fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
     try:
         while True:
@@ -119,18 +166,34 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
                 ms = last_ms + 1
             last_ms = ms
             fr, hr = face.detect_for_video(img, ms), hand.detect_for_video(img, ms)
+            n += 1
+            lms = fr.face_landmarks[0] if fr.face_landmarks else None
+            if lms is None and (box or n % 10 == 1):  # ponytail: grid scan ~1/s, crop tracking between
+                H, W = bgr.shape[:2]
+                for x, y, cw, ch in _face_crops(W, H, box):
+                    sub = cv2.cvtColor(bgr[y:y + ch, x:x + cw], cv2.COLOR_BGR2RGB)
+                    cr = face_crop.detect(mp.Image(image_format=mp.ImageFormat.SRGB, data=sub.copy()))
+                    if cr.face_landmarks:
+                        fr = cr
+                        lms = [_Pt((x + p.x * cw) / W, (y + p.y * ch) / H, p.z) for p in cr.face_landmarks[0]]
+                        break
+            if lms is not None:
+                box = _box_around(lms, *bgr.shape[1::-1])
+            else:
+                box = None
             row = dict(t=t, smile=None, brow_raise=None, brow_furrow=None, jaw_open=None,
                        gaze_off=None, pitch_deg=None, hand_face_dist=None,
-                       face_visible=bool(fr.face_landmarks))
-            if fr.face_landmarks:
+                       face_visible=lms is not None)
+            if lms is not None:
                 blend = {c.category_name: c.score for c in (fr.face_blendshapes or [[]])[0]}
                 m = fr.facial_transformation_matrixes[0] if fr.facial_transformation_matrixes else None
-                row.update(face_features(fr.face_landmarks[0], blend, m))
-                row["hand_face_dist"] = hand_face_dist(fr.face_landmarks[0], hr.hand_landmarks,
+                row.update(face_features(lms, blend, m))
+                row["hand_face_dist"] = hand_face_dist(lms, hr.hand_landmarks,
                                                        aspect=bgr.shape[1] / bgr.shape[0])
             frames.append(row)
     finally:
         cap.release()
         face.close()
+        face_crop.close()
         hand.close()
     return frames
