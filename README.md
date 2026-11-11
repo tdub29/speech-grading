@@ -116,6 +116,8 @@ Each mode picks which cues run and how strict they are (see `PROFILES` in `speec
 - `stage`: face touch and chin up only; tighter face-touch distance (0.12); scanning the audience is normal.
 - `interview`: drops the gaze check (speaker looks at the interviewer).
 
+Video cues are reported as counts, plus per-minute rates for clips of 60s or more. They do not change the overall score. Chin up and smile are measured against the speaker's own first 30 seconds, so a habit held from the start is never flagged. The visual tier tracks one face; `--speaker` does not choose which face.
+
 ### Visual models location
 
 The visual tier loads MediaPipe models from `~/.orator/models` (or the `$ORATOR_MODELS` environment variable):

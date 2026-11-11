@@ -13,7 +13,7 @@ from pathlib import Path
 
 VIDEO_EXT = {".mp4", ".mov", ".mkv", ".webm", ".avi", ".m4v"}
 MODELS = ("face_landmarker.task", "hand_landmarker.task")
-_NOSE, _CHIN, _LEFT_FACE, _RIGHT_FACE = 1, 152, 234, 454  # FaceMesh indices
+_NOSE, _CHIN, _LEFT_FACE, _RIGHT_FACE, _TOP = 1, 152, 234, 454, 10  # FaceMesh indices
 
 
 class VisualUnavailable(RuntimeError):
@@ -35,7 +35,10 @@ def _bs(blend: dict, *names: str) -> float | None:
 
 def face_features(lms, blend: dict, matrix) -> dict:
     """One face -> smile/brow/jaw/gaze/pitch. `lms` has .x/.y; `blend` maps name->score."""
-    gaze = [_bs(blend, f"eyeLook{d}Left", f"eyeLook{d}Right") for d in ("Out", "In", "Up", "Down")]
+    # Pair blendshapes by gaze DIRECTION: looking to the subject's right is the right eye
+    # looking out and the left eye looking in. Pairing Out-with-Out averaged opposite eyes.
+    gaze = [_bs(blend, "eyeLookOutRight", "eyeLookInLeft"), _bs(blend, "eyeLookOutLeft", "eyeLookInRight"),
+            _bs(blend, "eyeLookUpLeft", "eyeLookUpRight"), _bs(blend, "eyeLookDownLeft", "eyeLookDownRight")]
     gaze = [g for g in gaze if g is not None]
     pitch = None
     if matrix is not None and getattr(matrix, "size", 0) >= 16:  # empty array when no matrix
@@ -52,14 +55,21 @@ def face_features(lms, blend: dict, matrix) -> dict:
     )
 
 
-def hand_face_dist(face_lms, hands) -> float | None:
-    """Min hand-landmark to nose/chin distance, normalised by face width."""
+def hand_face_dist(face_lms, hands, aspect: float = 1.0) -> float | None:
+    """Min hand-landmark to nose/chin distance, normalised by face size.
+
+    Landmarks are normalised per axis, so x is scaled by width/height (`aspect`) to get
+    square pixels. Face size is max(width, height) so a head turn (width shrinks) does not
+    inflate the distance. ponytail: 2D only; a hand in front of the face at depth still counts.
+    """
     if not hands:
         return None
-    w = math.dist((face_lms[_LEFT_FACE].x, face_lms[_LEFT_FACE].y),
-                  (face_lms[_RIGHT_FACE].x, face_lms[_RIGHT_FACE].y)) or 1e-6
-    pts = [(face_lms[_NOSE].x, face_lms[_NOSE].y), (face_lms[_CHIN].x, face_lms[_CHIN].y)]
-    return min(math.dist((p.x, p.y), q) for h in hands for p in h for q in pts) / w
+    def xy(lm):
+        return (lm.x * aspect, lm.y)
+    size = max(math.dist(xy(face_lms[_LEFT_FACE]), xy(face_lms[_RIGHT_FACE])),
+               math.dist(xy(face_lms[_TOP]), xy(face_lms[_CHIN]))) or 1e-6
+    pts = [xy(face_lms[_NOSE]), xy(face_lms[_CHIN])]
+    return min(math.dist(xy(p), q) for h in hands for p in h for q in pts) / size
 
 
 def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | None = None) -> list[dict]:
@@ -85,18 +95,24 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
     if not cap.isOpened():
         raise VisualUnavailable(f"cannot open video: {path}")
     frames, next_t, step = [], 0.0, 1.0 / fps
-    last_ms = -1
+    last_ms, idx = -1, -1
+    native_fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
     try:
         while True:
             if not cap.grab():  # grab-only for skipped frames: no decode cost
                 break
+            idx += 1
             t = cap.get(cv2.CAP_PROP_POS_MSEC) / 1000.0
+            if t <= 0 and idx > 0:  # some containers never report a position
+                t = idx / native_fps
             if t < next_t:
                 continue
             ok, bgr = cap.retrieve()
             if not ok:
-                break
-            next_t = t + step
+                continue  # one bad frame should not end the run
+            next_t += step  # fixed grid: t + step drifts below the requested fps
+            if next_t <= t:
+                next_t = t + step
             img = mp.Image(image_format=mp.ImageFormat.SRGB, data=cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
             ms = int(t * 1000)
             if ms <= last_ms:
@@ -110,7 +126,8 @@ def extract_frames(path: str | Path, fps: float = 10.0, models: str | Path | Non
                 blend = {c.category_name: c.score for c in (fr.face_blendshapes or [[]])[0]}
                 m = fr.facial_transformation_matrixes[0] if fr.facial_transformation_matrixes else None
                 row.update(face_features(fr.face_landmarks[0], blend, m))
-                row["hand_face_dist"] = hand_face_dist(fr.face_landmarks[0], hr.hand_landmarks)
+                row["hand_face_dist"] = hand_face_dist(fr.face_landmarks[0], hr.hand_landmarks,
+                                                       aspect=bgr.shape[1] / bgr.shape[0])
             frames.append(row)
     finally:
         cap.release()

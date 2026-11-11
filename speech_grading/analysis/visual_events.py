@@ -8,7 +8,7 @@ reliable indicators of confidence or nervousness.
 """
 from __future__ import annotations
 
-from statistics import mean
+from statistics import mean, median
 from typing import Callable, Optional
 
 from ..schema import Finding
@@ -16,17 +16,24 @@ from ..schema import Finding
 _BASE_KEYS = ("smile", "brow_raise", "brow_furrow", "jaw_open", "gaze_off", "pitch_deg")
 
 
-def baseline(frames: list[dict], first_sec: float = 30.0) -> dict:
-    """Per-speaker mean of each feature over the first `first_sec` seconds."""
+def baseline(frames: list[dict], first_sec: float = 30.0, min_face_sec: float = 10.0) -> dict:
+    """Per-speaker median of each feature over the first `first_sec` seconds.
+
+    Empty when the face spans under `min_face_sec` there: too little to trust.
+    ponytail: a behavior held from the very start (chin up the whole talk) is absorbed
+    into the baseline and never flagged; cues measure change from the speaker's norm.
+    """
     if not frames:
         return {}
     t0 = frames[0]["t"]
     head = [f for f in frames if f["t"] - t0 <= first_sec and f.get("face_visible")]
+    if not head or head[-1]["t"] - head[0]["t"] < min_face_sec:
+        return {}
     out = {}
     for k in _BASE_KEYS:
         vals = [f[k] for f in head if f.get(k) is not None]
         if vals:
-            out[k] = mean(vals)
+            out[k] = median(vals)
     return out
 
 
@@ -119,9 +126,19 @@ PROFILES: dict[str, dict] = {
 }
 
 
-def summarize(frames: list[dict], sentence_ends: list[float], mode: str = "default") -> dict:
-    """Run every valid cue for `mode`; return findings, per-minute rates, quality, skipped cues."""
+MIN_RATE_SEC = 60.0  # per-minute rates from shorter clips are mostly noise
+
+
+def summarize(frames: list[dict], sentence_ends: list[float], mode: str = "default",
+              speaking_sec: Optional[float] = None) -> dict:
+    """Run every valid cue for `mode`; return findings, per-minute rates, quality, skipped cues.
+
+    `speaking_sec` (set with a speaker filter) is the rate denominator instead of video length.
+    """
     p = PROFILES.get(mode, PROFILES["default"])
+    if not frames:
+        return {"mode": mode, "quality": data_quality(frames), "findings": [], "rates_per_min": {},
+                "skipped": {c: "no video frames decoded" for c in p["cues"]}}
     q = data_quality(frames)
     base = baseline(frames)
     skipped = {}
@@ -134,18 +151,25 @@ def summarize(frames: list[dict], sentence_ends: list[float], mode: str = "defau
             if q["hands_visible_pct"] < 100 * p["need_hands"]:
                 skipped[cue] = "hands rarely in frame"; continue
             found += detect_face_touch(frames, touch_dist=p["touch_dist"])
+        elif cue in ("chin_up", "auto_smile") and not base:
+            skipped[cue] = "under 10s of face in the first 30s: no baseline"
         elif cue == "chin_up":
             found += detect_chin_up(frames, base, thresh_deg=p["chin_thresh"])
         elif cue == "auto_smile":
             found += smile_after_sentence(frames, sentence_ends, base)
         elif cue == "reaction_check":
             found += gaze_check_after_sentence(frames, sentence_ends, off=p["gaze_off"])
-    minutes = max((frames[-1]["t"] - frames[0]["t"]) / 60, 1e-9) if len(frames) > 1 else 1e-9
-    rates: dict[str, float] = {}
+    counts: dict[str, int] = {}
     for f in found:
-        rates[f.kind] = rates.get(f.kind, 0) + 1
-    return {"mode": mode, "quality": q, "findings": found, "skipped": skipped,
-            "rates_per_min": {k: round(n / minutes, 2) for k, n in rates.items()}}
+        counts[f.kind] = counts.get(f.kind, 0) + 1
+    secs = speaking_sec if speaking_sec else frames[-1]["t"] - frames[0]["t"]
+    out = {"mode": mode, "quality": q, "findings": found, "skipped": skipped,
+           "counts": counts, "rates_per_min": {}}
+    if secs < MIN_RATE_SEC:
+        out["rates_note"] = f"under {MIN_RATE_SEC:.0f}s: counts only, no per-minute rates"
+    else:
+        out["rates_per_min"] = {k: round(n / (secs / 60), 2) for k, n in counts.items()}
+    return out
 
 
 def feature_rows(frames: list[dict], win: float = 5.0, mode: str = "default") -> list[dict]:

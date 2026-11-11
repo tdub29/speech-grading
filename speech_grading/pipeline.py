@@ -170,7 +170,10 @@ def load_input(input_path: str, cfg: Config) -> Transcript:
         # (faster-whisper via PyAV) still leave audio_path on the .mp4, which parselmouth
         # cannot open, and prosody would silently score the speaker as monotone.
         if visual.is_video(input_path) and find_ffmpeg():
-            audio_path = extract_audio_from_video(input_path)
+            try:
+                audio_path = extract_audio_from_video(input_path)
+            except RuntimeError as e:
+                raise RuntimeError(f"cannot read audio from {input_path} (no audio track?): {e}") from e
         t = backend.transcribe(audio_path)
         if not t.audio_path:
             t.audio_path = audio_path
@@ -193,7 +196,8 @@ def add_visual(report: Report, t: Transcript, input_path: str, cfg: Config) -> R
         report.metrics["visual"] = {"skipped": str(e)}
         return report
     ends = [t.words[e].end for _, e in t.sentences if 0 <= e < len(t.words)]
-    res = visual_events.summarize(frames, ends, cfg.mode)
+    res = visual_events.summarize(frames, ends, cfg.mode,
+                                  speaking_sec=t.duration_sec if cfg.speaker else None)
     report.findings += res.pop("findings")
     report.metrics["visual"] = res
     if cfg.visual_rows:

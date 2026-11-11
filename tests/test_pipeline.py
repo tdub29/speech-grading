@@ -124,12 +124,47 @@ def test_add_visual_merges_findings_and_writes_rows(monkeypatch, tmp_path, sampl
     from speech_grading.analysis import visual
 
     frames = [dict(t=i / 10, face_visible=True, smile=0.1, brow_raise=0.0, brow_furrow=0.0,
-                   jaw_open=0.0, gaze_off=0.0, pitch_deg=0.0, hand_face_dist=None,
-                   wrist_y_rel=None, hands_visible=False) for i in range(300)]
+                   jaw_open=0.0, gaze_off=0.0, pitch_deg=0.0,
+                   hand_face_dist=0.05 if 100 <= i < 120 else 0.5, wrist_y_rel=None)
+              for i in range(300)]
     monkeypatch.setattr(visual, "extract_frames", lambda p: frames)
     rows = tmp_path / "rows.jsonl"
     cfg = Config(mode="zoom", visual_rows=str(rows))
     rep = pipeline.add_visual(run_on_transcript(sample_transcript, cfg), sample_transcript, "x.mp4", cfg)
     assert rep.metrics["visual"]["mode"] == "zoom"
+    assert [f.kind for f in rep.findings if f.word_index < 0] == ["face_touch"]
+    from speech_grading.report import render_html
+
+    html_out = tmp_path / "r.html"
+    render_html(rep, str(html_out))
+    assert "Video cues" in html_out.read_text(encoding="utf-8")
     assert rows.read_text().strip()
     json.loads(rows.read_text().splitlines()[0])
+
+
+
+def test_cli_speaker_end_to_end_ignores_other_turn(tmp_path):
+    import json
+    from speech_grading import cli
+
+    words = [{"text": f"w{i}", "start": i * 0.3, "end": i * 0.3 + 0.25, "speaker": "A"} for i in range(4)]
+    words += [{"text": "long", "start": 1.5, "end": 5.9, "speaker": "B"}]
+    words += [{"text": f"x{i}", "start": 6.0 + i * 0.3, "end": 6.25 + i * 0.3, "speaker": "A"} for i in range(4)]
+    src = tmp_path / "two.json"
+    src.write_text(json.dumps({"words": words}), encoding="utf-8")
+    out = tmp_path / "out.json"
+    assert cli.main([str(src), "--speaker", "A", "--json", str(out)]) == 0
+    rep = json.loads(out.read_text(encoding="utf-8"))
+    assert not [f for f in rep["findings"] if f["kind"] == "long_pause"]
+    assert rep["transcript"]["duration_sec"] == 2.3  # two 1.15s turns, not the 7.15s wall clock
+
+
+def test_cli_unknown_speaker_exits_cleanly(tmp_path, capsys):
+    import json
+    from speech_grading import cli
+
+    src = tmp_path / "one.json"
+    src.write_text(json.dumps({"words": [{"text": "hi", "start": 0, "end": 0.3, "speaker": "A"}]}),
+                   encoding="utf-8")
+    assert cli.main([str(src), "--speaker", "Z"]) == 2
+    assert "not found" in capsys.readouterr().err

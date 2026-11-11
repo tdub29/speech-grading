@@ -92,6 +92,8 @@ class Transcript(BaseModel):
         if want is None:
             sorted_avail = ", ".join(sorted(available))
             raise ValueError(f"Speaker {speaker!r} not found in transcript. Available speakers: {sorted_avail}")
+        if self.turn_starts and all(w.speaker == want for w in self.words):
+            return self  # already filtered: re-filtering would erase turn boundaries
         matching, turns, prev_mine = [], [], False
         for w in self.words:
             mine = w.speaker == want

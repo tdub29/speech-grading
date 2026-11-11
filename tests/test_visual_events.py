@@ -51,12 +51,16 @@ def test_auto_smile_and_reaction_check():
 
 
 def test_summarize_modes_and_gates():
-    frames = [fr(i * 0.1, hand_face_dist=0.05 if 10 <= i < 40 else None) for i in range(100)]
+    frames = [fr(i * 0.1, hand_face_dist=0.05 if 10 <= i < 40 else 0.5) for i in range(700)]
     phone = v.summarize(frames, [], "phone")
     assert phone["findings"] and phone["rates_per_min"]["face_touch"] > 0
+    short = v.summarize(frames[:100], [], "phone")
+    assert short["counts"]["face_touch"] == 1 and short["rates_per_min"] == {}
     nohands = v.summarize(series(100), [], "phone")
     assert "face_touch" in nohands["skipped"]
-    assert "reaction_check" not in v.summarize(frames, [1.0], "zoom")["skipped"]
+    gaze_away = [fr(i * 0.1, gaze_off=0.9 if i >= 10 else 0.0) for i in range(700)]
+    assert v.summarize(gaze_away, [1.0], "default")["counts"].get("reaction_check") == 1
+    assert "reaction_check" not in v.summarize(gaze_away, [1.0], "zoom")["counts"]
     dark = v.summarize([fr(i * 0.1, face_visible=False) for i in range(50)], [], "stage")
     assert dark["findings"] == [] and dark["skipped"]
 
@@ -64,3 +68,28 @@ def test_summarize_modes_and_gates():
 def test_feature_rows_windows():
     rows = v.feature_rows(series(120), win=5.0, mode="stage")
     assert len(rows) == 3 and rows[0]["mode"] == "stage" and rows[0]["n"] == 50
+
+
+
+def test_baseline_needs_ten_seconds_of_face():
+    assert v.baseline(series(50, pitch_deg=2.0)) == {}  # 5s of face
+    s = v.summarize(series(50, pitch_deg=2.0), [], "default")
+    assert "chin_up" in s["skipped"] and "auto_smile" in s["skipped"]
+
+
+def test_baseline_median_ignores_early_spike():
+    frames = series(200, pitch_deg=0.0)
+    for f in frames[:20]:
+        f["pitch_deg"] = 40.0
+    assert v.baseline(frames)["pitch_deg"] == 0.0
+
+
+def test_speaking_sec_is_rate_denominator():
+    frames = [fr(i * 0.1, hand_face_dist=0.05 if 10 <= i < 40 else 0.5) for i in range(1200)]
+    full = v.summarize(frames, [], "phone")["rates_per_min"]["face_touch"]
+    spk = v.summarize(frames, [], "phone", speaking_sec=60.0)["rates_per_min"]["face_touch"]
+    assert spk == 1.0 and full < spk
+
+
+def test_no_frames_reports_reason():
+    assert "no video frames" in next(iter(v.summarize([], [], "default")["skipped"].values()))

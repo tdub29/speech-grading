@@ -117,6 +117,16 @@ _PAGE = Template(
   </ul>
   {% endif %}
 
+  {% if visual %}
+  <h2>Video cues (counts, not scored)</h2>
+  <ul class="findings">
+    {% for f in visual %}
+    <li><code>{{ "%d:%02d"|format(f.start // 60, f.start % 60) }}</code> {{ f.kind.replace("_", " ") }}
+        &nbsp;<span class="sub">{{ f.rationale }}</span></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
   <h2>Metrics</h2>
   <table class="metrics">
     {% for k, v in metrics %}<tr><td>{{ k }}</td><td>{{ v }}</td></tr>{% endfor %}
@@ -215,6 +225,7 @@ def render_html(report: Report, out_path: str) -> None:
         dims=dims,
         transcript_html=highlight_transcript_html(report),
         suggestions=suggestions,
+        visual=[f for f in report.findings if f.word_index < 0],
         metrics=sorted(report.metrics.items()),
     )
     with open(out_path, "w", encoding="utf-8") as fh:

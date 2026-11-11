@@ -19,7 +19,7 @@ def test_face_features_blend_and_none_matrix():
 
 
 def test_hand_face_dist_normalised():
-    face = {v._NOSE: lm(0.5, 0.5), v._CHIN: lm(0.5, 0.7), v._LEFT_FACE: lm(0.4, 0.5), v._RIGHT_FACE: lm(0.6, 0.5)}
+    face = {v._NOSE: lm(0.5, 0.5), v._CHIN: lm(0.5, 0.7), v._LEFT_FACE: lm(0.4, 0.5), v._RIGHT_FACE: lm(0.6, 0.5), v._TOP: lm(0.5, 0.55)}
     assert v.hand_face_dist(face, []) is None
     d = v.hand_face_dist(face, [[lm(0.5, 0.5)]])  # on the nose
     assert d == 0.0
@@ -73,3 +73,19 @@ def test_extract_frames_synthetic_video_has_no_face(tmp_path):
     assert 8 <= len(frames) <= 12  # 1s at 30fps sampled to 10fps
     assert all(f["face_visible"] is False for f in frames)
     assert [f["t"] for f in frames] == sorted(f["t"] for f in frames)
+
+
+def test_hand_face_dist_turned_head_and_wide_frame():
+    turned = {v._NOSE: lm(0.5, 0.5), v._CHIN: lm(0.5, 0.7), v._LEFT_FACE: lm(0.48, 0.5),
+              v._RIGHT_FACE: lm(0.52, 0.5), v._TOP: lm(0.5, 0.3)}
+    # width collapses to 0.04 on a head turn; height (0.4) keeps the scale sane
+    assert abs(v.hand_face_dist(turned, [[lm(0.7, 0.5)]]) - 0.5) < 1e-9
+    face = {v._NOSE: lm(0.5, 0.5), v._CHIN: lm(0.5, 0.7), v._LEFT_FACE: lm(0.4, 0.5),
+            v._RIGHT_FACE: lm(0.6, 0.5), v._TOP: lm(0.5, 0.55)}
+    # 16:9 frame: horizontal offsets scale with width/height on both sides of the ratio
+    assert abs(v.hand_face_dist(face, [[lm(0.7, 0.5)]], aspect=16 / 9) - 1.0) < 1e-9
+
+
+def test_gaze_pairs_by_direction():
+    looking_right = {"eyeLookOutRight": 0.9, "eyeLookInLeft": 0.9, "eyeLookInRight": 0.0, "eyeLookOutLeft": 0.0}
+    assert v.face_features(None, looking_right, None)["gaze_off"] == 0.9

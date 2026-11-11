@@ -118,9 +118,13 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     from .pipeline import load_input
 
-    t = load_input(args.input, cfg)
-    if cfg.speaker:  # filter once so word-choice handoff, scoring and visual share one index space
-        t = t.filter_by_speaker(cfg.speaker)
+    try:
+        t = load_input(args.input, cfg)
+        if cfg.speaker:  # filter once so word-choice handoff, scoring and visual share one index space
+            t = t.filter_by_speaker(cfg.speaker)
+    except (RuntimeError, ValueError, FileNotFoundError) as e:
+        print(f"orator: error: {e}", file=sys.stderr)
+        return 2
 
     if args.emit_request is not None:
         import json as _json
@@ -142,7 +146,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     report = add_visual(run_on_transcript(t, cfg), t, args.input, cfg)
     vis = report.metrics.get("visual")
     if vis:
-        print("visual:", vis.get("skipped") or f"{vis['mode']} mode, rates/min {vis['rates_per_min']}, "
+        print("visual:", vis["skipped"] if "mode" not in vis else f"{vis['mode']} mode, rates/min {vis['rates_per_min'] or vis.get('rates_note')}, "
               f"face visible {vis['quality']['face_visible_pct']:.0f}%")
 
     if args.json_out:
