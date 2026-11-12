@@ -47,7 +47,7 @@ def _build_parser() -> argparse.ArgumentParser:
                         "(circles every grade back to one place)")
     p.add_argument("--mode", default=None,
                    choices=["default", "zoom", "phone", "stage", "interview"],
-                   help="video speaking mode: sets which visual cues and thresholds apply")
+                   help="speaking mode: sets visual cues and thresholds; stage (speeches) also uses a 110 to 150 wpm pace band")
     p.add_argument("--visual-rows", default=None,
                    help="video only: write windowed visual feature JSONL here (training data)")
     p.add_argument("--camera-level", action="store_true",

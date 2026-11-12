@@ -18,8 +18,9 @@ source list lives here.
 - **Prosody** was silently skipped when parselmouth or librosa was missing; `--acoustic` now says so.
   Corpus pitch variation: speeches median 3.3 semitones, debates 4.1.
 
-Known limit: slow oratory (Kennedy 1961, Trump SOTU 2019) still lands at "poor" pace against the
-130 to 160 wpm conversational band. That band suits presentations, not ceremonial addresses.
+Slow oratory sits below the 130 to 160 wpm conversational band, so `--mode stage` uses 110 to 150
+(fair 95 to 170). With it, speech pace lands good for 14 of 20 clips, fair for 4, poor for 2
+(Sanders 2016 at 80 wpm, Trump SOTU 2019 at 92); speech median overall 84.6.
 There are no "good speaker" labels here, so this sets reference ranges, not a learned model.
 
 ## Sources

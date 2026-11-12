@@ -18,7 +18,7 @@ from .analysis.repetitions import detect_repetitions
 from .analysis.vocabulary import compute_vocabulary
 from .analysis.weak_words import detect_weak_words
 from .analysis.prosody import compute_prosody
-from .config import Config
+from .config import MODE_THRESHOLDS, Config
 from .schema import (
     Finding,
     Report,
@@ -77,7 +77,7 @@ def run_on_transcript(t: Transcript, cfg: Config) -> Report:
     # and the scorer redistributes their weight.
     if t.has_timing:
         findings += detect_pauses(t, cfg.thresholds)
-        dim_scores.append(compute_pace(t, cfg.thresholds))
+        dim_scores.append(compute_pace(t, {**cfg.thresholds, **MODE_THRESHOLDS.get(cfg.mode, {})}))
 
     prosody_ds, prosody_findings = compute_prosody(t, cfg)
     if prosody_ds is not None:

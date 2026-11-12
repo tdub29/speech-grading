@@ -71,3 +71,22 @@ def test_applause_gap_does_not_slow_pace(sample_transcript):
     ds = compute_pace(t, Config().thresholds)
     assert abs(ds.raw - base) / base < 0.15
     assert ds.detail["wall_clock_wpm"] < ds.raw * 0.6
+
+
+def test_stage_mode_pace_band_fits_oratory(sample_transcript):
+    """120 wpm is slow for a talk but squarely inside the stage (speech) band."""
+    from speech_grading.config import MODE_THRESHOLDS
+
+    t = sample_transcript.model_copy(deep=True)
+    words_needed = 120 * t.duration_sec / 60  # stretch time so pace lands near 120 wpm
+    scale = t.total_words / words_needed
+    for w in t.words:
+        w.start *= scale
+        w.end *= scale
+    t.duration_sec *= scale
+    t.speaking_sec *= scale
+    default = compute_pace(t, Config().thresholds)
+    stage = compute_pace(t, {**Config().thresholds, **MODE_THRESHOLDS["stage"]})
+    assert 110 < stage.raw < 130
+    assert default.band in ("fair", "poor") and stage.band in ("good", "excellent", "fair")
+    assert stage.points > default.points

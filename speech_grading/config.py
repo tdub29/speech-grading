@@ -58,6 +58,13 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     "low_conf_threshold": 0.5,      # word.confidence below this contributes to "low_conf"
 }
 
+# Speaking modes that change audio thresholds too. Stage = speeches and addresses: the
+# 30-clip political corpus (docs/political-corpus.md) put speeches at p10 103, median 124,
+# p90 153 wpm, below the 130 to 160 conversational band.
+MODE_THRESHOLDS: dict[str, dict[str, float]] = {
+    "stage": {"wpm_ideal_low": 110.0, "wpm_ideal_high": 150.0, "wpm_fair_low": 95.0, "wpm_fair_high": 170.0},
+}
+
 
 class Config(BaseModel):
     """Runtime configuration. Construct directly or via :func:`load_config`."""

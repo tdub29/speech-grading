@@ -113,7 +113,7 @@ Each mode picks which cues run and how strict they are (see `PROFILES` in `speec
 - `default`: self-touch, chin up, smile right after a sentence; on-camera gaze share at 0.5.
 - `zoom`: same cues; gaze share threshold 0.6 (screen sits below the lens).
 - `phone`: same cues; looser self-touch distance (0.20), chin threshold (10 deg) and smile rise (0.30) for a close camera.
-- `stage`: self-touch and chin up only; tighter self-touch distance (0.12); gaze share threshold 0.8.
+- `stage`: speeches and addresses. Pace band 110 to 150 wpm (any input, audio too); self-touch and chin up only; tighter self-touch distance (0.12); gaze share threshold 0.8.
 - `interview`: same as default with gaze share threshold 0.7 (speaker looks at the interviewer).
 
 `--av-offset SEC` shifts transcript times by SEC before matching them to video frames; use it when the transcript or audio was supplied separately and is out of sync (audio extracted from the same video needs none).
