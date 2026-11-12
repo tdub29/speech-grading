@@ -22,7 +22,7 @@ dependencies = [
 # Word-choice via Claude API (offline lexicon fallback always works without this).
 llm = ["anthropic>=0.40"]
 # Default MIT ASR backend.
-asr = ["faster-whisper>=1.0"]
+asr = ["faster-whisper>=1.0", "av<18"]  # faster-whisper 1.2.1 passes metadata_errors, which av 19 removed
 # Optional acoustic prosody track.
 acoustic = ["praat-parselmouth>=0.4", "librosa>=0.10", "numpy>=1.24"]
 # Optional opt-in non-commercial high-accuracy ASR.

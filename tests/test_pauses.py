@@ -40,3 +40,18 @@ def test_detect_pauses_sorted_and_well_formed(sample_transcript):
         assert f.original == "(pause %.2fs)" % gap
         # Scores stay within the documented 0-1 range.
         assert 0.0 < f.score <= 1.0
+
+
+def test_sentence_boundary_pauses_are_not_disfluency(sample_transcript):
+    """Long pauses at sentence edges are listed but do not count toward the pauses load."""
+    from speech_grading.schema import Finding
+    from speech_grading.scorer import _pauses_dim
+
+    def pause(rationale):
+        return Finding(kind="long_pause", word_index=1, start=0.0, end=1.0, original="(pause 1.00s)",
+                       rationale=rationale, score=0.8, source="rule")
+
+    edge = [pause("Long pause at a sentence boundary")] * 5
+    assert _pauses_dim(edge, sample_transcript).raw == 0.0
+    ds = _pauses_dim(edge + [pause("Long mid-clause pause (awkward)")], sample_transcript)
+    assert ds.raw > 0 and ds.detail["midclause_pauses"] == 1 and ds.detail["long_pauses"] == 6

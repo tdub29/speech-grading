@@ -58,3 +58,16 @@ def test_count_syllables_and_articulation_sps():
     t = derive_transcript_fields(Transcript(words=words))
     # 5 syllables over 2.5s total minus the 1.0s pause = 1.5s
     assert articulation_sps(t) == round(5 / 1.5, 3)
+
+
+def test_applause_gap_does_not_slow_pace(sample_transcript):
+    """A 30s applause break mid-speech leaves listener pace unchanged."""
+    base = compute_pace(sample_transcript, Config().thresholds).raw
+    t = sample_transcript.model_copy(deep=True)
+    for w in t.words[20:]:
+        w.start += 30.0
+        w.end += 30.0
+    t.duration_sec += 30.0
+    ds = compute_pace(t, Config().thresholds)
+    assert abs(ds.raw - base) / base < 0.15
+    assert ds.detail["wall_clock_wpm"] < ds.raw * 0.6

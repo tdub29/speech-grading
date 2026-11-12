@@ -62,8 +62,11 @@ def _fillers_dim(findings: list[Finding], t: Transcript, cfg: Config) -> Dimensi
 def _pauses_dim(findings: list[Finding], t: Transcript) -> DimensionScore:
     long_pauses = [f for f in findings if f.kind == "long_pause"]
     repeats = [f for f in findings if f.kind in ("repetition", "false_start")]
-    # Disfluency load per minute: long pauses count full, repairs count a bit less.
-    load = len(long_pauses) + 0.7 * len(repeats)
+    # Disfluency load per minute: mid-clause pauses count full, repairs a bit less.
+    # A pause at a sentence edge is delivery, not disfluency: in a 30-clip political
+    # corpus it put every major speech in "poor" (median 7.3/min, boundary pauses).
+    mid = [f for f in long_pauses if f.rationale.startswith("Long mid-clause")]
+    load = len(mid) + 0.7 * len(repeats)
     per_min = _per_minute(load, t.minutes)
     if per_min < 1.0:
         band = "excellent"
@@ -82,6 +85,7 @@ def _pauses_dim(findings: list[Finding], t: Transcript) -> DimensionScore:
         findings=long_pauses + repeats,
         detail={
             "long_pauses": len(long_pauses),
+            "midclause_pauses": len(mid),
             "repetitions": len(repeats),
             "disfluency_per_minute": round(per_min, 2),
         },

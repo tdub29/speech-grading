@@ -104,7 +104,12 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
     consistency_full = thresholds.get("wpm_consistency_full", 15.0)
     consistency_dock = thresholds.get("wpm_consistency_dock", 35.0)
 
-    overall_wpm = _rate(t.total_words, t.duration_sec)
+    # Gaps longer than the cap are applause, crowd or dead air, not the speaker's pacing:
+    # counting them dragged every applause-heavy political speech in the corpus to "poor".
+    gap_cap = thresholds.get("wpm_gap_cap_sec", 2.0)
+    excess = sum(max(0.0, t.gap_before(i) - gap_cap) for i in range(1, len(t.words)))
+    wall_wpm = _rate(t.total_words, t.duration_sec)
+    overall_wpm = _rate(t.total_words, t.duration_sec - excess)
     articulation_wpm = _rate(t.total_words, t.speaking_sec)
 
     window_wpms = _window_wpms(t, window_sec)
@@ -157,6 +162,7 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
         findings=[],
         detail={
             "wpm": overall_wpm,
+            "wall_clock_wpm": wall_wpm,
             "articulation_wpm": articulation_wpm,
             "articulation_sps": articulation_sps(t, thresholds.get("pause_micro", 0.25)),
             "consistency": consistency,

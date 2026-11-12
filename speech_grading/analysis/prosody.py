@@ -213,7 +213,9 @@ def compute_prosody(t: Transcript, cfg: Config) -> tuple[Optional[DimensionScore
         import librosa  # type: ignore
         import numpy as np  # type: ignore
         import parselmouth  # type: ignore
-    except ImportError:
+    except ImportError as e:  # asked for acoustics: say why the dimension is missing
+        import sys
+        print(f"orator: prosody skipped, {e.name} not installed (pip install -e '.[acoustic]')", file=sys.stderr)
         return None, []
 
     spans = _speaker_spans(t)
