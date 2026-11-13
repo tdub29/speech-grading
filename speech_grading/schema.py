@@ -290,10 +290,33 @@ def drop_nonspeech_tags(words: list) -> list:
     return [w for w, k in zip(words, keep) if k]
 
 
+_CROWD_SOUNDS = {"oh", "ooh", "ah", "aah", "woo", "whoo", "wooo", "yeah", "hey", "wow", "yay"}
+
+
+def drop_crowd_runs(words: list, min_run: int = 3, max_conf: float = 0.5) -> list:
+    """Remove crowd noise ASR heard as words: 3+ identical interjections in a row
+    ("Oh! Oh! Oh!") at low mean confidence. Whisper small wrote these before Michelle
+    Obama's 2016 DNC speech; medium heard nothing. A single "oh", a confident run,
+    and emphatic repeats of real words ("no, no, no") stay.
+    """
+    keep = [True] * len(words)
+    i = 0
+    while i < len(words):
+        n = words[i].normalized or normalize_token(words[i].text)
+        j = i
+        while j < len(words) and (words[j].normalized or normalize_token(words[j].text)) == n:
+            j += 1
+        confs = [w.confidence for w in words[i:j] if w.confidence is not None]
+        if n in _CROWD_SOUNDS and j - i >= min_run and confs and sum(confs) / len(confs) < max_conf:
+            keep[i:j] = [False] * (j - i)
+        i = j
+    return [w for w, k in zip(words, keep) if k]
+
+
 def derive_transcript_fields(t: Transcript) -> Transcript:
     """Fill normalized forms, speaker_median_gap, sentence spans, speaking_sec,
     and duration_sec when missing. Idempotent."""
-    kept = drop_nonspeech_tags(t.words)
+    kept = drop_crowd_runs(drop_nonspeech_tags(t.words))
     if len(kept) != len(t.words):
         if t.turn_starts:  # turn starts index words: shift them past the dropped tags
             ids = {id(w): n for n, w in enumerate(kept)}
