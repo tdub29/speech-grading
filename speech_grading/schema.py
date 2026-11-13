@@ -252,9 +252,58 @@ def _median(values: list[float]) -> float:
     return s[mid] if n % 2 else (s[mid - 1] + s[mid]) / 2.0
 
 
+_TAG_WORDS = {"music", "applause", "laughter", "laughs", "cheering", "cheers", "inaudible",
+              "crosstalk", "silence", "booing", "chanting"}
+
+
+def _is_upper(text: str) -> bool:
+    letters = [c for c in text if c.isalpha()]
+    return len(letters) > 1 and all(c.isupper() for c in letters)
+
+
+def drop_nonspeech_tags(words: list) -> list:
+    """Remove ASR sound-event captions ("MUSIC", "CHEERING AND APPLAUSE", "[Applause]").
+
+    A tag is a bracketed token, or an all-caps tag word (plus an "AND" joining two);
+    a lowercase "music" said by the speaker, and all-caps chanting ("USA!"), stay.
+    """
+    keep = [True] * len(words)
+    i = 0
+    while i < len(words):
+        w = words[i]
+        if re.match(r"^[\[(].*[\])][.,!?]*$", w.text.strip()):
+            keep[i] = False
+            i += 1
+            continue
+        if _is_upper(w.text):
+            j = i
+            while j < len(words) and _is_upper(words[j].text):
+                j += 1
+            norms = [normalize_token(x.text) for x in words[i:j]]
+            for k, n in enumerate(norms):  # tag words, and "AND" joining two tags
+                joins = n in ("and", "&") and 0 < k < len(norms) - 1                     and norms[k - 1] in _TAG_WORDS and norms[k + 1] in _TAG_WORDS
+                if n in _TAG_WORDS or joins:
+                    keep[i + k] = False
+            i = j
+            continue
+        i += 1
+    return [w for w, k in zip(words, keep) if k]
+
+
 def derive_transcript_fields(t: Transcript) -> Transcript:
     """Fill normalized forms, speaker_median_gap, sentence spans, speaking_sec,
     and duration_sec when missing. Idempotent."""
+    kept = drop_nonspeech_tags(t.words)
+    if len(kept) != len(t.words):
+        if t.turn_starts:  # turn starts index words: shift them past the dropped tags
+            ids = {id(w): n for n, w in enumerate(kept)}
+            new, n = [], 0
+            for i, w in enumerate(t.words):
+                if i in t.turn_starts:
+                    new.append(n)
+                n += id(w) in ids
+            t.turn_starts = sorted({x for x in new if x < len(kept)})
+        t.words = kept
     words = t.words
     for w in words:
         if not w.normalized:
