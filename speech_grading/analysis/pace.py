@@ -106,14 +106,21 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
 
     # Gaps longer than the cap are applause, crowd or dead air, not the speaker's pacing:
     # counting them dragged every applause-heavy political speech in the corpus to "poor".
+    # ASR may instead hang the applause on a word's end time (a 16.6 s "and" under
+    # Whisper small, where medium puts the same applause in a gap), so a word held past
+    # word_cap is trimmed to the median word length and its overhang joins the next gap:
+    # one applause break then costs the same clock either way.
     gap_cap = thresholds.get("wpm_gap_cap_sec", 2.0)
-    excess = sum(max(0.0, t.gap_before(i) - gap_cap) for i in range(1, len(t.words)))
-    # ASR also stretches a word's timestamps over applause (a 16.6 s "and" in a DNC
-    # speech), so a word held past the cap is cut from both clocks too.
     word_cap = thresholds.get("wpm_word_cap_sec", 1.5)
-    held = sum(max(0.0, w.end - w.start - word_cap) for w in t.words)
+    ws = t.words
+    typical = statistics.median(w.end - w.start for w in ws) if ws else 0.0
+    eff_end = [w.start + typical if w.end - w.start > word_cap else w.end for w in ws]
+    held = sum(w.end - e for w, e in zip(ws, eff_end))
+    excess = sum(max(0.0, ws[i].start - eff_end[i - 1] - gap_cap)
+                 for i in range(1, len(ws)) if i not in t.turn_starts)  # turns: other speaker's time
+    excess += max(0.0, ws[-1].end - eff_end[-1] - gap_cap) if ws else 0.0  # held last word
     wall_wpm = _rate(t.total_words, t.duration_sec)
-    overall_wpm = _rate(t.total_words, t.duration_sec - excess - held)
+    overall_wpm = _rate(t.total_words, t.duration_sec - excess)
     articulation_wpm = _rate(t.total_words, t.speaking_sec - held)
 
     window_wpms = _window_wpms(t, window_sec)
