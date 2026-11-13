@@ -34,6 +34,7 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     "wpm_fair_high": 180.0,
     "wpm_window_sec": 10.0,
     "wpm_gap_cap_sec": 2.0,         # longer silences (applause, crowd) are cut from the pace clock
+    "wpm_word_cap_sec": 1.5,        # a word timestamp held longer than this has absorbed applause
     "wpm_consistency_full": 15.0,   # windowed-WPM stdev at/below this = no penalty
     "wpm_consistency_dock": 35.0,   # stdev at/above this = full consistency penalty
     # Pauses (seconds). Gaps above pause_long are "long"; classified per-speaker too.

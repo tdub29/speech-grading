@@ -73,6 +73,18 @@ def test_applause_gap_does_not_slow_pace(sample_transcript):
     assert ds.detail["wall_clock_wpm"] < ds.raw * 0.6
 
 
+def test_word_stretched_over_applause_does_not_slow_pace(sample_transcript):
+    """ASR can hang a 20s applause break on one word's end time instead of a gap."""
+    base = compute_pace(sample_transcript, Config().thresholds).raw
+    t = sample_transcript.model_copy(deep=True)
+    t.words[19].end += 20.0
+    for w in t.words[20:]:
+        w.start += 20.0
+        w.end += 20.0
+    t.duration_sec += 20.0
+    assert abs(compute_pace(t, Config().thresholds).raw - base) / base < 0.15
+
+
 def test_stage_mode_pace_band_fits_oratory(sample_transcript):
     """120 wpm is slow for a talk but squarely inside the stage (speech) band."""
     from speech_grading.config import MODE_THRESHOLDS

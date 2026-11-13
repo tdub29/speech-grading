@@ -108,9 +108,13 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
     # counting them dragged every applause-heavy political speech in the corpus to "poor".
     gap_cap = thresholds.get("wpm_gap_cap_sec", 2.0)
     excess = sum(max(0.0, t.gap_before(i) - gap_cap) for i in range(1, len(t.words)))
+    # ASR also stretches a word's timestamps over applause (a 16.6 s "and" in a DNC
+    # speech), so a word held past the cap is cut from both clocks too.
+    word_cap = thresholds.get("wpm_word_cap_sec", 1.5)
+    held = sum(max(0.0, w.end - w.start - word_cap) for w in t.words)
     wall_wpm = _rate(t.total_words, t.duration_sec)
-    overall_wpm = _rate(t.total_words, t.duration_sec - excess)
-    articulation_wpm = _rate(t.total_words, t.speaking_sec)
+    overall_wpm = _rate(t.total_words, t.duration_sec - excess - held)
+    articulation_wpm = _rate(t.total_words, t.speaking_sec - held)
 
     window_wpms = _window_wpms(t, window_sec)
     k = len(window_wpms)
