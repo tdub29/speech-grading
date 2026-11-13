@@ -12,6 +12,7 @@ beat is rhetorically natural).
 
 from __future__ import annotations
 
+from speech_grading.lexicons import FILLED_PAUSES
 from speech_grading.schema import (
     Finding,
     Transcript,
@@ -50,10 +51,18 @@ def detect_pauses(t: Transcript, thresholds: dict) -> list[Finding]:
 
         # Mid-clause = the boundary between words i-1 and i is NOT a sentence edge.
         at_boundary = is_sentence_final(t, i - 1) or is_sentence_initial(t, i)
-        mid_clause = not at_boundary
-        if mid_clause:
+        # A pause after a comma, semicolon or colon closes a clause: delivery, not
+        # hesitation. Counting these as mid-clause doubled the count under Whisper small
+        # (Obama 2004: 23 vs 8 under medium), nearly all of them after a comma.
+        # ASR punctuates fillers too ("uh,"): that comma is hesitation, not a clause end.
+        prev = t.words[i - 1]
+        at_clause = prev.text.rstrip().endswith((",", ";", ":")) and not (prev.is_filled_pause or prev.normalized in FILLED_PAUSES)
+        if not (at_boundary or at_clause):
             score = min(1.0, base * midclause_weight)
             rationale = "Long mid-clause pause (awkward)"
+        elif at_clause and not at_boundary:
+            score = base
+            rationale = "Long pause at a clause boundary"
         else:
             score = base
             rationale = "Long pause at a sentence boundary"

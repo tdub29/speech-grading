@@ -55,3 +55,14 @@ def test_sentence_boundary_pauses_are_not_disfluency(sample_transcript):
     assert _pauses_dim(edge, sample_transcript).raw == 0.0
     ds = _pauses_dim(edge + [pause("Long mid-clause pause (awkward)")], sample_transcript)
     assert ds.raw > 0 and ds.detail["midclause_pauses"] == 1 and ds.detail["long_pauses"] == 6
+
+
+def test_pause_after_comma_is_clause_boundary_not_midclause():
+    from speech_grading.analysis.pauses import detect_pauses as _dp
+    from speech_grading.schema import Transcript, Word, derive_transcript_fields
+    ws = [Word(text="Today,", start=0.0, end=0.4), Word(text="we", start=1.6, end=1.8),
+          Word(text="stand", start=1.9, end=2.2), Word(text="uh,", start=2.3, end=2.5),
+          Word(text="together", start=3.7, end=4.2)]
+    t = derive_transcript_fields(Transcript(words=ws, has_timing=True))
+    r = [f.rationale for f in _dp(t, {})]
+    assert r == ["Long pause at a clause boundary", "Long mid-clause pause (awkward)"]
