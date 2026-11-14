@@ -23,6 +23,31 @@ Slow oratory sits below the 130 to 160 wpm conversational band, so `--mode stage
 (Sanders 2016 at 80 wpm, Trump SOTU 2019 at 92); speech median overall 84.6.
 There are no "good speaker" labels here, so this sets reference ranges, not a learned model.
 
+## ASR-robustness pass (Whisper small vs medium)
+
+The grade should not depend on which Whisper model transcribed the audio. On the first
+5 minutes of four speeches (Sanders 2016, Trump 2019 SOTU, Obama 2004, Michelle Obama
+2016), each clip was graded from a Whisper small transcript and from a Whisper medium
+reference. Word recall was already 0.98 to 1.04, so small does not drop words; the slow
+Sanders and Trump paces are real ovation time, not missing speech. Four grader fixes
+closed the gaps:
+
+| Fix | Before | After |
+|---|---|---|
+| Pause after a comma, semicolon or colon is a clause boundary (not after a filler's comma, "uh,") | Obama mid-clause pauses 23 (small) vs 8 (medium) | 0 vs 1 |
+| ASR sound captions (MUSIC, CHEERING AND APPLAUSE, [Applause]) are not words | 3 to 6 caption tokens per clip scored as speech | 0 |
+| Applause hung on a word's end time costs the same as applause in a gap | Sanders pace 69.9 vs 64.6 wpm | 65.2 vs 63.5 |
+| A low-confidence run of 3+ identical interjections ("Oh! Oh! Oh!") is crowd noise | Michelle Obama: one false stumble under small | none |
+
+After the fixes, all four clips get the same overall score under small and medium.
+
+Full 30-clip regrade with these fixes: median speech score 84.6 to 89.2; debates 87.2 to
+87.4. Speech pauses went from 9 good, 7 fair, 4 poor to 18 excellent, 2 good: the old
+"poor" verdicts were comma pauses. Pace is unchanged for speeches (13 good, 5 fair, 2
+poor: Sanders 83 wpm, Trump 2019 94 wpm); two fast debates (Biden-Ryan 180, Trump-Biden
+182 wpm) now read poor. Caveat: pauses now sit near the top for polished oratory, so
+the dimension separates these speakers less than it used to.
+
 ## Sources
 
 | Clip | Source |
