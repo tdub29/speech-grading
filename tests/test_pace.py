@@ -102,3 +102,16 @@ def test_stage_mode_pace_band_fits_oratory(sample_transcript):
     assert 110 < stage.raw < 130
     assert default.band in ("fair", "poor") and stage.band in ("good", "excellent", "fair")
     assert stage.points > default.points
+
+
+def test_held_word_ending_a_turn_does_not_slow_pace(sample_transcript):
+    """Applause hung on the last word of a non-final turn leaves the clock like a final one."""
+    t = sample_transcript.model_copy(deep=True)
+    t.turn_starts = [0, 20]
+    base = compute_pace(t, Config().thresholds).raw
+    t.words[19].end += 16.0
+    for w in t.words[20:]:
+        w.start += 16.0
+        w.end += 16.0
+    t.duration_sec += 16.0
+    assert abs(compute_pace(t, Config().thresholds).raw - base) / base < 0.15

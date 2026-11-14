@@ -19,6 +19,8 @@ from typing import Any, Literal, Optional
 
 from pydantic import BaseModel, Field
 
+from speech_grading.lexicons import FILLED_PAUSES
+
 _PUNCT_STRIP = re.compile(r"^[^\w']+|[^\w']+$")
 
 
@@ -271,7 +273,8 @@ def drop_nonspeech_tags(words: list) -> list:
     i = 0
     while i < len(words):
         w = words[i]
-        if re.match(r"^[\[(].*[\])][.,!?]*$", w.text.strip()):
+        if re.match(r"^[\[(].*[\])][.,!?]*$", w.text.strip()) and not (
+                w.is_filled_pause or normalize_token(w.text) in FILLED_PAUSES):  # CrisperWhisper "[UM]"
             keep[i] = False
             i += 1
             continue
@@ -316,7 +319,12 @@ def drop_crowd_runs(words: list, min_run: int = 3, max_conf: float = 0.5) -> lis
 def derive_transcript_fields(t: Transcript) -> Transcript:
     """Fill normalized forms, speaker_median_gap, sentence spans, speaking_sec,
     and duration_sec when missing. Idempotent."""
-    kept = drop_crowd_runs(drop_nonspeech_tags(t.words))
+    kept = drop_nonspeech_tags(t.words)
+    while True:  # removing one run can join two others; repeat so a second call is a no-op
+        nxt = drop_crowd_runs(kept)
+        if len(nxt) == len(kept):
+            break
+        kept = nxt
     if len(kept) != len(t.words):
         if t.turn_starts:  # turn starts index words: shift them past the dropped tags
             ids = {id(w): n for n, w in enumerate(kept)}

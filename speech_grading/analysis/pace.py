@@ -114,11 +114,13 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
     word_cap = thresholds.get("wpm_word_cap_sec", 1.5)
     ws = t.words
     typical = statistics.median(w.end - w.start for w in ws) if ws else 0.0
-    eff_end = [w.start + typical if w.end - w.start > word_cap else w.end for w in ws]
+    eff_end = [min(w.end, w.start + typical) if w.end - w.start > word_cap else w.end for w in ws]
     held = sum(w.end - e for w, e in zip(ws, eff_end))
     excess = sum(max(0.0, ws[i].start - eff_end[i - 1] - gap_cap)
                  for i in range(1, len(ws)) if i not in t.turn_starts)  # turns: other speaker's time
-    excess += max(0.0, ws[-1].end - eff_end[-1] - gap_cap) if ws else 0.0  # held last word
+    # A held word that ends a turn (or the transcript) has no following gap to join.
+    ends = [i - 1 for i in t.turn_starts if i > 0] + ([len(ws) - 1] if ws else [])
+    excess += sum(max(0.0, ws[i].end - eff_end[i] - gap_cap) for i in set(ends))
     wall_wpm = _rate(t.total_words, t.duration_sec)
     overall_wpm = _rate(t.total_words, t.duration_sec - excess)
     articulation_wpm = _rate(t.total_words, t.speaking_sec - held)

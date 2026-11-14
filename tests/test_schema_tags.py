@@ -25,3 +25,17 @@ def test_low_confidence_interjection_run_is_crowd_noise():
     assert [x.text for x in derive_transcript_fields(Transcript(words=crowd, has_timing=True)).words] == ["Thank", "you."]
     speech = [w("Oh,", 0, 0.2), w("no,", 1, 0.3), w("no,", 2, 0.3), w("no.", 3, 0.3), w("Oh!", 4, 0.9), w("Oh!", 5, 0.9), w("Oh!", 6, 0.9)]
     assert len(derive_transcript_fields(Transcript(words=speech, has_timing=True)).words) == 7
+
+
+def test_bracketed_filler_is_speech_not_a_caption():
+    ws = [Word(text="I", start=0, end=0.2), Word(text="[UM]", start=0.3, end=0.6, is_filled_pause=True),
+          Word(text="think", start=0.7, end=1.0)]
+    assert [w.text for w in derive_transcript_fields(Transcript(words=ws, has_timing=True)).words] == ["I", "[UM]", "think"]
+
+
+def test_derive_is_idempotent_when_crowd_runs_merge():
+    texts = ["Oh!", "Oh!", "yeah", "yeah", "yeah", "Oh!", "Thank"]
+    ws = [Word(text=x, start=i, end=i + 0.3, confidence=0.9 if x == "Thank" else 0.2) for i, x in enumerate(texts)]
+    once = derive_transcript_fields(Transcript(words=ws, has_timing=True))
+    twice = derive_transcript_fields(once.model_copy(deep=True))
+    assert [w.text for w in once.words] == [w.text for w in twice.words] == ["Thank"]
