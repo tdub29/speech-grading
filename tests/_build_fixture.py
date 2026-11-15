@@ -92,6 +92,39 @@ def build() -> dict:
     }
 
 
+_MEETING_TEXT = (
+    "We shipped the new onboarding flow last week and the early numbers look solid. "
+    "Signups rose across every channel, and support tickets about setup dropped sharply. "
+    "Next we want to test a shorter checklist with the enterprise accounts before the quarter closes. "
+    "The design team already has two variants ready, so the experiment can start on Monday. "
+)
+
+
+def _turn(speaker: str, n: int, start: float, offset: int = 0) -> list[dict]:
+    """n words, 0.3 s each with 0.1 s gaps (0.4 s step), text cycled from _MEETING_TEXT."""
+    pool = _MEETING_TEXT.split()
+    return [{"text": pool[(offset + k) % len(pool)], "start": round(start + 0.4 * k, 3),
+             "end": round(start + 0.4 * k + 0.3, 3), "confidence": 0.95, "speaker": speaker}
+            for k in range(n)]
+
+
+def build_meeting() -> dict:
+    """3-speaker meeting for tests/test_group.py (all numbers hand-checkable):
+
+    Alice 20 words 0.0-7.9 | Bob "yeah" 8.2-8.5 (backchannel) | Alice 20 words 8.8-17.0
+    (last word held to 17.0) | Bob 65 words 16.6-42.5 (starts 0.4 s before Alice stops:
+    the planted overlap) | Cara 5 words 43.5-45.4 | Alice 25 words 46.0-55.9.
+    """
+    alice2 = _turn("Alice", 20, 8.8, 20)
+    alice2[-1]["end"] = 17.0
+    words = (_turn("Alice", 20, 0.0)
+             + [{"text": "yeah", "start": 8.2, "end": 8.5, "confidence": 0.9, "speaker": "Bob"}]
+             + alice2 + _turn("Bob", 65, 16.6, 7) + _turn("Cara", 5, 43.5, 30)
+             + _turn("Alice", 25, 46.0, 40))
+    return {"words": words, "audio_path": None, "language": "en", "engine": "fixture multitrack",
+            "tracks": {"Alice": "alice.wav", "Bob": "bob.wav", "Cara": "cara.wav"}}
+
+
 def main() -> None:
     out_dir = os.path.join(os.path.dirname(__file__), "fixtures")
     os.makedirs(out_dir, exist_ok=True)
@@ -99,6 +132,10 @@ def main() -> None:
     with open(out_path, "w", encoding="utf-8") as fh:
         json.dump(build(), fh, indent=2)
     print(f"wrote {out_path} ({len(TOKENS)} tokens)")
+    meeting = os.path.join(out_dir, "meeting_3speakers.json")
+    with open(meeting, "w", encoding="utf-8") as fh:
+        json.dump(build_meeting(), fh, indent=2)
+    print(f"wrote {meeting}")
 
 
 if __name__ == "__main__":

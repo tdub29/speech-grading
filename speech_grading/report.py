@@ -235,3 +235,135 @@ def render_html(report: Report, out_path: str) -> None:
 def render_json(report: Report, out_path: str) -> None:
     with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(report.model_dump_json(indent=2))
+
+
+# --------------------------------------------------------------------------- #
+# Group report (one page for a multi-speaker run; per-speaker pages use render_html)
+# --------------------------------------------------------------------------- #
+
+_WEAK_DIMS = ("pace", "pauses")
+
+_GROUP_PAGE = Template(
+    """<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>orator group report</title>
+<style>
+  :root { --ink:#1c1c1e; --muted:#6b7280; --line:#e5e7eb; --bg:#fbfbfa; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:15px/1.55 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
+  .wrap { max-width:960px; margin:0 auto; padding:40px 16px 80px; }
+  h1 { font-size:22px; margin:0 0 2px; }
+  .sub { color:var(--muted); margin:0 0 24px; }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.06em;
+       color:var(--muted); margin:30px 0 12px; }
+  .scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  td, th { padding:6px 8px; border-bottom:1px solid var(--line); text-align:right;
+           font-variant-numeric:tabular-nums; white-space:nowrap; }
+  td:first-child, th:first-child, td.l, th.l { text-align:left; }
+  th { color:var(--muted); font-weight:600; }
+  .share { display:grid; grid-template-columns:140px 1fr 56px; gap:12px; align-items:center; margin:6px 0; }
+  .bar { height:10px; background:#eef0f2; border-radius:6px; overflow:hidden; }
+  .bar > i { display:block; height:100%; background:#2563eb; border-radius:6px; }
+  .muted { color:var(--muted); }
+  .note { background:#fff; border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-size:13px; }
+  dl { font-size:13px; } dt { font-weight:600; margin-top:8px; } dd { margin:2px 0 0 0; color:var(--muted); }
+</style></head>
+<body><div class="wrap">
+  <h1>orator: group report</h1>
+  <p class="sub">{{ g.speakers }} speakers &middot; share basis: {{ g.share_basis }}
+     &middot; word timing: {{ "yes" if g.timing else "no (timing metrics n/a)" }}</p>
+
+  <h2>Leaderboard</h2>
+  <div class="scroll"><table>
+    <tr><th>#</th><th class="l">speaker</th><th>overall</th><th>words</th><th>talk share</th>
+        <th>floor turns</th><th>longest turn s</th><th>latency median s</th>
+        <th>overlaps made / received</th><th>backchannels</th></tr>
+    {% for r in leaderboard %}{% set p = per[r.speaker] %}
+    <tr><td>{{ loop.index }}</td><td class="l"><a href="{{ r.file }}">{{ r.speaker }}</a></td>
+        <td>{{ r.overall }}</td><td>{{ r.words }}</td><td>{{ "%.0f"|format(p.share * 100) }}%</td>
+        <td>{{ p.floor_turns }}</td><td>{{ na(p.longest_turn_s) }}</td><td>{{ na(p.response_latency_median_s) }}</td>
+        <td>{{ na(p.overlaps_made) }} / {{ na(p.overlaps_received) }}</td><td>{{ p.backchannels }}</td></tr>
+    {% endfor %}
+    {% for s, n in not_graded.items() %}{% set p = per[s] %}
+    <tr class="muted"><td>-</td><td class="l">{{ s }}</td><td>not graded</td><td>{{ n }} (&lt; {{ min_words }})</td>
+        <td>{{ "%.0f"|format(p.share * 100) }}%</td><td>{{ p.floor_turns }}</td><td>{{ na(p.longest_turn_s) }}</td>
+        <td>{{ na(p.response_latency_median_s) }}</td><td>{{ na(p.overlaps_made) }} / {{ na(p.overlaps_received) }}</td>
+        <td>{{ p.backchannels }}</td></tr>
+    {% endfor %}
+  </table></div>
+  <p class="muted" style="font-size:12px">Scores from short samples are noisy: compare word counts before comparing scores.</p>
+
+  <h2>Talk share</h2>
+  {% for s, p in per.items() %}
+  <div class="share"><span>{{ s }}</span><span class="bar"><i style="width:{{ "%.1f"|format(p.share * 100) }}%"></i></span>
+    <span class="muted">{{ "%.0f"|format(p.share * 100) }}%</span></div>
+  {% endfor %}
+  <p class="muted" style="font-size:12px">Balance (normalized entropy, 1 = even): {{ na(g.balance) }}
+     &middot; floor turns {{ g.floor_turns }} &middot; backchannels {{ g.backchannels }}
+     &middot; overlapping starts {{ na(g.overlapping_starts) }}
+     &middot; median response latency {{ na(g.response_latency_median_s) }} s</p>
+
+  {% if spread %}
+  <h2>Spread per dimension</h2>
+  <div class="scroll"><table>
+    <tr><th class="l">dimension</th><th class="l">lowest</th><th>pts</th><th class="l">highest</th><th>pts</th><th>spread</th></tr>
+    {% for d in spread %}
+    <tr><td>{{ d.dimension }}{% if d.weak %} *{% endif %}</td><td class="l">{{ d.low }}</td><td>{{ d.low_pts }}</td>
+        <td class="l">{{ d.high }}</td><td>{{ d.high_pts }}</td><td>{{ d.spread }}</td></tr>
+    {% endfor %}
+  </table></div>
+  {% endif %}
+  {% for n in notes %}<p class="note">* {{ n }}</p>{% endfor %}
+
+  <h2>Definitions</h2>
+  <dl>{% for k, v in definitions.items() %}<dt>{{ k }}</dt><dd>{{ v }}</dd>{% endfor %}</dl>
+</div></body></html>""",
+    autoescape=True,
+)
+
+
+def group_summary(res: dict) -> dict:
+    """JSON-safe view of a grade_group result (Reports reduced to scores)."""
+    per = res["per_speaker"]
+    board = sorted(res["reports"].items(), key=lambda kv: -kv[1].overall_score)
+    leaderboard = [
+        {"speaker": s, "file": res["files"][s] + ".html", "overall": r.overall_score,
+         "words": per[s]["words"], "share": per[s]["share"],
+         "dimensions": {d.dimension: round(d.points, 1) for d in r.dimensions}}
+        for s, r in board
+    ]
+    spread = []
+    for d in sorted({d for row in leaderboard for d in row["dimensions"]}):
+        pts = [(row["dimensions"][d], row["speaker"]) for row in leaderboard if d in row["dimensions"]]
+        lo, hi = min(pts), max(pts)
+        spread.append({"dimension": d, "low": lo[1], "low_pts": lo[0], "high": hi[1],
+                       "high_pts": hi[0], "spread": round(hi[0] - lo[0], 1), "weak": d in _WEAK_DIMS})
+    return {
+        "leaderboard": leaderboard,
+        "not_graded": res["not_graded"],
+        "min_words": res["min_words"],
+        "spread": spread,
+        "per_speaker": per,
+        "group": res["group"],
+        "definitions": res["definitions"],
+        "notes": res["notes"],
+    }
+
+
+def render_group_json(res: dict, out_path: str) -> None:
+    with open(out_path, "w", encoding="utf-8") as fh:
+        json.dump(group_summary(res), fh, indent=2)
+
+
+def render_group_html(res: dict, out_path: str) -> None:
+    s = group_summary(res)
+    html_doc = _GROUP_PAGE.render(
+        g=s["group"], per=s["per_speaker"], na=lambda v: "n/a" if v is None else v,
+        leaderboard=s["leaderboard"], not_graded=s["not_graded"], min_words=s["min_words"],
+        spread=s["spread"], notes=s["notes"], definitions=s["definitions"],
+    )
+    with open(out_path, "w", encoding="utf-8") as fh:
+        fh.write(html_doc)

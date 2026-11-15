@@ -57,6 +57,9 @@ DEFAULT_THRESHOLDS: dict[str, Any] = {
     },
     "tripped_up_min_score": 0.45,   # event_score threshold to surface a tripped_up moment
     "low_conf_threshold": 0.5,      # word.confidence below this contributes to "low_conf"
+    # Group mode: a speaker with fewer lexical words is listed but not graded. A guess:
+    # per-minute rates on short samples are noisy, so word count is shown beside scores.
+    "group_min_words": 60,
 }
 
 # Speaking modes that change audio thresholds too. Stage = speeches and addresses: the

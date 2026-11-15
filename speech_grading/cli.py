@@ -5,6 +5,8 @@ Examples:
   orator talk.wav --backend faster-whisper --acoustic --html report.html
   orator talk.wav --llm --effort high --html report.html
   orator talk.wav --backend crisper-whisper --allow-noncommercial
+  orator meeting.json --group --out-dir out/meeting
+  orator "Zoom/Audio Record" --group --acoustic --asr-model small.en --out-dir out/zoom
 """
 
 from __future__ import annotations
@@ -20,7 +22,8 @@ from .report import render_html, render_json
 
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="orator", description="Grade a speech sample.")
-    p.add_argument("input", help="audio (.wav/.mp3/...), video (.mp4/.mov/...), Transcript JSON (.json), or text (.txt/.md/.vtt/.srt)")
+    p.add_argument("input", help="audio (.wav/.mp3/...), video (.mp4/.mov/...), Transcript JSON (.json), "
+                                 "text (.txt/.md/.vtt/.srt), or a folder of per-speaker audio tracks")
     p.add_argument("--config", help="YAML/JSON config file", default=None)
     p.add_argument("--backend", default=None,
                    choices=["faster-whisper", "crisper-whisper", "vosk"],
@@ -56,6 +59,12 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="video only: seconds added to transcript times so sentence ends line up with video frames")
     p.add_argument("--speaker", default=None,
                    help="grade words for this speaker label only (e.g. SPEAKER_00 or Alice)")
+    p.add_argument("--group", action="store_true",
+                   help="grade every labelled speaker: <label>.html/.json plus group.html/.json in --out-dir")
+    p.add_argument("--out-dir", default="orator-group",
+                   help="--group output folder (default: orator-group)")
+    p.add_argument("--asr-model", default=None,
+                   help="faster-whisper model size (default: large-v3; e.g. small.en for speed)")
     p.set_defaults(use_llm=None)
     return p
 
@@ -84,6 +93,8 @@ def _config_from_args(args) -> Config:
         cfg.camera_level = True
     if args.av_offset is not None:
         cfg.av_offset_sec = args.av_offset
+    if args.asr_model:
+        cfg.asr_model_size = args.asr_model
     return cfg
 
 
@@ -117,11 +128,58 @@ def _append_log(log_path: str, source: str, report) -> None:
         fh.write(row)
 
 
+def _run_group(args, cfg: Config, t) -> int:
+    """--group: one report per speaker plus group.html/.json. No visual tier (one-face tracker)."""
+    import os
+
+    from .group import grade_group
+    from .report import render_group_html, render_group_json
+
+    try:
+        res = grade_group(t, cfg)
+    except ValueError as e:
+        print(f"orator: error: {e}", file=sys.stderr)
+        return 2
+    out = args.out_dir
+    os.makedirs(out, exist_ok=True)
+    if os.path.isdir(args.input):  # multitrack: keep the ASR result for instant offline re-grades
+        with open(os.path.join(out, "merged.json"), "w", encoding="utf-8") as fh:
+            fh.write(t.model_dump_json(indent=2))
+    source = os.path.normpath(args.input)
+    for label, rep in res["reports"].items():
+        base = os.path.join(out, res["files"][label])
+        render_html(rep, base + ".html")
+        render_json(rep, base + ".json")
+        if args.log:
+            _append_log(args.log, f"{source}#{label}", rep)
+    render_group_html(res, os.path.join(out, "group.html"))
+    render_group_json(res, os.path.join(out, "group.json"))
+
+    per = res["per_speaker"]
+    board = sorted(res["reports"].items(), key=lambda kv: -kv[1].overall_score)
+    line = " | ".join(f"{i}. {s} {r.overall_score} ({per[s]['words']} words, {per[s]['share']:.0%})"
+                      for i, (s, r) in enumerate(board, 1))
+    if res["not_graded"]:
+        line += " | not graded: " + ", ".join(f"{s} ({n} words)" for s, n in res["not_graded"].items())
+    print("leaderboard:", line or "nobody graded")
+    print(f"wrote {os.path.join(out, 'group.html')}")
+    return 0
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv and argv[0] == "grade":  # tolerate an optional "grade" subcommand
         argv = argv[1:]
     args = _build_parser().parse_args(argv)
+    if args.group and args.speaker:
+        print("orator: error: --group grades every speaker; drop --speaker", file=sys.stderr)
+        return 2
+    import os
+
+    if os.path.isdir(args.input) and not (args.group or args.speaker):
+        print("orator: error: a folder of per-speaker tracks needs --group (or --speaker <label>); "
+              "without it every voice is graded as one speaker", file=sys.stderr)
+        return 2
     cfg = _config_from_args(args)
 
     from .pipeline import load_input
@@ -133,6 +191,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     except (RuntimeError, ValueError, FileNotFoundError) as e:
         print(f"orator: error: {e}", file=sys.stderr)
         return 2
+
+    if args.group:
+        return _run_group(args, cfg, t)
 
     if args.emit_request is not None:
         import json as _json

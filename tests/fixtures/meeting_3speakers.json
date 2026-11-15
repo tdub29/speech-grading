@@ -1,0 +1,964 @@
+{
+  "words": [
+    {
+      "text": "We",
+      "start": 0.0,
+      "end": 0.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "shipped",
+      "start": 0.4,
+      "end": 0.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "the",
+      "start": 0.8,
+      "end": 1.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "new",
+      "start": 1.2,
+      "end": 1.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "onboarding",
+      "start": 1.6,
+      "end": 1.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "flow",
+      "start": 2.0,
+      "end": 2.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "last",
+      "start": 2.4,
+      "end": 2.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "week",
+      "start": 2.8,
+      "end": 3.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "and",
+      "start": 3.2,
+      "end": 3.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "the",
+      "start": 3.6,
+      "end": 3.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "early",
+      "start": 4.0,
+      "end": 4.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "numbers",
+      "start": 4.4,
+      "end": 4.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "look",
+      "start": 4.8,
+      "end": 5.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "solid.",
+      "start": 5.2,
+      "end": 5.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "Signups",
+      "start": 5.6,
+      "end": 5.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "rose",
+      "start": 6.0,
+      "end": 6.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "across",
+      "start": 6.4,
+      "end": 6.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "every",
+      "start": 6.8,
+      "end": 7.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "channel,",
+      "start": 7.2,
+      "end": 7.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "and",
+      "start": 7.6,
+      "end": 7.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "yeah",
+      "start": 8.2,
+      "end": 8.5,
+      "confidence": 0.9,
+      "speaker": "Bob"
+    },
+    {
+      "text": "support",
+      "start": 8.8,
+      "end": 9.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "tickets",
+      "start": 9.2,
+      "end": 9.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "about",
+      "start": 9.6,
+      "end": 9.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "setup",
+      "start": 10.0,
+      "end": 10.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "dropped",
+      "start": 10.4,
+      "end": 10.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "sharply.",
+      "start": 10.8,
+      "end": 11.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "Next",
+      "start": 11.2,
+      "end": 11.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "we",
+      "start": 11.6,
+      "end": 11.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "want",
+      "start": 12.0,
+      "end": 12.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "to",
+      "start": 12.4,
+      "end": 12.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "test",
+      "start": 12.8,
+      "end": 13.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "a",
+      "start": 13.2,
+      "end": 13.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "shorter",
+      "start": 13.6,
+      "end": 13.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "checklist",
+      "start": 14.0,
+      "end": 14.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "with",
+      "start": 14.4,
+      "end": 14.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "the",
+      "start": 14.8,
+      "end": 15.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "enterprise",
+      "start": 15.2,
+      "end": 15.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "accounts",
+      "start": 15.6,
+      "end": 15.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "before",
+      "start": 16.0,
+      "end": 16.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "the",
+      "start": 16.4,
+      "end": 17.0,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "week",
+      "start": 16.6,
+      "end": 16.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "and",
+      "start": 17.0,
+      "end": 17.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "the",
+      "start": 17.4,
+      "end": 17.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "early",
+      "start": 17.8,
+      "end": 18.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "numbers",
+      "start": 18.2,
+      "end": 18.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "look",
+      "start": 18.6,
+      "end": 18.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "solid.",
+      "start": 19.0,
+      "end": 19.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "Signups",
+      "start": 19.4,
+      "end": 19.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "rose",
+      "start": 19.8,
+      "end": 20.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "across",
+      "start": 20.2,
+      "end": 20.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "every",
+      "start": 20.6,
+      "end": 20.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "channel,",
+      "start": 21.0,
+      "end": 21.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "and",
+      "start": 21.4,
+      "end": 21.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "support",
+      "start": 21.8,
+      "end": 22.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "tickets",
+      "start": 22.2,
+      "end": 22.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "about",
+      "start": 22.6,
+      "end": 22.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "setup",
+      "start": 23.0,
+      "end": 23.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "dropped",
+      "start": 23.4,
+      "end": 23.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "sharply.",
+      "start": 23.8,
+      "end": 24.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "Next",
+      "start": 24.2,
+      "end": 24.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "we",
+      "start": 24.6,
+      "end": 24.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "want",
+      "start": 25.0,
+      "end": 25.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "to",
+      "start": 25.4,
+      "end": 25.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "test",
+      "start": 25.8,
+      "end": 26.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "a",
+      "start": 26.2,
+      "end": 26.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "shorter",
+      "start": 26.6,
+      "end": 26.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "checklist",
+      "start": 27.0,
+      "end": 27.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "with",
+      "start": 27.4,
+      "end": 27.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "the",
+      "start": 27.8,
+      "end": 28.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "enterprise",
+      "start": 28.2,
+      "end": 28.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "accounts",
+      "start": 28.6,
+      "end": 28.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "before",
+      "start": 29.0,
+      "end": 29.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "the",
+      "start": 29.4,
+      "end": 29.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "quarter",
+      "start": 29.8,
+      "end": 30.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "closes.",
+      "start": 30.2,
+      "end": 30.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "The",
+      "start": 30.6,
+      "end": 30.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "design",
+      "start": 31.0,
+      "end": 31.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "team",
+      "start": 31.4,
+      "end": 31.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "already",
+      "start": 31.8,
+      "end": 32.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "has",
+      "start": 32.2,
+      "end": 32.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "two",
+      "start": 32.6,
+      "end": 32.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "variants",
+      "start": 33.0,
+      "end": 33.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "ready,",
+      "start": 33.4,
+      "end": 33.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "so",
+      "start": 33.8,
+      "end": 34.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "the",
+      "start": 34.2,
+      "end": 34.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "experiment",
+      "start": 34.6,
+      "end": 34.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "can",
+      "start": 35.0,
+      "end": 35.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "start",
+      "start": 35.4,
+      "end": 35.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "on",
+      "start": 35.8,
+      "end": 36.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "Monday.",
+      "start": 36.2,
+      "end": 36.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "We",
+      "start": 36.6,
+      "end": 36.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "shipped",
+      "start": 37.0,
+      "end": 37.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "the",
+      "start": 37.4,
+      "end": 37.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "new",
+      "start": 37.8,
+      "end": 38.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "onboarding",
+      "start": 38.2,
+      "end": 38.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "flow",
+      "start": 38.6,
+      "end": 38.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "last",
+      "start": 39.0,
+      "end": 39.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "week",
+      "start": 39.4,
+      "end": 39.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "and",
+      "start": 39.8,
+      "end": 40.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "the",
+      "start": 40.2,
+      "end": 40.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "early",
+      "start": 40.6,
+      "end": 40.9,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "numbers",
+      "start": 41.0,
+      "end": 41.3,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "look",
+      "start": 41.4,
+      "end": 41.7,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "solid.",
+      "start": 41.8,
+      "end": 42.1,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "Signups",
+      "start": 42.2,
+      "end": 42.5,
+      "confidence": 0.95,
+      "speaker": "Bob"
+    },
+    {
+      "text": "test",
+      "start": 43.5,
+      "end": 43.8,
+      "confidence": 0.95,
+      "speaker": "Cara"
+    },
+    {
+      "text": "a",
+      "start": 43.9,
+      "end": 44.2,
+      "confidence": 0.95,
+      "speaker": "Cara"
+    },
+    {
+      "text": "shorter",
+      "start": 44.3,
+      "end": 44.6,
+      "confidence": 0.95,
+      "speaker": "Cara"
+    },
+    {
+      "text": "checklist",
+      "start": 44.7,
+      "end": 45.0,
+      "confidence": 0.95,
+      "speaker": "Cara"
+    },
+    {
+      "text": "with",
+      "start": 45.1,
+      "end": 45.4,
+      "confidence": 0.95,
+      "speaker": "Cara"
+    },
+    {
+      "text": "quarter",
+      "start": 46.0,
+      "end": 46.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "closes.",
+      "start": 46.4,
+      "end": 46.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "The",
+      "start": 46.8,
+      "end": 47.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "design",
+      "start": 47.2,
+      "end": 47.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "team",
+      "start": 47.6,
+      "end": 47.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "already",
+      "start": 48.0,
+      "end": 48.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "has",
+      "start": 48.4,
+      "end": 48.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "two",
+      "start": 48.8,
+      "end": 49.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "variants",
+      "start": 49.2,
+      "end": 49.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "ready,",
+      "start": 49.6,
+      "end": 49.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "so",
+      "start": 50.0,
+      "end": 50.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "the",
+      "start": 50.4,
+      "end": 50.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "experiment",
+      "start": 50.8,
+      "end": 51.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "can",
+      "start": 51.2,
+      "end": 51.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "start",
+      "start": 51.6,
+      "end": 51.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "on",
+      "start": 52.0,
+      "end": 52.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "Monday.",
+      "start": 52.4,
+      "end": 52.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "We",
+      "start": 52.8,
+      "end": 53.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "shipped",
+      "start": 53.2,
+      "end": 53.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "the",
+      "start": 53.6,
+      "end": 53.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "new",
+      "start": 54.0,
+      "end": 54.3,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "onboarding",
+      "start": 54.4,
+      "end": 54.7,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "flow",
+      "start": 54.8,
+      "end": 55.1,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "last",
+      "start": 55.2,
+      "end": 55.5,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    },
+    {
+      "text": "week",
+      "start": 55.6,
+      "end": 55.9,
+      "confidence": 0.95,
+      "speaker": "Alice"
+    }
+  ],
+  "audio_path": null,
+  "language": "en",
+  "engine": "fixture multitrack",
+  "tracks": {
+    "Alice": "alice.wav",
+    "Bob": "bob.wav",
+    "Cara": "cara.wav"
+  }
+}

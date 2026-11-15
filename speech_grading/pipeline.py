@@ -154,10 +154,16 @@ def load_input(input_path: str, cfg: Config) -> Transcript:
     """Resolve an input path to a canonical Transcript.
 
     ``.json`` -> timed Transcript fixture; ``.txt/.md/.vtt/.srt`` -> text-only
-    Transcript (no timestamps); anything else -> transcribe via the ASR backend.
+    Transcript (no timestamps); a directory -> one audio track per speaker, merged
+    (see :func:`speech_grading.group.load_multitrack`); anything else -> transcribe
+    via the ASR backend.
     """
     ext = os.path.splitext(input_path)[1].lower()
-    if ext == ".json":
+    if os.path.isdir(input_path):
+        from .group import load_multitrack
+
+        t = load_multitrack(input_path, cfg)
+    elif ext == ".json":
         t = load_transcript_json(input_path)
     elif ext in (".txt", ".md", ".vtt", ".srt"):
         t = load_transcript_text(input_path)
@@ -218,7 +224,7 @@ def run_pipeline(input_path: str, cfg: Config) -> Report:
     return add_visual(run_on_transcript(t, cfg), t, input_path, cfg)
 
 
-def _make_backend(cfg: Config):
+def _make_backend(cfg: Config, vad_filter: bool = False):
     name = cfg.asr_backend
     if name == "faster-whisper":
         from .asr.faster_whisper_backend import FasterWhisperBackend
@@ -227,6 +233,7 @@ def _make_backend(cfg: Config):
             model_size=cfg.asr_model_size,
             device=cfg.asr_device,
             compute_type=cfg.asr_compute_type,
+            vad_filter=vad_filter,
         )
     if name == "crisper-whisper":
         from .asr.crisper_whisper_backend import CrisperWhisperBackend

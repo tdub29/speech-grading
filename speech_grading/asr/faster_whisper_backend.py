@@ -20,20 +20,26 @@ class FasterWhisperBackend(ASRBackend):
     engine_id = "faster-whisper"
 
     def __init__(self, model_size: str = "large-v3", device: str = "cpu",
-                 compute_type: str = "int8") -> None:
+                 compute_type: str = "int8", vad_filter: bool = False) -> None:
         self.model_size = model_size
         self.device = device
         self.compute_type = compute_type
+        # Off by default so single-file baselines stay put; multitrack turns it on so
+        # long silent stretches of a per-speaker track do not hallucinate words.
+        self.vad_filter = vad_filter
+        self._model = None  # loaded once, reused across files (multitrack transcribes N)
 
     def transcribe(self, audio_path: str) -> Transcript:
         from faster_whisper import WhisperModel  # lazy: heavy optional dep
 
-        model = WhisperModel(self.model_size, device=self.device, compute_type=self.compute_type)
-        segments, _info = model.transcribe(
+        if self._model is None:
+            self._model = WhisperModel(self.model_size, device=self.device, compute_type=self.compute_type)
+        segments, _info = self._model.transcribe(
             audio_path,
             word_timestamps=True,
             condition_on_previous_text=False,
             initial_prompt=_VERBATIM_PROMPT,
+            vad_filter=self.vad_filter,
         )
 
         raw_words = []

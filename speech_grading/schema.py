@@ -67,6 +67,9 @@ class Transcript(BaseModel):
     # Word indices that open a new turn after another speaker talked (set by filter_by_speaker).
     # gap_before() reads 0 there, so the other speaker's turn never scores as a pause.
     turn_starts: list[int] = Field(default_factory=list)
+    # Speaker label -> that speaker's own audio file (multitrack input). filter_by_speaker
+    # points audio_path at it, so prosody reads the right voice.
+    tracks: dict[str, str] = Field(default_factory=dict)
 
     @property
     def total_words(self) -> int:
@@ -96,16 +99,12 @@ class Transcript(BaseModel):
             raise ValueError(f"Speaker {speaker!r} not found in transcript. Available speakers: {sorted_avail}")
         if self.turn_starts and all(w.speaker == want for w in self.words):
             return self  # already filtered: re-filtering would erase turn boundaries
-        matching, turns, prev_mine = [], [], False
-        for w in clean_words(self.words):  # before the turn clock, so captions never pad it
-            mine = w.speaker == want
-            if mine:
-                if not prev_mine:
-                    turns.append(len(matching))
-                matching.append(w)
-            prev_mine = mine
+        # clean before the turn clock, so captions never pad it
+        matching, turns = speaker_turns(clean_words(self.words), want, multitrack=bool(self.tracks))
         filtered = self.model_copy(deep=True)
         filtered.words = [w.model_copy() for w in matching]
+        if want in self.tracks:
+            filtered.audio_path = self.tracks[want]
         filtered.turn_starts = turns  # includes 0: marks the transcript as speaker-filtered
         # Pace counts only this speaker's turns, not the wall clock spent listening.
         bounds = turns + [len(matching)]
@@ -113,6 +112,39 @@ class Transcript(BaseModel):
             matching[b - 1].end - matching[a].start for a, b in zip(bounds, bounds[1:])), 4) or 0.0
         filtered.sentences = []
         return derive_transcript_fields(filtered)
+
+
+TRACK_TURN_GAP_SEC = 1.0
+
+
+def speaker_turns(cleaned: list, want: str, multitrack: bool) -> tuple[list, list[int]]:
+    """(this speaker's words, indices into them that open a turn).
+
+    Single channel: a turn is a run of consecutive words in the merged order. Multitrack
+    (one track per voice, so voices overlap): turns come from the speaker's own timeline;
+    a new turn opens only after a gap over TRACK_TURN_GAP_SEC that another speaker's word
+    overlaps, so talking over someone neither splits their turn nor yours, and a long
+    pause nobody filled stays a pause.
+    """
+    if not multitrack:
+        matching, turns, prev_mine = [], [], False
+        for w in cleaned:
+            mine = w.speaker == want
+            if mine:
+                if not prev_mine:
+                    turns.append(len(matching))
+                matching.append(w)
+            prev_mine = mine
+        return matching, turns
+    matching = [w for w in cleaned if w.speaker == want]
+    others = [w for w in cleaned if w.speaker != want]
+    # ponytail: O(words x others) scan, only on >1 s gaps; bisect on others if meetings get long.
+    turns = [0] if matching else []
+    for i in range(1, len(matching)):
+        a, b = matching[i - 1].end, matching[i].start
+        if b - a > TRACK_TURN_GAP_SEC and any(o.start < b and o.end > a for o in others):
+            turns.append(i)
+    return matching, turns
 
 
 class Finding(BaseModel):
@@ -228,6 +260,8 @@ def _text_words(text: str) -> list[Word]:
     speaker: Optional[str] = None
     for ln in lines:
         ln = ln.strip()
+        if ln == "WEBVTT" or ln.startswith("NOTE") or ln.isdigit() or "-->" in ln:
+            continue  # VTT/SRT header, comment, cue number, timestamp line: not speech
         m = _VTT_VOICE.match(ln)
         if m:
             speaker, ln = m.group(1).strip(), ln[m.end():]

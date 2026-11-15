@@ -104,6 +104,18 @@ Grade one speaker with `--speaker`. The labels must already be in the input: a `
 orator podcast.json --speaker SPEAKER_00 --html report.html
 ```
 
+### Group mode (`--group`)
+
+`--group` grades every labelled speaker at once. It writes `<label>.html`/`.json` per speaker (the same report `--speaker <label>` gives) plus `group.html` and `group.json`: a leaderboard with word count and talk share, talk-share bars, the spread per dimension, and floor metrics (floor turns, backchannels, longest/median turn, response latency, overlapping starts, entropy balance). Each metric's exact definition is printed on the page. Speakers under 60 words (`group_min_words`) are listed but not graded. Pace and pauses separate speakers weakly (pauses lean on ASR punctuation, pace cuts any silence over 2 s), and the page footnotes that. `--group` cannot be combined with `--speaker`, and the video tier does not run.
+
+Input is any labelled transcript (timing metrics read n/a for VTT and `Name:` text, and share falls back to word share) or a folder with one audio track per speaker, such as a Zoom recording made with "record a separate audio file for each participant". Tracks must share time zero; orator warns when their lengths differ by more than 1 s. Overlap counts only exist for folder input.
+
+```bash
+orator "<Zoom recording>/Audio Record" --group --mode zoom --acoustic --asr-model small.en --out-dir out/zoom-demo
+# open out/zoom-demo/group.html; re-grade instantly from the saved ASR result:
+orator out/zoom-demo/merged.json --group --out-dir out/zoom-demo
+```
+
 ### Video speaking modes (`--mode`)
 
 Different settings require different cue thresholds:
