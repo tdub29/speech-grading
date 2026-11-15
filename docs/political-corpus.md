@@ -25,28 +25,41 @@ There are no "good speaker" labels here, so this sets reference ranges, not a le
 
 ## ASR-robustness pass (Whisper small vs medium)
 
-The grade should not depend on which Whisper model transcribed the audio. On the first
-5 minutes of four speeches (Sanders 2016, Trump 2019 SOTU, Obama 2004, Michelle Obama
-2016), each clip was graded from a Whisper small transcript and from a Whisper medium
-reference. Word recall was already 0.98 to 1.04, so small does not drop words; the slow
-Sanders and Trump paces are real ovation time, not missing speech. Four grader fixes
-closed the gaps:
+Goal: the grade should not depend on which Whisper model transcribed the audio. On the
+first 5 minutes of four speeches (Sanders 2016, Trump 2019 SOTU, Obama 2004, Michelle
+Obama 2016) each clip was graded from a Whisper small transcript and a Whisper medium
+reference. Word-count ratio small/medium was 0.98 to 1.04 (a count ratio, not alignment
+recall). Four changes:
 
-| Fix | Before | After |
-|---|---|---|
-| Pause after a comma, semicolon or colon is a clause boundary (not after a filler's comma, "uh,") | Obama mid-clause pauses 23 (small) vs 8 (medium) | 0 vs 1 |
-| ASR sound captions (MUSIC, CHEERING AND APPLAUSE, [Applause]) are not words | 3 to 6 caption tokens per clip scored as speech | 0 |
-| Applause hung on a word's end time costs the same as applause in a gap | Sanders pace 69.9 vs 64.6 wpm | 65.2 vs 63.5 |
-| A low-confidence run of 3+ identical interjections ("Oh! Oh! Oh!") is crowd noise | Michelle Obama: one false stumble under small | none |
+- Pause after a comma, semicolon or colon counts as a clause boundary (except after a
+  filler's comma, "uh,"). Obama mid-clause pauses went 23 (small) vs 8 (medium) to 0 vs 1.
+- ASR sound captions (MUSIC, CHEERING AND APPLAUSE, [Applause]) are not scored as words.
+- Applause hung on a word's end time costs the same pace clock as applause in a gap.
+  Sanders pace error small vs medium went from 6.6% (baseline 68.8 vs 64.6 wpm) to 2.7%.
+- A low-confidence run of 3+ identical interjections ("Oh! Oh! Oh!") is treated as crowd noise.
 
-After the fixes, all four clips get the same overall score under small and medium.
+All four clips then landed in the same band on every dimension under both models.
 
-Full 30-clip regrade with these fixes: median speech score 84.6 to 89.2; debates 87.2 to
-87.4. Speech pauses went from 9 good, 7 fair, 4 poor to 18 excellent, 2 good: the old
-"poor" verdicts were comma pauses. Pace is unchanged for speeches (13 good, 5 fair, 2
-poor: Sanders 83 wpm, Trump 2019 94 wpm); two fast debates (Biden-Ryan 180, Trump-Biden
-182 wpm) now read poor. Caveat: pauses now sit near the top for polished oratory, so
-the dimension separates these speakers less than it used to.
+Full 30-clip regrade: median speech score 84.6 to 89.2 (speeches compared with the
+stage-mode run, debates with the default-mode run); debates 87.2 to 87.4. Speech pauses
+went from 9 good, 7 fair, 4 poor to 18 excellent, 2 good.
+
+### Known limits (adversarial review)
+
+- **Pauses now mostly read ASR punctuation.** 96% of long pauses in the corpus follow
+  punctuation, because Whisper punctuates where people pause. With punctuation stripped
+  (as a no-punctuation engine like Vosk outputs), Obama 2004 pauses drop from excellent
+  to poor; a synthetic talk with 44 six-second freezes after commas still scores
+  excellent. The comma rule removed the mid-clause category under both models rather
+  than making small match medium. Settling it needs hand-labelled pauses (hesitation vs
+  boundary), including non-oratory speech.
+- **Agreement is not correctness.** These goals measure small/medium agreement, not
+  accuracy against human judgement, on 4 tuning clips with no held-out set. A Whisper
+  medium rerun moved the Sanders reference pace by 5%, the same size as the tolerance.
+- **Pace cannot tell applause from a freeze.** Any gap over 2 s is cut, so a speaker who
+  freezes for 6 s is not slowed. Cutting only gaps with crowd-level audio energy would fix it.
+- **The crowd-run rule was fitted to one intro** and could drop a soft "yeah yeah yeah".
+- The higher 30-clip median shows the scores shifted, not that grading got more accurate.
 
 ## Sources
 

@@ -39,3 +39,10 @@ def test_derive_is_idempotent_when_crowd_runs_merge():
     once = derive_transcript_fields(Transcript(words=ws, has_timing=True))
     twice = derive_transcript_fields(once.model_copy(deep=True))
     assert [w.text for w in once.words] == [w.text for w in twice.words] == ["Thank"]
+
+
+def test_speaker_turn_clock_excludes_captions():
+    ws = [Word(text="Hi", start=0, end=0.5, speaker="A"), Word(text="there.", start=0.6, end=1.0, speaker="A"),
+          Word(text="APPLAUSE", start=1.0, end=9.0, speaker="A"), Word(text="Yes.", start=9.5, end=10.0, speaker="B")]
+    t = Transcript(words=ws, has_timing=True).filter_by_speaker("A")
+    assert [w.text for w in t.words] == ["Hi", "there."] and t.duration_sec == 1.0

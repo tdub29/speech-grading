@@ -97,7 +97,7 @@ class Transcript(BaseModel):
         if self.turn_starts and all(w.speaker == want for w in self.words):
             return self  # already filtered: re-filtering would erase turn boundaries
         matching, turns, prev_mine = [], [], False
-        for w in self.words:
+        for w in clean_words(self.words):  # before the turn clock, so captions never pad it
             mine = w.speaker == want
             if mine:
                 if not prev_mine:
@@ -316,15 +316,21 @@ def drop_crowd_runs(words: list, min_run: int = 3, max_conf: float = 0.5) -> lis
     return [w for w, k in zip(words, keep) if k]
 
 
+def clean_words(words: list) -> list:
+    """Drop sound captions and crowd runs. Repeats crowd removal because removing one run
+    can join two others, so a second call is a no-op."""
+    kept = drop_nonspeech_tags(words)
+    while True:
+        nxt = drop_crowd_runs(kept)
+        if len(nxt) == len(kept):
+            return kept
+        kept = nxt
+
+
 def derive_transcript_fields(t: Transcript) -> Transcript:
     """Fill normalized forms, speaker_median_gap, sentence spans, speaking_sec,
     and duration_sec when missing. Idempotent."""
-    kept = drop_nonspeech_tags(t.words)
-    while True:  # removing one run can join two others; repeat so a second call is a no-op
-        nxt = drop_crowd_runs(kept)
-        if len(nxt) == len(kept):
-            break
-        kept = nxt
+    kept = clean_words(t.words)
     if len(kept) != len(t.words):
         if t.turn_starts:  # turn starts index words: shift them past the dropped tags
             ids = {id(w): n for n, w in enumerate(kept)}
