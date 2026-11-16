@@ -183,6 +183,10 @@ def load_input(input_path: str, cfg: Config) -> Transcript:
         t = backend.transcribe(audio_path)
         if not t.audio_path:
             t.audio_path = audio_path
+        if cfg.diarize:
+            from .diarize import diarize
+
+            diarize(t, audio_path, cfg.diarize_speakers, cfg.diarize_names)
         t = derive_transcript_fields(t)
     return t
 

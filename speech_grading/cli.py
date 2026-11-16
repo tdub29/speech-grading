@@ -65,6 +65,12 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="--group output folder (default: orator-group)")
     p.add_argument("--asr-model", default=None,
                    help="faster-whisper model size (default: large-v3; e.g. small.en for speed)")
+    p.add_argument("--diarize", action="store_true",
+                   help="one shared mic (stage, room): split speakers by voice, then use --group or --speaker")
+    p.add_argument("--speakers", type=int, default=None, metavar="N",
+                   help="--diarize: number of speakers if known (better than automatic)")
+    p.add_argument("--names", default=None,
+                   help="--diarize: comma-separated names in order of who speaks first (default Speaker 1..N)")
     p.set_defaults(use_llm=None)
     return p
 
@@ -95,6 +101,10 @@ def _config_from_args(args) -> Config:
         cfg.av_offset_sec = args.av_offset
     if args.asr_model:
         cfg.asr_model_size = args.asr_model
+    if args.diarize:
+        cfg.diarize = True
+        cfg.diarize_speakers = args.speakers
+        cfg.diarize_names = [n.strip() for n in (args.names or "").split(",") if n.strip()]
     return cfg
 
 
@@ -179,6 +189,16 @@ def main(argv: Optional[list[str]] = None) -> int:
     if os.path.isdir(args.input) and not (args.group or args.speaker):
         print("orator: error: a folder of per-speaker tracks needs --group (or --speaker <label>); "
               "without it every voice is graded as one speaker", file=sys.stderr)
+        return 2
+    if args.diarize and (os.path.isdir(args.input) or os.path.splitext(args.input)[1].lower()
+                         in (".json", ".txt", ".md", ".vtt", ".srt")):
+        print("orator: error: --diarize needs one audio or video file", file=sys.stderr)
+        return 2
+    if args.diarize and not (args.group or args.speaker):
+        print("orator: error: --diarize needs --group (or --speaker \"Speaker 1\")", file=sys.stderr)
+        return 2
+    if (args.speakers or args.names) and not args.diarize:
+        print("orator: error: --speakers/--names only apply with --diarize", file=sys.stderr)
         return 2
     cfg = _config_from_args(args)
 

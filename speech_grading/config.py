@@ -91,6 +91,9 @@ class Config(BaseModel):
     camera_level: bool = False           # camera at eye level: enables the chin-up cue
     visual_rows: str = ""                # if set, write windowed visual feature JSONL here (training export)
     speaker: Optional[str] = None        # filter transcript to this speaker label only
+    diarize: bool = False                # one shared mic: label words by voice (speech_grading.diarize)
+    diarize_speakers: Optional[int] = None  # known speaker count; None = automatic
+    diarize_names: list[str] = Field(default_factory=list)  # labels in order of first appearance
     asr_model_size: str = "large-v3"
     asr_device: str = "cpu"
     asr_compute_type: str = "int8"

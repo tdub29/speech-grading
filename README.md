@@ -98,7 +98,7 @@ Orator accepts text transcripts, audio recordings, or video files:
 
 ### Multi-speaker transcripts
 
-Grade one speaker with `--speaker`. The labels must already be in the input: a `speaker` field per word in `.json`, VTT `<v Name>` tags, or `Name:` line prefixes in text (a name must open at least two lines). No ASR backend diarizes yet. Other speakers' turns never count as pauses, pace time, or prosody.
+Grade one speaker with `--speaker`. Labels come from the input (a `speaker` field per word in `.json`, VTT `<v Name>` tags, or `Name:` line prefixes in text, where a name must open at least two lines) or from `--diarize` for one unlabelled recording (see One shared mic). Other speakers' turns never count as pauses, pace time, or prosody.
 
 ```bash
 orator podcast.json --speaker SPEAKER_00 --html report.html
@@ -115,6 +115,18 @@ orator "<Zoom recording>/Audio Record" --group --mode zoom --acoustic --asr-mode
 # open out/zoom-demo/group.html; re-grade instantly from the saved ASR result:
 orator out/zoom-demo/merged.json --group --out-dir out/zoom-demo
 ```
+
+### One shared mic (`--diarize`)
+
+For a stage panel or room recording on one mic, `--diarize` splits the audio by voice before grading. Silero VAD (bundled with faster-whisper) finds speech, a WeSpeaker ResNet34 speaker model embeds 1.5 s windows, spectral clustering groups them, and each word takes the voice of the windows it overlaps. Pass `--speakers N` when you know the count (otherwise a cosine cut guesses it) and `--names "Ana,Ben,Cy"` to label voices in order of who speaks first. Combine with `--group`, or with `--speaker "Speaker 2"` for one person.
+
+```bash
+orator panel.mp4 --diarize --speakers 3 --names "Ana,Ben,Cy" --group --acoustic --asr-model small.en --out-dir out/panel
+```
+
+Model: `wespeaker_en_voxceleb_resnet34_LM.onnx` (26.5 MB, sha256 `e9848563...9c39012`) from the [sherpa-onnx speaker-recognition release](https://github.com/k2-fsa/sherpa-onnx/releases/tag/speaker-recongition-models), saved to `~/.orator/models/`. Trained by [WeSpeaker](https://github.com/wenet-e2e/wespeaker) on VoxCeleb; licensed CC BY 4.0.
+
+Measured on synthetic panels built from the speech corpus: about 3 minutes each, speech-only turns cut out of different speeches, each voice RMS-matched on its speech, scored one-to-one so a merged or extra speaker counts as wrong. The automatic-count threshold (0.7) was picked on one 3-voice mix (94.8%; any value from 0.5 to 0.8 gave the same result) and then held fixed for the others: 3 voices, 6 to 25 s turns: 99.7% of speech time, 99.8% of 405 small.en words; 4 voices, 5 to 20 s turns: 98.9%; 5 voices, 2 to 8 s turns: 96.9%. In every mix, the automatic count found the right number of speakers. These are easy cases, because each voice comes from a different recording, so room and mic differences help. Real panels on one mic, crosstalk and one-word interjections will score lower, and no public diarization benchmark has been run. When two people talk at once, each word still gets only one speaker label.
 
 ### Video speaking modes (`--mode`)
 
