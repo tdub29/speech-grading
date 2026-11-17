@@ -18,11 +18,35 @@ monologues where natural repetition (function words, topic nouns) pulls MATTR
 well below what you'd see in edited prose.
 """
 
-from __future__ import annotations
-
 from lexicalrichness import LexicalRichness
 
 from speech_grading.schema import DimensionScore, Transcript
+
+
+def count_signposts(t: Transcript) -> dict[str, float]:
+    """Count rhetorical signpost/transition markers and rate per 100 words."""
+    tokens = [w.normalized for w in t.words if not w.is_filled_pause and w.normalized]
+    if not tokens:
+        return {"signpost_count": 0, "signpost_rate_per_100w": 0.0}
+    
+    SINGLE = {"first", "second", "third", "finally", "however", "therefore", "furthermore", "meanwhile", "consequently", "nevertheless"}
+    PHRASES = [("on", "the", "other", "hand"), ("as", "a", "result"), ("for", "example"), ("for", "instance"), ("in", "conclusion"), ("in", "summary"), ("to", "summarize"), ("in", "addition")]
+    
+    count = 0
+    i = 0
+    while i < len(tokens):
+        for p in PHRASES:
+            if tuple(tokens[i : i + len(p)]) == p:
+                count += 1
+                i += len(p)
+                break
+        else:
+            if tokens[i] in SINGLE:
+                count += 1
+            i += 1
+    
+    rate = round(count / len(tokens) * 100.0, 2)
+    return {"signpost_count": count, "signpost_rate_per_100w": rate}
 
 #: Heuristic MATTR cut-points for spoken monologues (see module docstring).
 _BAND_EXCELLENT = 0.85
@@ -70,7 +94,14 @@ def compute_vocabulary(t: Transcript) -> DimensionScore:
 
     # Guard short/empty transcripts: nothing to measure -> neutral "fair".
     if total == 0:
-        detail = {"mattr": 0.0, "mtld": 0.0, "ttr": 0.0, "unique": 0, "total": 0}
+        detail = {
+            "mattr": 0.0,
+            "mtld": 0.0,
+            "ttr": 0.0,
+            "unique": 0,
+            "total": 0,
+            **count_signposts(t),
+        }
         return DimensionScore(
             dimension="vocabulary",
             raw=0.0,
@@ -109,6 +140,7 @@ def compute_vocabulary(t: Transcript) -> DimensionScore:
         "ttr": ttr,
         "unique": unique,
         "total": total,
+        **count_signposts(t),
     }
     return DimensionScore(
         dimension="vocabulary",
