@@ -8,14 +8,34 @@ Input is a Transcript whose words already carry ``speaker`` labels: a labelled
 speaker matches ``--speaker <label>`` exactly.
 """
 
-from __future__ import annotations
-
 import math
 import os
 import re
 import statistics
 import sys
 from typing import Optional
+
+
+def interruption_free_streaks(turns: list[list], labels: list[str], tol: float = 0.2) -> dict[str, int]:
+    result = {s: 0 for s in labels}
+    
+    for spk in labels:
+        cur = 0
+        best = 0
+        for turn in turns:
+            if turn[0] == spk:
+                interrupted = any(
+                    other != spk and turn[1] <= o_start and o_start + tol < turn[2]
+                    for other, o_start, o_end in turns
+                )
+                if interrupted:
+                    cur = 0
+                else:
+                    cur += 1
+                    best = max(best, cur)
+        result[spk] = best
+    
+    return result
 
 from .config import Config
 from .pipeline import run_on_transcript
@@ -49,6 +69,9 @@ DEFINITIONS: dict[str, str] = {
                                          "counts once as made by the starter and once as received by each "
                                          "speaker talked over. Multitrack input only (one track per voice); "
                                          "n/a otherwise, because one channel cannot hold two voices' words.",
+    "interruption_free_streak": f"Longest consecutive run of floor turns by this speaker where no other "
+                                f"speaker started speaking during the turn more than {OVERLAP_TOL_SEC:g} s "
+                                "before it ended. n/a without word timing.",
     "response_latency_median_s": "Median over floor-turn changes to this speaker of (their first word "
                                  "start minus the previous floor turn's last word end). Negative means "
                                  "they started before the other speaker finished.",
@@ -138,6 +161,7 @@ def group_metrics(t: Transcript, overlap: bool) -> dict:
             if j and turns[j - 1][0] != spk:
                 latency[spk].append(round(start - turns[j - 1][2], 4))
 
+    streaks = interruption_free_streaks(turns, labels, OVERLAP_TOL_SEC) if timed else {}
     per: dict[str, dict] = {}
     for s in labels:
         ts = t.filter_by_speaker(s) if s in speakers(t) else None  # None: silent track
@@ -151,6 +175,7 @@ def group_metrics(t: Transcript, overlap: bool) -> dict:
             "median_turn_s": round(statistics.median(spans), 3) if timed and spans else None,
             "overlaps_made": made[s] if timed and overlap else None,
             "overlaps_received": received[s] if timed and overlap else None,
+            "interruption_free_streak": streaks[s] if timed else None,
             "response_latency_median_s": (round(statistics.median(latency[s]), 3)
                                           if timed and latency[s] else None),
         }
