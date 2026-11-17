@@ -31,6 +31,22 @@ def sentence_length_stats(t: Transcript) -> dict[str, float]:
     }
 
 
+def question_stats(t: Transcript) -> dict[str, float]:
+    """Count question sentences and their share of all sentences."""
+    q = 0
+    total = len(t.sentences)
+    
+    if total == 0:
+        return {"question_count": 0, "question_rate": 0.0}
+    
+    for a, b in t.sentences:
+        if 0 <= a <= b < len(t.words):
+            if t.words[b].text.strip().rstrip("\"' )]").endswith("?"):
+                q += 1
+    
+    return {"question_count": q, "question_rate": round(q / total, 4)}
+
+
 def _safe(fn: Callable[[str], float], text: str) -> float:
     """Run a textstat metric, returning 0.0 on any failure (empty text, etc.)."""
     try:
@@ -83,5 +99,6 @@ def compute_readability(t: Transcript) -> DimensionScore:
             "smog_index": smog_index,
             "gunning_fog": gunning_fog,
             **sentence_length_stats(t),
+            **question_stats(t),
         },
     )
