@@ -13,9 +13,38 @@ Each pattern yields a uniform :class:`~speech_grading.schema.Finding`. Overlappi
 that would otherwise fire inside it). Results are returned sorted by ``start``.
 """
 
-from __future__ import annotations
-
 from speech_grading.schema import Finding, Transcript
+
+
+def detect_anaphora(t: Transcript, min_run: int = 3) -> list[dict]:
+    openings = []
+    for a, b in t.sentences:
+        for w in t.words[a:b + 1]:
+            if not w.is_filled_pause and w.normalized != "":
+                openings.append((a, b, w.normalized))
+                break
+        else:
+            openings.append((a, b, ""))
+    
+    runs = []
+    start = 0
+    while start < len(openings):
+        run = [openings[start]]
+        while start + 1 < len(openings) and openings[start + 1][2] == run[-1][2] and openings[start + 1][2] != "":
+            run.append(openings[start + 1])
+            start += 1
+        runs.append(run)
+        start += 1
+    
+    result = []
+    for run in runs:
+        if len(run) >= min_run:
+            word = run[0][2]
+            start_word = run[0][0]
+            end_word = run[-1][1]
+            result.append({"word": word, "count": len(run), "start_word": start_word, "end_word": end_word})
+    
+    return result
 
 # Very common short words that are real words, not clipped fragments. A bare
 # prefix match against the next word ("to" before "today", "we" before "went")

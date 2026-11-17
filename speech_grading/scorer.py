@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from typing import Optional
 
+from .analysis.repetitions import detect_anaphora
 from .config import Config
 from .schema import DimensionScore, Finding, Report, Transcript
 
@@ -218,6 +219,7 @@ def _metrics(present: list[DimensionScore], t: Transcript) -> dict:
         "total_words": t.total_words,
         "duration_sec": round(t.duration_sec, 2),
         "speaking_sec": round(t.speaking_sec, 2),
+        "anaphora_count": len(detect_anaphora(t)),
     }
     for ds in present:
         for k, v in ds.detail.items():
