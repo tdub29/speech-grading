@@ -15,12 +15,22 @@ band *and* keeping that pace steady.
 Pure function, no external dependencies beyond the foundation modules and stdlib.
 """
 
-from __future__ import annotations
-
 import re
 import statistics
 
 from speech_grading.schema import DimensionScore, Transcript
+
+
+def pace_drift_wpm(window_wpms: list[float]) -> float:
+    """Compare second-half mean window WPM to first-half mean window WPM."""
+    if len(window_wpms) < 2:
+        return 0.0
+    mid = len(window_wpms) // 2
+    first_half = window_wpms[:mid]
+    second_half = window_wpms[mid:]
+    mean_first = sum(first_half) / len(first_half)
+    mean_second = sum(second_half) / len(second_half)
+    return round(mean_second - mean_first, 2)
 
 
 def _rate(n_words: int, seconds: float) -> float:
@@ -180,5 +190,6 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
             "articulation_sps": articulation_sps(t, thresholds.get("pause_micro", 0.25)),
             "consistency": consistency,
             "n_windows": k,
+            "pace_drift_wpm": pace_drift_wpm(window_wpms),
         },
     )
