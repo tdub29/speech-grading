@@ -8,13 +8,27 @@ plain-spoken talk is not a defect — so ``points`` stay mostly high. No finding
 emitted (there is nothing to flag word-by-word here).
 """
 
-from __future__ import annotations
-
+import statistics
 from typing import Callable
 
 import textstat
 
 from speech_grading.schema import DimensionScore, Transcript
+
+
+def sentence_length_stats(t: Transcript) -> dict[str, float]:
+    lengths = [sum(1 for w in t.words[a : b + 1] if not w.is_filled_pause) for a, b in t.sentences if any(not w.is_filled_pause for w in t.words[a : b + 1])]
+    if not lengths:
+        return {
+            "sentence_count": 0,
+            "mean_sentence_words": 0.0,
+            "sentence_length_stdev": 0.0,
+        }
+    return {
+        "sentence_count": len(lengths),
+        "mean_sentence_words": round(sum(lengths) / len(lengths), 2),
+        "sentence_length_stdev": round(statistics.pstdev(lengths), 2) if len(lengths) >= 2 else 0.0,
+    }
 
 
 def _safe(fn: Callable[[str], float], text: str) -> float:
@@ -68,5 +82,6 @@ def compute_readability(t: Transcript) -> DimensionScore:
             "flesch_kincaid_grade": flesch_kincaid_grade,
             "smog_index": smog_index,
             "gunning_fog": gunning_fog,
+            **sentence_length_stats(t),
         },
     )
