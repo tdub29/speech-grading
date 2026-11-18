@@ -208,6 +208,8 @@ def score(
             or ("claude" if cfg.use_llm else "offline-lexicon"),
             "weights": {ds.dimension: round(ds.weight, 4) for ds in present},
             "version": "0.1.0",
+            "rubric_status": "uncalibrated_heuristic",
+            "rubric_evidence": "docs/evidence-map.md",
         },
         summary=_summary(round(overall, 1), present),
     )

@@ -62,9 +62,9 @@ def _window_wpms(t: Transcript, window_sec: float) -> list[float]:
         starts = [w.start for w in seg if not w.is_filled_pause]
         lo = span_start
         while lo < span_end:
-            hi = lo + window_sec
+            hi = min(lo + window_sec, span_end)
             count = sum(1 for s in starts if lo <= s < hi)
-            wpms.append(_rate(count, window_sec))
+            wpms.append(_rate(count, hi - lo))
             lo = hi
     return wpms
 

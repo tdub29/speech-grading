@@ -71,7 +71,8 @@ DEFINITIONS: dict[str, str] = {
                                          "n/a otherwise, because one channel cannot hold two voices' words.",
     "interruption_free_streak": f"Longest consecutive run of floor turns by this speaker where no other "
                                 f"speaker started speaking during the turn more than {OVERLAP_TOL_SEC:g} s "
-                                "before it ended. n/a without word timing.",
+                                "before it ended. Multitrack input only; n/a without word timing or "
+                                "overlap-capable input. This detects overlapping starts, not their intent.",
     "response_latency_median_s": "Median over floor-turn changes to this speaker of (their first word "
                                  "start minus the previous floor turn's last word end). Negative means "
                                  "they started before the other speaker finished.",
@@ -161,7 +162,7 @@ def group_metrics(t: Transcript, overlap: bool) -> dict:
             if j and turns[j - 1][0] != spk:
                 latency[spk].append(round(start - turns[j - 1][2], 4))
 
-    streaks = interruption_free_streaks(turns, labels, OVERLAP_TOL_SEC) if timed else {}
+    streaks = interruption_free_streaks(turns, labels, OVERLAP_TOL_SEC) if timed and overlap else {}
     per: dict[str, dict] = {}
     for s in labels:
         ts = t.filter_by_speaker(s) if s in speakers(t) else None  # None: silent track
@@ -175,7 +176,7 @@ def group_metrics(t: Transcript, overlap: bool) -> dict:
             "median_turn_s": round(statistics.median(spans), 3) if timed and spans else None,
             "overlaps_made": made[s] if timed and overlap else None,
             "overlaps_received": received[s] if timed and overlap else None,
-            "interruption_free_streak": streaks[s] if timed else None,
+            "interruption_free_streak": streaks[s] if timed and overlap else None,
             "response_latency_median_s": (round(statistics.median(latency[s]), 3)
                                           if timed and latency[s] else None),
         }
