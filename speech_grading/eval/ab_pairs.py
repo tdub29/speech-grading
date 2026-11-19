@@ -106,6 +106,17 @@ def insert_audio(y, sample_rate: int, at_sec: float, inserted):
     return np.concatenate((y[:at], inserted, y[at:]))
 
 
+def pick_midclause_boundary(texts: list[str], starts: list[float], ends: list[float], fillers: list[bool], min_time: float = 5.0) -> int | None:
+    """First word index ending a tight, unpunctuated, filler-free boundary after min_time."""
+    for i in range(len(texts) - 1):
+        if starts[i] >= min_time and \
+           not texts[i].rstrip().endswith((".", ",", ";", ":", "!", "?")) and \
+           not fillers[i] and not fillers[i + 1] and \
+           0 <= starts[i + 1] - ends[i] < 0.15:
+            return i
+    return None
+
+
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
