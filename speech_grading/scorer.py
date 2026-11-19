@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from typing import Optional
 
+from .analysis.delivery_extras import count_tricolons, mean_length_of_run, opening_body_contrast
 from .analysis.repetitions import detect_anaphora
 from .config import Config
 from .schema import DimensionScore, Finding, Report, Transcript
@@ -222,7 +223,13 @@ def _metrics(present: list[DimensionScore], t: Transcript) -> dict:
         "duration_sec": round(t.duration_sec, 2),
         "speaking_sec": round(t.speaking_sec, 2),
         "anaphora_count": len(detect_anaphora(t)),
+        "tricolon_count": count_tricolons(
+            [" ".join(w.text for w in t.words[a:b + 1]) for a, b in t.sentences]),
     }
+    if t.has_timing:
+        lex = [w for w in t.words if not w.is_filled_pause]
+        bag["mean_length_of_run"] = mean_length_of_run([w.start for w in lex], [w.end for w in lex])
+        bag.update(opening_body_contrast([w.start for w in t.words], [w.is_filled_pause for w in t.words]))
     for ds in present:
         for k, v in ds.detail.items():
             bag[k] = v

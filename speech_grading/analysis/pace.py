@@ -63,6 +63,9 @@ def _window_wpms(t: Transcript, window_sec: float) -> list[float]:
         lo = span_start
         while lo < span_end:
             hi = min(lo + window_sec, span_end)
+            # A leftover under half a window joins this one: a 0.05 s sliver read as 1200 WPM.
+            if span_end - hi < window_sec / 2:
+                hi = span_end
             count = sum(1 for s in starts if lo <= s < hi)
             wpms.append(_rate(count, hi - lo))
             lo = hi

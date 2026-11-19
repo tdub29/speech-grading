@@ -1,0 +1,568 @@
+{
+  "schema_version": 1,
+  "reviewed": "2026-11-17",
+  "status": "unreviewed_research_candidates",
+  "audio_policy": "Audio and full transcripts remain outside repository under ~/.orator/corpus/exemplars only.",
+  "candidates": [
+    {
+      "id": "e_mlk_dream_1963",
+      "label": "acclaimed",
+      "speaker": "Martin Luther King Jr.",
+      "title": "I Have a Dream",
+      "date": "1963-08-28",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=8LWuu2Zwsfs",
+      "rankings": [
+        {
+          "list_id": "lucas_medhurst_1999",
+          "rank": 1
+        },
+        {
+          "list_id": "aom_35",
+          "rank": 34
+        },
+        {
+          "list_id": "watchmojo_2015",
+          "rank": 2
+        }
+      ],
+      "notes": "Full restored upload mixes two historical audio recordings. Verify duration and edit provenance; prior political-corpus source vP4iY1TtS3s is a shorter excerpt, not this source.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_kennedy_inaugural_1961",
+      "label": "acclaimed",
+      "speaker": "John F. Kennedy",
+      "title": "Inaugural Address",
+      "date": "1961-01-20",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=PEC1C4p0k3E",
+      "rankings": [
+        {
+          "list_id": "lucas_medhurst_1999",
+          "rank": 2
+        },
+        {
+          "list_id": "aom_35",
+          "rank": 6
+        },
+        {
+          "list_id": "watchmojo_2015",
+          "rank": 6
+        }
+      ],
+      "notes": "Exact source also listed in political-corpus.md; cache overlap must be disclosed.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_fdr_inaugural_1933",
+      "label": "acclaimed",
+      "speaker": "Franklin D. Roosevelt",
+      "title": "First Inaugural Address",
+      "date": "1933-03-04",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.fdrlibrary.org/documents/356632/405112/afdr012.mp3/92b01969-c0ce-4e37-ad86-2a1fd78f39f7",
+      "rankings": [
+        {
+          "list_id": "lucas_medhurst_1999",
+          "rank": 3
+        },
+        {
+          "list_id": "aom_35",
+          "rank": 11
+        },
+        {
+          "list_id": "watchmojo_2015",
+          "rank": 4
+        }
+      ],
+      "notes": "Official archival MP3 listed as 27 minutes including program material; identify first speaker onset before 900-second cap.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_fdr_infamy_1941",
+      "label": "acclaimed",
+      "speaker": "Franklin D. Roosevelt",
+      "title": "Pearl Harbor Address to Congress",
+      "date": "1941-12-08",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://stream-media.loc.gov/afc/cal/afc1986022_sr14a01.mp3",
+      "rankings": [
+        {
+          "list_id": "lucas_medhurst_1999",
+          "rank": 4
+        },
+        {
+          "list_id": "aom_35",
+          "rank": 32
+        }
+      ],
+      "notes": "Library of Congress audio; alternate official FDR Library afdr244.mp3 includes program material.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_reagan_challenger_1986",
+      "label": "acclaimed",
+      "speaker": "Ronald Reagan",
+      "title": "Challenger Address",
+      "date": "1986-01-28",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=DqilE4AAa-M",
+      "rankings": [
+        {
+          "list_id": "lucas_medhurst_1999",
+          "rank": 8
+        },
+        {
+          "list_id": "aom_35",
+          "rank": 7
+        }
+      ],
+      "notes": "US National Archives upload, identifier 6014714. Same event as political corpus, different source.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_reagan_berlin_1987",
+      "label": "acclaimed",
+      "speaker": "Ronald Reagan",
+      "title": "Brandenburg Gate Address",
+      "date": "1987-06-12",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=5MDFX-dNtsM",
+      "rankings": [
+        {
+          "list_id": "lucas_medhurst_1999",
+          "rank": 94
+        },
+        {
+          "list_id": "aom_35",
+          "rank": 20
+        },
+        {
+          "list_id": "watchmojo_2015",
+          "rank": "honorable mention"
+        }
+      ],
+      "notes": "LearnOutLoud links this video and an original audio download.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_eisenhower_farewell_1961",
+      "label": "acclaimed",
+      "speaker": "Dwight D. Eisenhower",
+      "title": "Farewell Address",
+      "date": "1961-01-17",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.learnoutloud.com/audiobooks/DwightDEisenhowerFarewellAddress.mp3",
+      "rankings": [
+        {
+          "list_id": "lucas_medhurst_1999",
+          "rank": 18
+        },
+        {
+          "list_id": "aom_35",
+          "rank": 18
+        }
+      ],
+      "notes": "Download link verified in source HTML; web fetch timed out, local availability still unverified.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_churchill_finest_1940",
+      "label": "acclaimed",
+      "speaker": "Winston Churchill",
+      "title": "Their Finest Hour",
+      "date": "1940-06-18",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=6jjhxeHIjvU",
+      "rankings": [
+        {
+          "list_id": "aom_35",
+          "rank": 16
+        }
+      ],
+      "notes": "Exact source in political corpus. Recording provenance uncertain: distinguish original Commons performance, same-day broadcast, later re-recording. Acclaim of text does not establish acclaim of this recording.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_jordan_dnc_1976",
+      "label": "acclaimed",
+      "speaker": "Barbara Jordan",
+      "title": "DNC Keynote",
+      "date": "1976-07-12",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=A7kotfNCDrQ",
+      "rankings": [
+        {
+          "list_id": "lucas_medhurst_1999",
+          "rank": 5
+        }
+      ],
+      "notes": "DNC official upload verified; inspect whether entire speech or excerpt. Texas Southern University Archives separately praises delivery, presence, command of crowd, not a second ranking.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_obama_dnc_2004",
+      "label": "acclaimed",
+      "speaker": "Barack Obama",
+      "title": "DNC Keynote",
+      "date": "2004-07-27",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=ueMNqdB1QIE",
+      "rankings": [
+        {
+          "list_id": "charisma_obama_2020",
+          "rank": "analysed exemplar"
+        }
+      ],
+      "notes": "Exact source in political corpus. Coach selection rather than all-time ranked list; broad acclaim supported by contemporary and retrospective reporting.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_jobs_stanford_2005",
+      "label": "acclaimed",
+      "speaker": "Steve Jobs",
+      "title": "Stanford Commencement",
+      "date": "2005-06-12",
+      "genre": "commencement",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=UF8uR6Z6KLc",
+      "rankings": [
+        {
+          "list_id": "npr_commencement",
+          "rank": "selected"
+        },
+        {
+          "list_id": "ted_transformative",
+          "rank": "selected"
+        },
+        {
+          "list_id": "time_jobs_2014",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Stanford upload; also analysed by Six Minutes. TED has a separate hosted cut, do not count it twice.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_rowling_harvard_2008",
+      "label": "acclaimed",
+      "speaker": "J.K. Rowling",
+      "title": "The Fringe Benefits of Failure, and the Importance of Imagination",
+      "date": "2008-06-05",
+      "genre": "commencement",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=wHGqp8lz36c",
+      "rankings": [
+        {
+          "list_id": "npr_commencement",
+          "rank": "selected"
+        },
+        {
+          "list_id": "time_women_2014",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Speaker website links Harvard upload. TED hosts same event under shortened title.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_wallace_kenyon_2005",
+      "label": "acclaimed",
+      "speaker": "David Foster Wallace",
+      "title": "This Is Water",
+      "date": "2005-05-21",
+      "genre": "commencement",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=DCbGM4mqEVw",
+      "rankings": [
+        {
+          "list_id": "npr_commencement",
+          "rank": "selected"
+        },
+        {
+          "list_id": "commencement_archive",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Full audio upload title verified; avoid the nine-minute cinematic edit. Original recording sound quality and provenance remain checks.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_mcraven_texas_2014",
+      "label": "acclaimed",
+      "speaker": "William H. McRaven",
+      "title": "UT Austin Commencement",
+      "date": "2014-05-17",
+      "genre": "commencement",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=yaQZFhrW0fU",
+      "rankings": [
+        {
+          "list_id": "npr_commencement",
+          "rank": "selected"
+        },
+        {
+          "list_id": "commencement_archive",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Official university upload. Texas Exes alternate pxBQLFLei70. NPR membership must be verified in full page before analysis inclusion.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_robinson_ted_2006",
+      "label": "acclaimed",
+      "speaker": "Ken Robinson",
+      "title": "Do schools kill creativity?",
+      "date": "2006-02",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.ted.com/talks/sir_ken_robinson_do_schools_kill_creativity",
+      "rankings": [
+        {
+          "list_id": "ted_popular",
+          "rank": "selected"
+        },
+        {
+          "list_id": "ted_transformative",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Official TED lists: popularity and editorial praise are different label channels; same publisher family. YouTube alternate iG9CE55wbtY.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_brown_ted_2010",
+      "label": "acclaimed",
+      "speaker": "Brene Brown",
+      "title": "The power of vulnerability",
+      "date": "2010-06",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.ted.com/talks/brene_brown_the_power_of_vulnerability",
+      "rankings": [
+        {
+          "list_id": "ted_popular",
+          "rank": "selected"
+        },
+        {
+          "list_id": "ted_transformative",
+          "rank": "selected"
+        },
+        {
+          "list_id": "tracy_inspirational",
+          "rank": 1
+        }
+      ],
+      "notes": "TEDxHouston event. Popularity does not independently validate delivery.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_sinek_ted_2009",
+      "label": "acclaimed",
+      "speaker": "Simon Sinek",
+      "title": "How great leaders inspire action",
+      "date": "2009-09",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.ted.com/talks/simon_sinek_how_great_leaders_inspire_action",
+      "rankings": [
+        {
+          "list_id": "ted_popular",
+          "rank": "selected"
+        },
+        {
+          "list_id": "tracy_inspirational",
+          "rank": 5
+        }
+      ],
+      "notes": "TEDxPuget Sound event; source page identifies editor selection.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_treasure_ted_2013",
+      "label": "acclaimed",
+      "speaker": "Julian Treasure",
+      "title": "How to speak so that people want to listen",
+      "date": "2013-06",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.ted.com/talks/julian_treasure_how_to_speak_so_that_people_want_to_listen",
+      "rankings": [
+        {
+          "list_id": "ted_popular",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Contains vocal demonstrations and exercises. These are target content, not a uniform natural speech sample; tag before comparing prosody.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_urban_ted_2016",
+      "label": "acclaimed",
+      "speaker": "Tim Urban",
+      "title": "Inside the mind of a master procrastinator",
+      "date": "2016-02",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.ted.com/talks/tim_urban_inside_the_mind_of_a_master_procrastinator",
+      "rankings": [
+        {
+          "list_id": "ted_popular",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Current official popularity playlist; do not invent a numerical rank from page order.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_taylor_ted_2008",
+      "label": "acclaimed",
+      "speaker": "Jill Bolte Taylor",
+      "title": "My stroke of insight",
+      "date": "2008-02",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.ted.com/talks/jill_bolte_taylor_my_stroke_of_insight",
+      "rankings": [
+        {
+          "list_id": "ted_popular_2013",
+          "rank": "selected"
+        },
+        {
+          "list_id": "ted_jaw_dropping",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Praise is editorial jaw-dropping playlist membership, not a top viewer-rating claim.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_adichie_ted_2009",
+      "label": "acclaimed",
+      "speaker": "Chimamanda Ngozi Adichie",
+      "title": "The danger of a single story",
+      "date": "2009-07",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.ted.com/talks/chimamanda_ngozi_adichie_the_danger_of_a_single_story",
+      "rankings": [
+        {
+          "list_id": "ted_transformative",
+          "rank": "selected"
+        },
+        {
+          "list_id": "marieclaire_women",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Editorial selections; source article names this exact TED talk.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_hettiarachchi_tm_2014",
+      "label": "acclaimed",
+      "speaker": "Dananjaya Hettiarachchi",
+      "title": "I See Something",
+      "date": "2014-08",
+      "genre": "Toastmasters",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=bbz2boNSeL0",
+      "rankings": [
+        {
+          "list_id": "toastmasters_champions",
+          "rank": "2014 winner"
+        }
+      ],
+      "notes": "Speaker full winning-speech upload. Championship title independently verified on official Toastmasters list; Moxie and WEF discuss winning speech.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_qahtani_tm_2015",
+      "label": "acclaimed",
+      "speaker": "Mohammed Qahtani",
+      "title": "The Power of Words",
+      "date": "2015-08",
+      "genre": "Toastmasters",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=Iqq1roF4C8s",
+      "rankings": [
+        {
+          "list_id": "toastmasters_champions",
+          "rank": "2015 winner"
+        }
+      ],
+      "notes": "Confident Presenting upload, not Toastmasters-owned despite title. Verify intro/outro trim. Official title independently verified.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_smith_tm_2018",
+      "label": "acclaimed",
+      "speaker": "Ramona J. Smith",
+      "title": "Still Standing",
+      "date": "2018-08-25",
+      "genre": "Toastmasters",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=7Tev43VNRIc",
+      "rankings": [
+        {
+          "list_id": "toastmasters_champions",
+          "rank": "2018 winner"
+        }
+      ],
+      "notes": "Official Toastmasters upload and magazine report. Closing sung excerpt is not ordinary spoken prosody.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_romney_debate_2012",
+      "label": "acclaimed",
+      "speaker": "Mitt Romney",
+      "title": "First Presidential Debate closing statement",
+      "date": "2012-10-03",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=aqd31fI1nN0",
+      "rankings": [
+        {
+          "list_id": "cnn_orc_2012",
+          "rank": "debate winner"
+        }
+      ],
+      "notes": "Standalone Wall Street Journal clip; victory poll applies whole debate, not validated quality of this closing excerpt. Trim moderator if present.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "e_reagan_debate_1984",
+      "label": "acclaimed",
+      "speaker": "Ronald Reagan",
+      "title": "Second debate age response",
+      "date": "1984-10-21",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=kygB-PA2ibs",
+      "rankings": [
+        {
+          "list_id": "smithsonian_debate_2016",
+          "rank": "selected"
+        },
+        {
+          "list_id": "foreignpolicy_debate_2012",
+          "rank": "selected"
+        }
+      ],
+      "notes": "Celebrated recovery moment, not claim of unanimous whole-debate victory. Short clip includes questioner; isolate Reagan answer and exclude moderator speech.",
+      "selection_status": "candidate_pending_download_and_grading"
+    }
+  ]
+}

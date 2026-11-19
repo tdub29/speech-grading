@@ -29,7 +29,8 @@ def test_partial_windows_use_each_turn_duration():
         w.start += 10.0
         w.end += 10.0
     t.turn_starts = [0, 25]
-    assert _window_wpms(t, 10.0) == pytest.approx([120.0] * 4)
+    # Each 12.5 s turn is one window: the 2.5 s leftover is under half a window, so it merges.
+    assert _window_wpms(t, 10.0) == pytest.approx([120.0] * 2)
 
 
 def test_single_channel_cannot_establish_uninterrupted_streak():

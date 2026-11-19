@@ -115,3 +115,15 @@ def test_held_word_ending_a_turn_does_not_slow_pace(sample_transcript):
         w.end += 16.0
     t.duration_sec += 16.0
     assert abs(compute_pace(t, Config().thresholds).raw - base) / base < 0.15
+
+
+def test_trailing_sliver_window_merges_instead_of_spiking():
+    from speech_grading.analysis.pace import _window_wpms
+    from speech_grading.schema import Transcript, Word
+
+    words = [Word(text="w", start=i * 0.5, end=i * 0.5 + 0.4) for i in range(20)]
+    words.append(Word(text="w", start=10.0, end=10.05))
+    t = Transcript(words=words)
+    wpms = _window_wpms(t, 10.0)
+    assert len(wpms) == 1
+    assert max(wpms) < 200
