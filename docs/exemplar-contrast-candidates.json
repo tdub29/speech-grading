@@ -1,0 +1,784 @@
+{
+  "schema_version": 1,
+  "reviewed": "2026-11-18",
+  "status": "unreviewed_research_candidates",
+  "audio_policy": "Audio and full transcripts remain outside repository under ~/.orator/corpus/exemplars only.",
+  "sources": [
+    {
+      "id": "press_contemporary",
+      "description": "Contemporary news reports and commentary, cited per candidate in judgement_sources."
+    },
+    {
+      "id": "retrospective",
+      "description": "Retrospectives and debate histories (Smithsonian, PBS Debating Our Destiny, Time)."
+    },
+    {
+      "id": "polls",
+      "description": "Audience polls (Pew, YouGov) cited for convention speeches."
+    },
+    {
+      "id": "toastmasters_official",
+      "description": "Toastmasters magazine and World Champions list for contest placements."
+    }
+  ],
+  "pair_good_refs": {
+    "pair_reagan_1984": "e_reagan_debate_1984",
+    "pair_obama_2004_2012": "e_obama_dnc_2004"
+  },
+  "candidates": [
+    {
+      "id": "p_reagan_debate1_1984",
+      "label": "panned",
+      "speaker": "Ronald Reagan",
+      "title": "First Presidential Debate closing statement",
+      "date": "1984-10-07",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=N6I9nXPh66w",
+      "alt_urls": [
+        "https://www.c-span.org/program/presidential-debates/1984-1st-presidential-debate/92876",
+        "https://www.youtube.com/watch?v=ZH2NgqA3CVY"
+      ],
+      "poor_reason": "rambling, meandering closing; halting recall and lost thread (judged on delivery, raised age/fitness concerns)",
+      "judgement_sources": [
+        {
+          "url": "https://www.smithsonianmag.com/history/when-debate-flop-raised-concerns-ronald-reagan-fitness-run-reelection-180984691/",
+          "claim": "Retrospective: Reagan stumbled through his answers and closing statement; Mondale closed the poll gap afterward."
+        },
+        {
+          "url": "https://www.reaganfoundation.org/ronald-reagan/white-house-diaries/diary-entry-10071984",
+          "claim": "Reagan's own diary entry for the night concedes he lost the debate."
+        }
+      ],
+      "pair_id": "pair_reagan_1984",
+      "pair_side": "poor",
+      "notes": "Clip contains both closing statements (Mondale's too); isolate Reagan. Full-debate alt is the Reagan Library upload. Good side is the second debate (Oct 21) in the acclaimed set.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_obama_debate1_2012",
+      "label": "panned",
+      "speaker": "Barack Obama",
+      "title": "First Presidential Debate closing statement",
+      "date": "2012-10-03",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=UANbTju765A",
+      "alt_urls": [
+        "https://www.c-span.org/program/presidential-debates/2012-presidential-candidates-debate/289142",
+        "https://www.youtube.com/watch?v=KfaBRyCKRhk"
+      ],
+      "poor_reason": "low energy, flat and halting professorial delivery; widely called listless",
+      "judgement_sources": [
+        {
+          "url": "https://www.npr.org/2012/10/04/162265100/five-takeaways-from-the-first-presidential-debate",
+          "claim": "NPR takeaways cast Obama as defensive and lackluster against a confident Romney."
+        },
+        {
+          "url": "https://www.creators.com/read/roger-simon/10/12/obama-snoozes-and-loses",
+          "claim": "Columnist Roger Simon described a low-energy, sleepy-seeming performance."
+        },
+        {
+          "url": "https://m.washingtontimes.com/news/2012/oct/4/obama-team-plans-adjustments-lackluster-debate/",
+          "claim": "Even supporters acknowledged he performed badly; campaign promised adjustments."
+        }
+      ],
+      "pair_id": "pair_obama_2004_2012",
+      "pair_side": "poor",
+      "notes": "CNN closing-statement clip; full-debate alts include moderator and Romney.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_biden_debate_2024",
+      "label": "panned",
+      "speaker": "Joe Biden",
+      "title": "CNN Presidential Debate (national debt answer)",
+      "date": "2024-06-27",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=D3BSgScrIlI",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=-v-8wJkmwBY"
+      ],
+      "poor_reason": "hoarse voice, halting pace, trailing off mid-answer, lost train of thought",
+      "judgement_sources": [
+        {
+          "url": "https://whyy.org/articles/presidential-debate-biden-trump-overview/",
+          "claim": "AP: a halting, raspy Biden lost his train of thought and trailed off, alarming Democrats."
+        },
+        {
+          "url": "https://abc7news.com/post/joe-bidens-age-full-display-presidential-debate-biggest/15007929/",
+          "claim": "ABC analysis: won on policy but lost on presentation."
+        }
+      ],
+      "pair_id": "pair_biden_2024",
+      "pair_side": "poor",
+      "notes": "Primary is a 68 s Fox Business clip of the debt answer; alt is the CNN full debate (90 min, needs start/end selection).",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "a_biden_sotu_2024",
+      "label": "acclaimed",
+      "speaker": "Joe Biden",
+      "title": "2024 State of the Union",
+      "date": "2024-03-07",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=cplSUhU2avc",
+      "alt_urls": [],
+      "judgement_sources": [
+        {
+          "url": "https://www.nbcnews.com/politics/white-house/live-blog/live-updates-state-union-biden-rcna140769",
+          "claim": "NBC described an energetic speech delivered at high volume."
+        },
+        {
+          "url": "https://news.yahoo.com/energetic-and-pugnacious-biden-makes-his-case-to-the-nation-055026417.html",
+          "claim": "AP: feisty, combative and energetic delivery."
+        }
+      ],
+      "pair_id": "pair_biden_2024",
+      "pair_side": "good",
+      "notes": "Some commentators (e.g. Noonan) still noted blurred words; acclaim is relative to his subdued appearances. Trim intro/applause; cap 900 s.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_clinton_dnc_1988",
+      "label": "panned",
+      "speaker": "Bill Clinton",
+      "title": "Nomination of Michael Dukakis, 1988 DNC",
+      "date": "1988-07-20",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=g0TdQwyd08A",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=vvTRvTII40o",
+        "https://www.c-span.org/clip/public-affairs-event/bill-clinton-in-closing/4609785"
+      ],
+      "poor_reason": "overlong, droning delivery that lost the hall (about 32 to 35 min against a planned 15)",
+      "judgement_sources": [
+        {
+          "url": "https://www.nbcnews.com/news/amp/wbna5470323",
+          "claim": "Brokaw recalled the crowd cheering when Clinton finally signalled his close after a long, rambling speech."
+        },
+        {
+          "url": "https://carnegieendowment.org/posts/2012/09/bill-clinton-the-reverse-clint-eastwood",
+          "claim": "Describes the 1988 address as almost universally panned for verbosity."
+        }
+      ],
+      "pair_id": "pair_clinton_1988_2012",
+      "pair_side": "poor",
+      "notes": "Clinton Library upload. Closing phrase reported as 'in conclusion' or 'in closing' in different sources.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "a_clinton_dnc_2012",
+      "label": "acclaimed",
+      "speaker": "Bill Clinton",
+      "title": "2012 DNC address",
+      "date": "2012-09-05",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=i5knEXDsrL4",
+      "alt_urls": [],
+      "judgement_sources": [
+        {
+          "url": "https://www.pewresearch.org/politics/2012/09/10/democratic-convention-highlights-clinton-outshines-obama/",
+          "claim": "Pew: 29% named Clinton's speech the convention highlight versus 16% for Obama's."
+        },
+        {
+          "url": "https://today.yougov.com/politics/articles/4313-bill-clinton-steals-show-dnc",
+          "claim": "YouGov: 81% of viewers rated it excellent or good."
+        }
+      ],
+      "pair_id": "pair_clinton_1988_2012",
+      "pair_side": "good",
+      "notes": "Also long (about 48 min) yet praised. C-SPAN upload. Cap 900 s.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_palin_endorse_2016",
+      "label": "panned",
+      "speaker": "Sarah Palin",
+      "title": "Endorsement of Donald Trump, Ames, Iowa",
+      "date": "2016-01-19",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=25uCYfvZgGQ",
+      "alt_urls": [
+        "https://www.c-span.org/program/campaign-2016/campaign-rally-with-donald-trump-and-sarah-palin/428618"
+      ],
+      "poor_reason": "rambling cadence with incoherent sequencing; partly a content/coherence pan",
+      "judgement_sources": [
+        {
+          "url": "https://reason.com/2016/01/20/sarah-palins-bizarre-rambling-speech-was/",
+          "claim": "Reason called it bizarre and rambling, issues strung together without coherent context."
+        },
+        {
+          "url": "https://www.irishtimes.com/news/world/us/sarah-palin-gives-bewildering-speech-as-she-backs-trump-1.2503462",
+          "claim": "Irish Times: boisterous and at times bewildering."
+        }
+      ],
+      "pair_id": "pair_palin_2008_2016",
+      "pair_side": "poor",
+      "notes": "ABC upload may include Trump intro; isolate Palin.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "a_palin_rnc_2008",
+      "label": "acclaimed",
+      "speaker": "Sarah Palin",
+      "title": "2008 RNC vice-presidential acceptance",
+      "date": "2008-09-03",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=UCDxXJSucF4",
+      "alt_urls": [],
+      "judgement_sources": [
+        {
+          "url": "https://content.time.com/time/specials/packages/article/0,28804,1838223_1838561,00.html",
+          "claim": "Time: poised, confident, well rehearsed, varied pacing and conversational projection."
+        },
+        {
+          "url": "https://www.startribune.com/palin-s-debut-draws-bravos-and-queries/27864389",
+          "claim": "Mostly glowing reviews of her delivery from pundits and voters."
+        }
+      ],
+      "pair_id": "pair_palin_2008_2016",
+      "pair_side": "good",
+      "notes": "C-SPAN full upload; cap 900 s.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_dukakis_debate2_1988",
+      "label": "panned",
+      "speaker": "Michael Dukakis",
+      "title": "Second Presidential Debate, death-penalty answer",
+      "date": "1988-10-13",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=DQNVICr9nMo",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=hHCUvx3tpnM"
+      ],
+      "poor_reason": "flat, emotionless, rehearsed-sounding delivery (monotone affect)",
+      "judgement_sources": [
+        {
+          "url": "https://content.time.com/time/specials/packages/article/0,28804,1844704_1844706_1844712,00.html",
+          "claim": "Time: showed no emotion, giving an analytical answer to a personal question."
+        },
+        {
+          "url": "https://www.pbs.org/newshour/spc/debatingourdestiny/doc1988.html",
+          "claim": "PBS debate history: answer widely seen as failing the moment."
+        }
+      ],
+      "pair_id": "pair_dukakis_1988",
+      "pair_side": "poor",
+      "notes": "NBC clip includes narration; isolate Dukakis answer. He reportedly had the flu that day.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "a_dukakis_dnc_1988",
+      "label": "acclaimed",
+      "speaker": "Michael Dukakis",
+      "title": "1988 DNC acceptance speech",
+      "date": "1988-07-21",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=9__LJ9EFcbg",
+      "alt_urls": [],
+      "judgement_sources": [
+        {
+          "url": "https://danratherjournalist.org/node/2700",
+          "claim": "Rather archive: acceptance speech was praised by journalists."
+        },
+        {
+          "url": "https://www.edweek.org/education/atlanta-hot-time-for-the-e-word/1988/08",
+          "claim": "Education Week: lines drew thunderously enthusiastic demonstrations in the hall."
+        }
+      ],
+      "pair_id": "pair_dukakis_1988",
+      "pair_side": "good",
+      "notes": "Fan upload (theCarbonFreeze), not official. Acclaim is moderate, not a ranked-list entry.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_rubio_nh_debate_2016",
+      "label": "panned",
+      "speaker": "Marco Rubio",
+      "title": "ABC Republican debate, repeated talking point",
+      "date": "2016-02-06",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=u9OZ8xHTX7c",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=cOOs-ft7S2c"
+      ],
+      "poor_reason": "robotic, scripted repetition of a memorised line under pressure",
+      "judgement_sources": [
+        {
+          "url": "https://www.npr.org/2016/02/07/465890256/rubios-repeated-line-shakes-up-last-debate-before-new-hampshire-votes",
+          "claim": "NPR: Rubio repeated the same rehearsed line about four times after Christie accused him of reciting."
+        },
+        {
+          "url": "https://www.pressherald.com/2016/02/07/candidates-hammer-rubio-after-robotic-debate-performance/",
+          "claim": "Coverage labelled the performance robotic."
+        }
+      ],
+      "pair_id": "pair_rubio_2012_2016",
+      "pair_side": "poor",
+      "notes": "WMUR clip includes Christie; isolate Rubio turns.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "a_rubio_rnc_2012",
+      "label": "acclaimed",
+      "speaker": "Marco Rubio",
+      "title": "2012 RNC speech introducing Romney",
+      "date": "2012-08-30",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=8svIxgki-AE",
+      "alt_urls": [],
+      "judgement_sources": [
+        {
+          "url": "https://rollcall.com/2012/08/30/marco-rubio-overcomes-awkward-lead-in-with-soaring-speech/",
+          "claim": "Roll Call headline: soaring speech that overcame an awkward lead-in."
+        },
+        {
+          "url": "https://news.wfsu.org/elections/2012-08-31/rising-gop-star-rubio-slips-up-during-rnc-speech",
+          "claim": "AP: met with cheers and applause, though one misstated line."
+        }
+      ],
+      "pair_id": "pair_rubio_2012_2016",
+      "pair_side": "good",
+      "notes": "NYT upload. Acclaim evidence thinner than other good sides.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_miliband_conf_2014",
+      "label": "panned",
+      "speaker": "Ed Miliband",
+      "title": "Labour conference leader's speech",
+      "date": "2014-09",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=TYUk6c-zZVo",
+      "alt_urls": [],
+      "poor_reason": "lost place: omitted planned deficit and immigration passages in a memorised 65-min speech",
+      "judgement_sources": [
+        {
+          "url": "https://huffingtonpost.co.uk/amp/entry/ed-miliband-conference-speech_n_5871624",
+          "claim": "Miliband admitted forgetting key sections of his memorised, note-free speech."
+        },
+        {
+          "url": "https://theweek.com/ed-miliband/63873/the-undoing-of-ed-miliband-what-labour-insiders-say",
+          "claim": "Aides said he rewrote the opening that morning instead of rehearsing."
+        }
+      ],
+      "pair_id": "pair_miliband_2012_2014",
+      "pair_side": "poor",
+      "notes": "Fan upload (John Dey). The failure is an omission, likely weak in acoustic features; useful as a hard negative.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "a_miliband_conf_2012",
+      "label": "acclaimed",
+      "speaker": "Ed Miliband",
+      "title": "'One Nation' Labour conference speech (excerpt)",
+      "date": "2012-10-02",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=ojZmE-T6BxI",
+      "alt_urls": [],
+      "judgement_sources": [
+        {
+          "url": "https://politicalquarterly.org.uk/blog/ed-milibands-bravura-performance-was-the-first-manifestation-of-post-olympic-politics/",
+          "claim": "Political Quarterly called it a bravura performance."
+        },
+        {
+          "url": "https://www.scotsman.com/news/opinion/columnists/labour-and-conservative-party-conferences-miliband-gets-ed-start-as-election-countdown-begins-1603958",
+          "claim": "Note-free 65-minute speech hailed even by right-leaning commentators."
+        }
+      ],
+      "pair_id": "pair_miliband_2012_2014",
+      "pair_side": "good",
+      "notes": "Only a 163 s excerpt found (Alan Stevens upload); full speech not located on YouTube.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_kinnock_sheffield_1992",
+      "label": "panned",
+      "speaker": "Neil Kinnock",
+      "title": "Sheffield Rally",
+      "date": "1992-04-01",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=8E6ykM_Q4F8",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=7TOgB3Smvro"
+      ],
+      "poor_reason": "triumphalist, shouted rock-star delivery ('well all right') read as overconfident",
+      "judgement_sources": [
+        {
+          "url": "https://labourlist.org/2017/04/we-were-not-alright-kinnock-describes-his-regret-over-sheffield-rally-in-1992",
+          "claim": "Kinnock later expressed regret over the rally's tone."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Sheffield_Rally",
+          "claim": "Rally widely cited as a triumphalist moment before Labour's defeat; impact contested."
+        }
+      ],
+      "pair_id": "pair_kinnock_1985_1992",
+      "pair_side": "poor",
+      "notes": "ITN clip, 143 s; partly crowd noise. Whether it changed votes is disputed.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "a_kinnock_conf_1985",
+      "label": "acclaimed",
+      "speaker": "Neil Kinnock",
+      "title": "Labour conference speech attacking Militant",
+      "date": "1985-10-01",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=Jji0JS5TPFk",
+      "alt_urls": [],
+      "judgement_sources": [
+        {
+          "url": "https://thecritic.co.uk/the-neil-kinnock-speech-that-lives-on",
+          "claim": "Retrospective: the speech that lives on and arguably saved Labour."
+        },
+        {
+          "url": "https://spectator.co.uk/article/is-labour-heading-for-another-kinnock-moment",
+          "claim": "Spectator treats it as the reference 'Kinnock moment'."
+        }
+      ],
+      "pair_id": "pair_kinnock_1985_1992",
+      "pair_side": "good",
+      "notes": "Fan upload, 391 s excerpt with heckling. Acclaim partly for content and courage.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_beverly_tm_2016",
+      "label": "acclaimed",
+      "speaker": "Aaron Beverly",
+      "title": "World Championship of Public Speaking final (2nd place)",
+      "date": "2016-08",
+      "genre": "Toastmasters",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=7bVSOJL57F8",
+      "alt_urls": [],
+      "poor_reason": "relative only: judged below the 2016 winner; not a panned speech",
+      "judgement_sources": [
+        {
+          "url": "https://toastmasters.org/magazine/magazine-issues/2016/nov2016/wcps",
+          "claim": "Toastmasters: Darren Tay won 2016; Beverly second."
+        },
+        {
+          "url": "https://toastmasters.org/resources/speech-contests/world-champions-of-public-speaking",
+          "claim": "Official champion list (Beverly 2019)."
+        }
+      ],
+      "pair_id": "pair_beverly_tm",
+      "pair_side": "poor",
+      "notes": "Label kept 'acclaimed' because a world-final runner-up is not panned; pair_side 'poor' is relative to his 2019 win. Official Toastmasters upload.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "a_beverly_tm_2019",
+      "label": "acclaimed",
+      "speaker": "Aaron Beverly",
+      "title": "An Unbelievable Story",
+      "date": "2019-08",
+      "genre": "Toastmasters",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=xmj1LBJu_Ss",
+      "alt_urls": [],
+      "judgement_sources": [
+        {
+          "url": "https://toastmasters.org/magazine/magazine-issues/2019/nov/highlights-from-world-championship-of-public-speaking",
+          "claim": "Toastmasters magazine: 2019 World Champion."
+        }
+      ],
+      "pair_id": "pair_beverly_tm",
+      "pair_side": "good",
+      "notes": "Official Toastmasters upload.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_perry_oops_2011",
+      "label": "panned",
+      "speaker": "Rick Perry",
+      "title": "CNBC Republican debate 'oops' answer",
+      "date": "2011-11-09",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=Sb9TX_ZfVcI",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=Amz8PqRlX-M"
+      ],
+      "poor_reason": "freeze: memory blank with fillers and long pauses",
+      "judgement_sources": [
+        {
+          "url": "https://abcnews.go.com/blogs/politics/2011/11/rick-perrys-debate-lapse-oops-cant-remember-department-of-energy",
+          "claim": "ABC: could not name the third agency he would eliminate."
+        },
+        {
+          "url": "https://www.npr.org/sections/itsallpolitics/2011/11/10/142206779/perry-says-he-stepped-in-it-at-debate-and-many-agree",
+          "claim": "NPR: Perry said he stepped in it, and many agreed."
+        }
+      ],
+      "notes": "Includes moderator and rival interjections.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_bay_ces_2014",
+      "label": "panned",
+      "speaker": "Michael Bay",
+      "title": "Samsung CES press conference",
+      "date": "2014-01-06",
+      "genre": "keynote",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=R4rMy1iA268",
+      "alt_urls": [],
+      "poor_reason": "freeze after teleprompter failure; stammering, then walked off",
+      "judgement_sources": [
+        {
+          "url": "https://www.cbsnews.com/news/michael-bay-walks-off-stage-ces-2014",
+          "claim": "CBS: Bay walked off stage after the teleprompter failed."
+        },
+        {
+          "url": "https://www.engadget.com/2014/01/06/michael-bay-samsung-ces-2014/",
+          "claim": "Engadget: brief, awkward appearance; Bay later said live shows aren't his thing."
+        }
+      ],
+      "notes": "80 s CNET clip; Samsung executive also speaks. Very short speech sample.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_jindal_response_2009",
+      "label": "panned",
+      "speaker": "Bobby Jindal",
+      "title": "Republican response to Obama address to Congress",
+      "date": "2009-02-24",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=QFK8aTpYAmg",
+      "alt_urls": [
+        "https://c-span.org/video/?284286-3/presidential-economic-address-response"
+      ],
+      "poor_reason": "over-earnest, stilted cadence ('animatronic' delivery)",
+      "judgement_sources": [
+        {
+          "url": "https://picayuneitem.com/?p=54469",
+          "claim": "AP via Picayune Item: earnest, awkward delivery compared to Kenneth the page; panned in style and substance."
+        },
+        {
+          "url": "https://vindyarchives.com/news/2009/feb/26/jindal-response-panned",
+          "claim": "Contemporary report: response widely panned."
+        }
+      ],
+      "notes": "C-SPAN upload.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_eastwood_rnc_2012",
+      "label": "panned",
+      "speaker": "Clint Eastwood",
+      "title": "Empty-chair RNC speech",
+      "date": "2012-08-30",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=MsndkdlXyS4",
+      "alt_urls": [
+        "https://www.c-span.org/clip/campaign/clint-eastwood-at-the-2012-republican-national-convention/3844235",
+        "https://www.youtube.com/watch?v=933hKyKNPFQ"
+      ],
+      "poor_reason": "rambling, halting improvised delivery with long pauses",
+      "judgement_sources": [
+        {
+          "url": "https://csmonitor.com/USA/Elections/From-the-Wires/2012/0831/Clint-Eastwood-brings-awkward-unscripted-RNC-performance",
+          "claim": "AP via CSM: awkward, unscripted performance."
+        },
+        {
+          "url": "https://democracynow.org/2012/8/31/clint_eastwood_delivers_rambling_rnc_speech",
+          "claim": "Described as rambling."
+        }
+      ],
+      "notes": "Some conservative outlets praised it; reception mixed but dominant pan.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_stockdale_vp_1992",
+      "label": "panned",
+      "speaker": "James Stockdale",
+      "title": "Vice-presidential debate opening",
+      "date": "1992-10-13",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=T1w3FgB0Ohc",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=BIq_mW-nSnQ"
+      ],
+      "poor_reason": "hesitant, disoriented-seeming delivery; opener landed as confusion",
+      "judgement_sources": [
+        {
+          "url": "https://www.minnpost.com/eric-black-ink/2016/10/day-veep-debate-tribute-adm-james-stockdale/",
+          "claim": "MinnPost: performance left an impression of a confused, inarticulate candidate (while arguing this was unfair)."
+        },
+        {
+          "url": "https://content.time.com/time/specials/packages/article/0,28804,1846388_1846409_1846426,00.html",
+          "claim": "Time: asked for a question to be repeated because his hearing aid was off."
+        }
+      ],
+      "notes": "78 s opening clip; full-debate alt is PBS (needs segment selection).",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_may_conf_2017",
+      "label": "panned",
+      "speaker": "Theresa May",
+      "title": "Conservative conference speech",
+      "date": "2017-10-04",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=kypGOTDoiLI",
+      "alt_urls": [],
+      "poor_reason": "voice loss and repeated coughing fits interrupting delivery",
+      "judgement_sources": [
+        {
+          "url": "https://www.cnbc.com/2017/10/04/may-speech-at-party-conference-suffers-series-of-disasters.html",
+          "claim": "CNBC: speech suffered a series of disasters including repeated coughing fits."
+        },
+        {
+          "url": "https://newstatesman.com/politics/uk/2017/10/conservative-conference-theresa-may-struggles-towards-finishing-line",
+          "claim": "New Statesman: May struggled toward the finish as her voice failed."
+        }
+      ],
+      "notes": "Guardian 69 s montage of mishaps, not continuous speech; find the full speech before grading. Some attendees felt it won sympathy.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_jeb_pleaseclap_2016",
+      "label": "panned",
+      "speaker": "Jeb Bush",
+      "title": "Hanover town hall 'please clap'",
+      "date": "2016-02-02",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=OUXvrWeQU0g",
+      "alt_urls": [],
+      "poor_reason": "low-energy delivery that failed to draw applause",
+      "judgement_sources": [
+        {
+          "url": "https://en.wikipedia.org/wiki/Please_clap",
+          "claim": "Speech met with silence; Bush asked the crowd to clap."
+        },
+        {
+          "url": "https://huffingtonpost.co.uk/amp/entry/watch-jeb-bush-in-the-saddest-political-moment-ever_n_9156870",
+          "claim": "HuffPost framed it as a low-energy campaign moment."
+        }
+      ],
+      "notes": "48 s CNN clip; the pan targets audience response as much as delivery.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_rubio_sotu_response_2013",
+      "label": "panned",
+      "speaker": "Marco Rubio",
+      "title": "Republican response to State of the Union",
+      "date": "2013-02-12",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=NLmZbBh83-I",
+      "alt_urls": [],
+      "poor_reason": "dry-mouth, strained delivery with an awkward mid-speech water break",
+      "judgement_sources": [
+        {
+          "url": "https://www.npr.org/2013/02/13/171883155/sen-rubio-parched-by-state-of-the-union-response",
+          "claim": "NPR: a parched Rubio reached off camera for water mid-speech."
+        },
+        {
+          "url": "https://politicalwire.com/2013/02/13/gulpgate/",
+          "claim": "Politico via Political Wire: appeared sweaty and dry-mouthed."
+        }
+      ],
+      "notes": "ABC upload, about 15 min; cap 900 s.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_zuckerberg_d8_2010",
+      "label": "panned",
+      "speaker": "Mark Zuckerberg",
+      "title": "D8 interview on privacy",
+      "date": "2010-06",
+      "genre": "interview",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=G4XGbZ7IrC8",
+      "alt_urls": [],
+      "poor_reason": "nervous, evasive answers; visible sweating (partly visual)",
+      "judgement_sources": [
+        {
+          "url": "https://www.huffingtonpost.com/2010/06/03/mark-zuckerberg-all-thing_n_598834.html",
+          "claim": "HuffPost: sweated heavily in the privacy hot seat."
+        },
+        {
+          "url": "https://techcrunch.com/?p=186070",
+          "claim": "TechCrunch: talked around privacy questions, visibly uneasy."
+        }
+      ],
+      "notes": "Unofficial 138 s upload; includes interviewer speech.",
+      "selection_status": "candidate_pending_download_and_grading"
+    },
+    {
+      "id": "p_gore_debate1_2000",
+      "label": "panned",
+      "speaker": "Al Gore",
+      "title": "First Presidential Debate",
+      "date": "2000-10-03",
+      "genre": "debate",
+      "mode": "default",
+      "source_url": "https://www.youtube.com/watch?v=HwQBeMUj_ps",
+      "alt_urls": [],
+      "poor_reason": "audible sighing and condescending manner while opponent spoke",
+      "judgement_sources": [
+        {
+          "url": "https://www.pbs.org/newshour/spc/debatingourdestiny/2000.html",
+          "claim": "PBS: sighing and eye-rolling appeared to hurt him in the first debate."
+        },
+        {
+          "url": "https://dailytarheel.com/article/2000/10/pundits_bush_gore_should_tweak_debate_styles",
+          "claim": "Pundits said off-camera sighing undermined his position."
+        }
+      ],
+      "notes": "Contested: Gore won several snap polls. Sighs occur during Bush's turns, so a Gore-only segment may miss the failure. Full 115-min PBS upload needs segment selection.",
+      "selection_status": "candidate_pending_download_and_grading"
+    }
+  ],
+  "dropped": [
+    {
+      "candidate": "George H.W. Bush, 1992 Richmond town hall debate vs 1988 RNC acceptance",
+      "reason": "Panned moment (checking watch) is visual; found no source describing an audio-delivery failure."
+    },
+    {
+      "candidate": "James Franco, 2011 Oscars hosting",
+      "reason": "Only official clip mixes both hosts in montage; cannot isolate Franco."
+    },
+    {
+      "candidate": "Al Gore TED 2006 as good side for a Gore pair",
+      "reason": "No source found praising its delivery; Gore kept as unpaired panned entry."
+    },
+    {
+      "candidate": "Non-winning Toastmasters semifinal rounds",
+      "reason": "Official semifinalist uploads exist but non-advancement not verified per speaker; Beverly 2016 runner-up used instead."
+    },
+    {
+      "candidate": "Michael Bloomberg, 2020 Las Vegas debate",
+      "reason": "Criticism mainly content, not delivery; no single-speaker clip verified."
+    },
+    {
+      "candidate": "Tim Kaine, 2016 VP debate interruptions",
+      "reason": "Not researched to verification."
+    }
+  ]
+}
