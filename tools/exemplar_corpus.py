@@ -164,6 +164,23 @@ def paired_stats(differences):
             "sign_test_p": p, "median_difference": statistics.median(differences) if differences else None}
 
 
+def effects_markdown(effects: dict) -> str:
+    fmt = lambda v: "n/a" if v is None else f"{v:.2f}"
+    metrics = [
+        (name, data) for name, data in effects.items() if data["auc_high"] is not None
+    ]
+    metrics.sort(key=lambda x: (-abs(x[1]["auc_high"] - 0.5), x[0]))
+
+    lines = [
+        "| metric | n acclaimed | n panned | median acclaimed | median panned | AUC | d |",
+        "|---|---|---|---|---|---|---|"
+    ]
+    for name, data in metrics:
+        lines.append(f"| {name} | {data['n_acclaimed']} | {data['n_panned']} | {fmt(data['median_acclaimed'])} | {fmt(data['median_panned'])} | {fmt(data['auc_high'])} | {fmt(data['cohen_d'])} |")
+
+    return "\n".join(lines) + "\n"
+
+
 def summarize(items):
     rows = []
     for item in items:
@@ -213,7 +230,9 @@ def main():
     ROOT.mkdir(parents=True, exist_ok=True)
     if args.action == "summarize":
         result = summarize(items)
-        write_json(args.output or ROOT / "summary.json", result)
+        out = args.output or ROOT / "summary.json"
+        write_json(out, result)
+        Path(out).with_suffix(".md").write_text(effects_markdown(result["effects"]), encoding="utf-8")
         print(json.dumps({"graded": len(result["rows"]), "missing": result["missing"]}), flush=True)
         return
     if not 1 <= args.workers <= 4:
