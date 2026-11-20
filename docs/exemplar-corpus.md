@@ -165,8 +165,49 @@ degraded copy per transform:
 
 It then regrades every copy and checks the targeted metric with `degradation_verdict`.
 
-Results: pending; the run is in progress. This section will be filled in from
-`~/.orator/corpus/exemplars/ab/ab_degrade.md`.
+Clips: Sinek, Jobs, Brown, Hettiarachchi and Obama 2004, from 60 to 180 s. The
+per-clip table is `~/.orator/corpus/exemplars/ab/ab_degrade.md`.
+
+| transform | target metric | moved as expected | overall score change, per clip |
+|---|---|---|---|
+| pace 0.8x | wpm down | 5 of 5 | +3.9, +6.5, +10.2, -1.6, -1.7 |
+| pace 1.25x | wpm up | 5 of 5 | -1.6, -2.1, -2.8, -8.9, -6.4 |
+| pitch flattened | monotone_semitones down | 5 of 5 | -7.0, -7.0, -4.5, -7.1, -5.9 |
+| dynamics compressed | energy_dynamics down | 5 of 5 | -4.5, +1.0, +0.2, -0.1, +0.4 |
+| 1.5 s mid-clause silence | midclause_pauses up | 0 of 5 | +1.2, -1.0, -0.5, +0.2, +2.0 |
+| same-speaker "um" | filler_count up | not run | no timed "um" in any of the 5 transcripts |
+
+What it shows:
+
+1. **The measures respond.** Rate, pitch range and energy all moved the right way on
+   every clip.
+2. **Slowing a fast talk raises its score.** Slowing Sinek, Jobs and Brown to 0.8x
+   *raised* their overall scores by 3.9 to 10.2 points. Pace points drove it: Sinek went
+   from 17 to 50, Jobs from 13 to 69, and Brown from 0 to 83. This is the stage pace band
+   from Finding 1. Time-stretching also moved other metrics, so this is not a pure
+   one-factor change.
+3. **Compression is not penalized.** Flattening energy dynamics cut `energy_dynamics`
+   sharply but left the overall score within 1 point on 4 of 5 clips.
+4. **The mid-clause pause detector missed every inserted mid-clause silence.**
+   `midclause_pauses` stayed 0 and `pauses_points` stayed 100 on all 5 clips, and the
+   overall score moved by 2 points or less. Raw `long_pauses` rose on only 2 of 5.
+   Re-transcribing the edited audio also moved filler counts and readability metrics,
+   so it reshuffles sentence and pause boundaries. A likely cause, not checked against
+   the edited transcripts, is that the ASR punctuates at the new gap, so the pause reads
+   as a clause or sentence boundary.
+5. **No filler test was possible.** The code searches each clip's whole source
+   transcript, and Whisper `small` timed no filled pause anywhere in the 5 transcripts.
+   The filler splice therefore had no source; `ab_degrade.md` lists it as skipped. This
+   is the same filler-dropping problem as Finding 2.
+6. **Time-stretching moves many other metrics.** It shifted 10 to 27 other metrics by
+   over 10%, which is expected for rate-dependent measures. Pitch flattening moved 3 to
+   17, and compression 1 to 9.
+
+Limits: 5 clips, one 120 s window each, one ASR pass per variant, and no repeat runs
+to measure re-ASR noise. All 5 insertion points sit between words with zero gap in
+Whisper `small` word times (for example, one word ending at 70.48 s and the next
+starting at 70.48 s). Those times are only roughly accurate, so a silence may cut into
+a word.
 
 ## What this does not change
 

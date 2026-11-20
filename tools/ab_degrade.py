@@ -22,7 +22,7 @@ TARGETS = {
     "pace_1.25x": ("wpm", "up"),
     "pitch_flat": ("monotone_semitones", "down"),
     "dynamics_compressed": ("energy_dynamics", "down"),
-    "silence_inserted": ("long_pauses", "up"),
+    "silence_inserted": ("midclause_pauses", "up"),
     "filled_pause_inserted": ("filler_count", "up"),
 }
 
@@ -69,7 +69,7 @@ def run_clip(key: str, start: float, length: float, backend) -> list[dict]:
         if not cache.is_file():
             cache.write_text(json.dumps(_grade(Path(o["path"]), backend, "stage")), encoding="utf-8")
         grades[o["transform"]] = json.loads(cache.read_text(encoding="utf-8"))
-    rows = []
+    rows = [{"clip": key, "transform": s["transform"], "skipped": s["reason"]} for s in manifest["skipped"]]
     for name, (metric, expect) in TARGETS.items():
         if name in grades and metric in grades["baseline"] and metric in grades[name]:
             v = degradation_verdict(grades["baseline"], grades[name], metric, expect)
@@ -83,6 +83,9 @@ def markdown(rows: list[dict]) -> str:
     lines = ["| clip | transform | target | baseline | edited | moved as expected | overall delta | other metrics moved >10% |",
              "|---|---|---|---|---|---|---|---|"]
     for r in rows:
+        if "skipped" in r:
+            lines.append(f"| {r['clip']} | {r['transform']} | n/a | | | skipped: {r['skipped']} | | |")
+            continue
         lines.append(f"| {r['clip']} | {r['transform']} | {r['target']} | {r['baseline']:.2f} | {r['edited']:.2f} | "
                      f"{'yes' if r['moved_as_expected'] else 'NO'} | {r['overall_delta']:+.1f} | {len(r['collateral'])} |")
     return "\n".join(lines) + "\n"
