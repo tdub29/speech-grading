@@ -161,7 +161,7 @@ def paired_stats(differences):
     p = min(1.0, 2 * sum(math.comb(n, i) for i in range(min(wins, n - wins) + 1)) / 2**n) if n else 1.0
     return {"n_pairs": len(differences), "wins": wins, "losses": n - wins,
             "ties": len(differences) - n, "direction_agreement": wins / n if n else None,
-            "sign_test_p": p, "median_difference": statistics.median(differences) if differences else None}
+            "sign_test_p": p, "wilcoxon_p": wilcoxon_exact_p(differences), "median_difference": statistics.median(differences) if differences else None}
 
 
 def effects_markdown(effects: dict) -> str:
@@ -206,6 +206,29 @@ def add_rate_metrics(metrics: dict) -> dict:
             result[f"{name}_per_1000w"] = round(metrics[name] / kwords, 3)
 
     return result
+
+
+def wilcoxon_exact_p(differences: list[float]) -> float:
+    """Exact two-sided Wilcoxon signed-rank p; zeros dropped, tied |d| get average ranks."""
+    d = [x for x in differences if x != 0]
+    n = len(d)
+    if n == 0:
+        return 1.0
+    order = sorted(range(n), key=lambda i: abs(d[i]))
+    ranks = [0.0] * n
+    i = 0
+    while i < n:
+        j = i
+        while j + 1 < n and abs(d[order[j + 1]]) == abs(d[order[i]]):
+            j += 1
+        for k in range(i, j + 1):
+            ranks[order[k]] = (i + j) / 2 + 1
+        i = j + 1
+    w_plus = sum(r for r, x in zip(ranks, d) if x > 0)
+    sums = [sum(ranks[i] for i in range(n) if mask >> i & 1) for mask in range(2 ** n)]
+    hi = sum(w >= w_plus - 1e-9 for w in sums)
+    lo = sum(w <= w_plus + 1e-9 for w in sums)
+    return round(min(1.0, 2 * min(lo, hi) / 2 ** n), 6)
 
 
 def summarize(items):
