@@ -181,6 +181,17 @@ def effects_markdown(effects: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def paired_markdown(paired: dict) -> str:
+    rows = sorted(((name, d) for name, d in paired.items()
+                   if d["n_pairs"] > 0 and d["direction_agreement"] is not None),
+                  key=lambda x: (x[1]["sign_test_p"], x[0]))
+    lines = ["| metric | pairs | good higher | good lower | ties | agreement | sign p |",
+             "|---|---|---|---|---|---|---|"]
+    lines += [f"| {n} | {d['n_pairs']} | {d['wins']} | {d['losses']} | {d['ties']} | "
+              f"{d['direction_agreement']:.2f} | {d['sign_test_p']:.3f} |" for n, d in rows]
+    return "\n".join(lines) + "\n"
+
+
 def summarize(items):
     rows = []
     for item in items:
@@ -232,7 +243,8 @@ def main():
         result = summarize(items)
         out = args.output or ROOT / "summary.json"
         write_json(out, result)
-        Path(out).with_suffix(".md").write_text(effects_markdown(result["effects"]), encoding="utf-8")
+        Path(out).with_suffix(".md").write_text(
+            effects_markdown(result["effects"]) + "\n" + paired_markdown(result["paired"]), encoding="utf-8")
         print(json.dumps({"graded": len(result["rows"]), "missing": result["missing"]}), flush=True)
         return
     if not 1 <= args.workers <= 4:

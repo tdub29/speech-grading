@@ -117,6 +117,21 @@ def pick_midclause_boundary(texts: list[str], starts: list[float], ends: list[fl
     return None
 
 
+def degradation_verdict(baseline: dict, edited: dict, target: str, expect: str, tol: float = 0.1) -> dict:
+    """Did ``target`` move in the ``expect`` direction, and which other numeric metrics moved over ``tol``?"""
+    b = baseline[target]
+    e = edited[target]
+    moved = e > b if expect == "up" else e < b
+
+    def num(v):
+        return isinstance(v, (int, float)) and not isinstance(v, bool)
+
+    collateral = sorted(k for k in baseline if k != target and k in edited
+                        and num(baseline[k]) and num(edited[k]) and baseline[k] != 0
+                        and abs(edited[k] - baseline[k]) / abs(baseline[k]) > tol)
+    return {"target": target, "baseline": b, "edited": e, "moved_as_expected": moved, "collateral": collateral}
+
+
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
