@@ -256,6 +256,22 @@ def auc_within_mode(rows: list[dict], metric: str, mode: str) -> float | None:
     return round(total_score / (len(pos) * len(neg)), 3)
 
 
+def percentile_range(values: list[float], lo: float = 10, hi: float = 90) -> tuple[float, float] | None:
+    if not values:
+        return None
+
+    v = sorted(values)
+    n = len(v)
+
+    def pct(p: float) -> float:
+        pos = (n - 1) * p / 100
+        f = int(pos)
+        c = min(f + 1, n - 1)
+        return v[f] + (v[c] - v[f]) * (pos - f)
+
+    return round(pct(lo), 2), round(pct(hi), 2)
+
+
 def summarize(items):
     rows = []
     for item in items:
@@ -275,7 +291,8 @@ def summarize(items):
                            "median_acclaimed": statistics.median(positive) if positive else None,
                            "median_panned": statistics.median(negative) if negative else None,
                            "auc_high": auc(positive, negative), "cohen_d": cohen_d(positive, negative),
-                           "auc_stage_only": auc_within_mode(rows, metric, "stage")}
+                           "auc_stage_only": auc_within_mode(rows, metric, "stage"),
+                           "acclaimed_p10_p90": percentile_range(positive)}
     pairs = {}
     for row in rows:
         if row["pair_id"]:
