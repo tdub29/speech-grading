@@ -301,6 +301,7 @@ def summarize(items):
     for metric in metrics:
         differences = [pair["good"]["metrics"][metric] - pair["poor"]["metrics"][metric]
                        for pair in pairs.values() if "good" in pair and "poor" in pair
+                       and pair["poor"]["label"] == "panned"
                        and metric in pair["good"]["metrics"] and metric in pair["poor"]["metrics"]]
         paired[metric] = paired_stats(differences)
     return {"rows": rows, "effects": effects, "paired": paired,
