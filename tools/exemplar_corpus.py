@@ -137,7 +137,7 @@ def numeric_metrics(report):
             values[key] = value
     for dimension in report["dimensions"]:
         values[f"{dimension['dimension']}_points"] = dimension["points"]
-    return values
+    return add_rate_metrics(values)
 
 
 def auc(positive, negative):
@@ -190,6 +190,22 @@ def paired_markdown(paired: dict) -> str:
     lines += [f"| {n} | {d['n_pairs']} | {d['wins']} | {d['losses']} | {d['ties']} | "
               f"{d['direction_agreement']:.2f} | {d['sign_test_p']:.3f} |" for n, d in rows]
     return "\n".join(lines) + "\n"
+
+
+def add_rate_metrics(metrics: dict) -> dict:
+    result = dict(metrics)
+    minutes = metrics.get("speaking_sec", 0) / 60
+    kwords = metrics.get("total_words", 0) / 1000
+
+    for name in ["long_pauses", "midclause_pauses", "repetitions"]:
+        if name in metrics and minutes > 0:
+            result[f"{name}_per_min"] = round(metrics[name] / minutes, 3)
+
+    for name in ["anaphora_count", "tricolon_count", "question_count"]:
+        if name in metrics and kwords > 0:
+            result[f"{name}_per_1000w"] = round(metrics[name] / kwords, 3)
+
+    return result
 
 
 def summarize(items):
