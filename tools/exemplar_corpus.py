@@ -231,6 +231,31 @@ def wilcoxon_exact_p(differences: list[float]) -> float:
     return round(min(1.0, 2 * min(lo, hi) / 2 ** n), 6)
 
 
+def auc_within_mode(rows: list[dict], metric: str, mode: str) -> float | None:
+    pos = []
+    neg = []
+
+    for row in rows:
+        if row["mode"] == mode and metric in row["metrics"]:
+            if row["label"] == "acclaimed":
+                pos.append(row["metrics"][metric])
+            elif row["label"] == "panned":
+                neg.append(row["metrics"][metric])
+
+    if not pos or not neg:
+        return None
+
+    total_score = 0
+    for a in pos:
+        for b in neg:
+            if a > b:
+                total_score += 1
+            elif a == b:
+                total_score += 0.5
+
+    return round(total_score / (len(pos) * len(neg)), 3)
+
+
 def summarize(items):
     rows = []
     for item in items:
@@ -249,7 +274,8 @@ def summarize(items):
         effects[metric] = {"n_acclaimed": len(positive), "n_panned": len(negative),
                            "median_acclaimed": statistics.median(positive) if positive else None,
                            "median_panned": statistics.median(negative) if negative else None,
-                           "auc_high": auc(positive, negative), "cohen_d": cohen_d(positive, negative)}
+                           "auc_high": auc(positive, negative), "cohen_d": cohen_d(positive, negative),
+                           "auc_stage_only": auc_within_mode(rows, metric, "stage")}
     pairs = {}
     for row in rows:
         if row["pair_id"]:
