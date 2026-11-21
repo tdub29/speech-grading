@@ -101,7 +101,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 130.7
     },
     {
       "id": "p_biden_debate_2024",
@@ -137,7 +138,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "moderator 0-3.5 s"
-      }
+      },
+      "end_sec": 66.9
     },
     {
       "id": "a_biden_sotu_2024",
@@ -168,7 +170,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "p_clinton_dnc_1988",
@@ -203,7 +206,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "a_clinton_dnc_2012",
@@ -236,7 +240,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "walk-on music with hallucinated lyrics 0-30 s"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "p_palin_endorse_2016",
@@ -270,7 +275,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "a_palin_rnc_2008",
@@ -303,7 +309,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "announcer 15-25 s"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "p_dukakis_debate2_1988",
@@ -338,7 +345,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "reason": "wrong content: commentary wrapped around debate clips (R1 rule 3); not re-sourced"
-      }
+      },
+      "end_sec": 144.7
     },
     {
       "id": "a_dukakis_dnc_1988",
@@ -371,7 +379,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "introducer 12-35 s"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "p_rubio_nh_debate_2016",
@@ -406,7 +415,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "reason": "panned moment (the memorised line repeated across turns under pressure) spans several turns, so no single contiguous Rubio excerpt contains it (Gate 2 gray zone)"
-      }
+      },
+      "end_sec": 364.6
     },
     {
       "id": "a_rubio_rnc_2012",
@@ -439,7 +449,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "announcer 6-7.5 s"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "p_miliband_conf_2014",
@@ -471,7 +482,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "a_miliband_conf_2012",
@@ -503,7 +515,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "reason": "wrong content: a commentator describes the speech for the whole clip (R1 rule 3); not re-sourced"
-      }
+      },
+      "end_sec": 162.3
     },
     {
       "id": "p_kinnock_sheffield_1992",
@@ -538,7 +551,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "reason": "wrong content: news package narrated by a reporter with short Kinnock clips (R1 rule 3); not re-sourced"
-      }
+      },
+      "end_sec": 142.7
     },
     {
       "id": "a_kinnock_conf_1985",
@@ -569,7 +583,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 390.7
     },
     {
       "id": "p_beverly_tm_2016",
@@ -603,7 +618,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "contest MC name and title 3.8-41.6 s"
-      }
+      },
+      "end_sec": 551.1
     },
     {
       "id": "a_beverly_tm_2019",
@@ -632,7 +648,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "contest MC 0-6.3 s"
-      }
+      },
+      "end_sec": 458.4
     },
     {
       "id": "p_perry_oops_2011",
@@ -695,7 +712,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "reason": "speaker cannot be isolated: longest contiguous Bay run (27.2-48.6 s) has about 30 lexical words, under 60 (R1 rule 2)"
-      }
+      },
+      "end_sec": 79.5
     },
     {
       "id": "p_jindal_response_2009",
@@ -764,7 +782,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "walk-on applause before 29 s"
-      }
+      },
+      "end_sec": 700.1
     },
     {
       "id": "p_stockdale_vp_1992",
@@ -796,7 +815,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 77.6
     },
     {
       "id": "p_may_conf_2017",
@@ -827,7 +847,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "reason": "not a contiguous recording: a 69 s montage of edited excerpts (manifest note); speaker-only contiguous excerpt not possible (R1 rule 2); full speech not re-sourced"
-      }
+      },
+      "end_sec": 68.9
     },
     {
       "id": "p_jeb_pleaseclap_2016",
@@ -887,7 +908,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 877.1
     },
     {
       "id": "p_zuckerberg_d8_2010",
@@ -919,7 +941,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "interviewers 0-102 s interleave; longest contiguous Zuckerberg run 102-137 s"
-      }
+      },
+      "end_sec": 137.1
     },
     {
       "id": "p_gore_debate1_2000",
@@ -950,7 +973,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "reason": "panned moment (audible sighing) occurs during Bush's turns, outside any Gore-only excerpt (Gate 2 gray zone; manifest note)"
-      }
+      },
+      "end_sec": 899.9
     }
   ],
   "dropped": [

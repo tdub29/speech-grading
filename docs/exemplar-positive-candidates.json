@@ -36,7 +36,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "introducer 11-27 s"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "e_kennedy_inaugural_1961",
@@ -70,7 +71,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "music and oath (Chief Justice reading, Kennedy repeating) 1-34 s"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "e_fdr_inaugural_1933",
@@ -104,7 +106,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "oath reader and repeated oath 1-47 s; unattributed 'Thank you very much' 50-54 s"
-      }
+      },
+      "end_sec": 900.0
     },
     {
       "id": "e_fdr_infamy_1941",
@@ -197,7 +200,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "applause and an unattributed 'Thank you!' before 36 s"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "e_eisenhower_farewell_1961",
@@ -227,7 +231,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "program announcer 5-10.5 s"
-      }
+      },
+      "end_sec": 900.0
     },
     {
       "id": "e_churchill_finest_1940",
@@ -251,7 +256,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 327.5
     },
     {
       "id": "e_jordan_dnc_1976",
@@ -275,7 +281,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 150.0
     },
     {
       "id": "e_obama_dnc_2004",
@@ -299,7 +306,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "e_jobs_stanford_2005",
@@ -362,7 +370,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "e_wallace_kenyon_2005",
@@ -418,7 +427,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 899.9
     },
     {
       "id": "e_robinson_ted_2006",
@@ -446,7 +456,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 900.0
     },
     {
       "id": "e_brown_ted_2010",
@@ -478,7 +489,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 900.0
     },
     {
       "id": "e_sinek_ted_2009",
@@ -506,7 +518,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 900.0
     },
     {
       "id": "e_treasure_ted_2013",
@@ -530,7 +543,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 584.3
     },
     {
       "id": "e_urban_ted_2016",
@@ -554,7 +568,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 834.1
     },
     {
       "id": "e_taylor_ted_2008",
@@ -582,7 +597,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 900.0
     },
     {
       "id": "e_adichie_ted_2009",
@@ -610,7 +626,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 900.0
     },
     {
       "id": "e_hettiarachchi_tm_2014",
@@ -636,7 +653,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "contest MC title and name 8-16 s"
-      }
+      },
+      "end_sec": 473.6
     },
     {
       "id": "e_qahtani_tm_2015",
@@ -662,7 +680,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "contest MC 2-21 s"
-      }
+      },
+      "end_sec": 685.1
     },
     {
       "id": "e_smith_tm_2018",
@@ -688,7 +707,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "contest MC 0-10.3 s"
-      }
+      },
+      "end_sec": 450.4
     },
     {
       "id": "e_romney_debate_2012",
@@ -712,7 +732,8 @@
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
-      }
+      },
+      "end_sec": 133.6
     },
     {
       "id": "e_reagan_debate_1984",
@@ -742,7 +763,8 @@
         "date": "2026-11-21",
         "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
         "bounds_note": "questioner 0-19 s"
-      }
+      },
+      "end_sec": 63.8
     }
   ]
 }
