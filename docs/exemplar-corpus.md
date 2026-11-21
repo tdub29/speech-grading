@@ -3,6 +3,20 @@
 Status: research diagnostic, 2026-11-19, independently reviewed. No scoring threshold was changed on the
 strength of this corpus (see "What this does not change").
 
+> **Data-quality correction, 2026-11-20.** A later model-pipeline data audit found 6 of
+> the 40 stage rows invalid. Four transcripts have Whisper `small` language drift:
+> e_rowling_harvard_2008, e_adichie_ted_2009, p_miliband_conf_2014 and
+> p_clinton_dnc_1988. Two sources carry the wrong content: a_miliband_conf_2012 is a
+> commentator and p_kinnock_sheffield_1992 is a news package. p_dukakis_debate2_1988
+> (default mode) is also commentary.
+>
+> At least 15 further stage rows include introducers, announcers, MCs or music, because
+> no speaker filter or excerpt bounds were applied. The pace and pause numbers below are
+> therefore contaminated and must be treated as provisional until the corpus is
+> re-verified and regraded. That includes the count of fast acclaimed talks behind
+> Finding 1. The audit record is in the workspace's private
+> `.agents/model-records/speech-grading/orator-pace-pause-2026-11-20/`.
+
 ## Question
 
 Rankings of the best speeches, plus press and coach verdicts on the worst ones, give
