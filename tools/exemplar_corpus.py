@@ -38,6 +38,39 @@ def item_id(item):
     return value
 
 
+def load_items(paths):
+    """Concatenate manifests (a list, {"speeches"} or {"candidates"}); apply pair_good_refs; ids unique."""
+    items, refs = [], {}
+    for path in paths:
+        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        if isinstance(data, dict):
+            refs.update(data.get("pair_good_refs", {}))
+            data = data.get("speeches", data.get("candidates", []))
+        items += data
+    by_id = {}
+    for item in items:
+        if item["id"] in by_id:
+            raise ValueError(f"Duplicate corpus id: {item['id']}")
+        by_id[item["id"]] = item
+    for pair, key in refs.items():
+        if key not in by_id:
+            raise ValueError(f"pair_good_refs {pair} names unknown id {key}")
+        by_id[key].update(pair_id=pair, pair_side="good")
+    return items
+
+
+def assert_committed(path):
+    """Label maturity: refuse a manifest whose bytes (CRLF-normalized) differ from its HEAD blob."""
+    path = Path(path).resolve()
+    top = subprocess.run(["git", "-C", str(path.parent), "rev-parse", "--show-toplevel"], capture_output=True, text=True)
+    if top.returncode:
+        raise RuntimeError(f"Manifest is not in a git repository: {path}")
+    rel = path.relative_to(Path(top.stdout.strip()).resolve()).as_posix()
+    head = subprocess.run(["git", "-C", top.stdout.strip(), "show", f"HEAD:{rel}"], capture_output=True)
+    if head.returncode or head.stdout.replace(b"\r\n", b"\n") != path.read_bytes().replace(b"\r\n", b"\n"):
+        raise RuntimeError(f"Manifest labels are not committed at HEAD: {rel}")
+
+
 def acquire(item):
     from speech_grading.pipeline import find_ffmpeg
     key = item_id(item)
@@ -310,15 +343,13 @@ def summarize(items):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("manifest", type=Path)
+    parser.add_argument("manifest", type=Path, nargs="+", help="one or more manifests, merged in order")
     parser.add_argument("action", choices=["acquire", "grade", "summarize"])
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--ids", nargs="+")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    items = json.loads(args.manifest.read_text(encoding="utf-8"))
-    if isinstance(items, dict):
-        items = items["speeches"]
+    items = load_items(args.manifest)
     if args.ids:
         items = [item for item in items if item["id"] in args.ids]
     ROOT.mkdir(parents=True, exist_ok=True)
@@ -330,6 +361,9 @@ def main():
             effects_markdown(result["effects"]) + "\n" + paired_markdown(result["paired"]), encoding="utf-8")
         print(json.dumps({"graded": len(result["rows"]), "missing": result["missing"]}), flush=True)
         return
+    if args.action == "grade":
+        for manifest in args.manifest:  # labels must be committed before any grade exists
+            assert_committed(manifest)
     if not 1 <= args.workers <= 4:
         parser.error("--workers must be between 1 and 4")
     def run(item):
