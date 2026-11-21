@@ -28,7 +28,15 @@
         }
       ],
       "notes": "Full restored upload mixes two historical audio recordings. Verify duration and edit provenance; prior political-corpus source vP4iY1TtS3s is a shorter excerpt, not this source.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 34.0,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "introducer 11-27 s"
+      }
     },
     {
       "id": "e_kennedy_inaugural_1961",
@@ -54,7 +62,15 @@
         }
       ],
       "notes": "Exact source also listed in political-corpus.md; cache overlap must be disclosed.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 69.0,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "music and oath (Chief Justice reading, Kennedy repeating) 1-34 s"
+      }
     },
     {
       "id": "e_fdr_inaugural_1933",
@@ -80,7 +96,15 @@
         }
       ],
       "notes": "Official archival MP3 listed as 27 minutes including program material; identify first speaker onset before 900-second cap.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 54.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "oath reader and repeated oath 1-47 s; unattributed 'Thank you very much' 50-54 s"
+      }
     },
     {
       "id": "e_fdr_infamy_1941",
@@ -102,7 +126,16 @@
         }
       ],
       "notes": "Library of Congress audio; alternate official FDR Library afdr244.mp3 includes program material.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 25.5,
+      "end_sec": 429.6,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "archive announcer 3-19 s; ends at 'Japanese Empire.'"
+      }
     },
     {
       "id": "e_reagan_challenger_1986",
@@ -124,7 +157,13 @@
         }
       ],
       "notes": "US National Archives upload, identifier 6014714. Same event as political corpus, different source.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_reagan_berlin_1987",
@@ -150,7 +189,15 @@
         }
       ],
       "notes": "LearnOutLoud links this video and an original audio download.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 35.8,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "applause and an unattributed 'Thank you!' before 36 s"
+      }
     },
     {
       "id": "e_eisenhower_farewell_1961",
@@ -172,7 +219,15 @@
         }
       ],
       "notes": "Download link verified in source HTML; web fetch timed out, local availability still unverified.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 12.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "program announcer 5-10.5 s"
+      }
     },
     {
       "id": "e_churchill_finest_1940",
@@ -190,7 +245,13 @@
         }
       ],
       "notes": "Exact source in political corpus. Recording provenance uncertain: distinguish original Commons performance, same-day broadcast, later re-recording. Acclaim of text does not establish acclaim of this recording.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_jordan_dnc_1976",
@@ -208,7 +269,13 @@
         }
       ],
       "notes": "DNC official upload verified; inspect whether entire speech or excerpt. Texas Southern University Archives separately praises delivery, presence, command of crowd, not a second ranking.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_obama_dnc_2004",
@@ -226,7 +293,13 @@
         }
       ],
       "notes": "Exact source in political corpus. Coach selection rather than all-time ranked list; broad acclaim supported by contemporary and retrospective reporting.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_jobs_stanford_2005",
@@ -252,7 +325,16 @@
         }
       ],
       "notes": "Stanford upload; also analysed by Six Minutes. TED has a separate hosted cut, do not count it twice.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 19.5,
+      "end_sec": 872.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "program announcer 7-11 s; copyright notice after 889 s"
+      }
     },
     {
       "id": "e_rowling_harvard_2008",
@@ -274,7 +356,13 @@
         }
       ],
       "notes": "Speaker website links Harvard upload. TED hosts same event under shortened title.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_wallace_kenyon_2005",
@@ -296,7 +384,13 @@
         }
       ],
       "notes": "Full audio upload title verified; avoid the nine-minute cinematic edit. Original recording sound quality and provenance remain checks.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_mcraven_texas_2014",
@@ -318,7 +412,13 @@
         }
       ],
       "notes": "Official university upload. Texas Exes alternate pxBQLFLei70. NPR membership must be verified in full page before analysis inclusion.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_robinson_ted_2006",
@@ -340,7 +440,13 @@
         }
       ],
       "notes": "Official TED lists: popularity and editorial praise are different label channels; same publisher family. YouTube alternate iG9CE55wbtY.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_brown_ted_2010",
@@ -366,7 +472,13 @@
         }
       ],
       "notes": "TEDxHouston event. Popularity does not independently validate delivery.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_sinek_ted_2009",
@@ -388,7 +500,13 @@
         }
       ],
       "notes": "TEDxPuget Sound event; source page identifies editor selection.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_treasure_ted_2013",
@@ -406,7 +524,13 @@
         }
       ],
       "notes": "Contains vocal demonstrations and exercises. These are target content, not a uniform natural speech sample; tag before comparing prosody.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_urban_ted_2016",
@@ -424,7 +548,13 @@
         }
       ],
       "notes": "Current official popularity playlist; do not invent a numerical rank from page order.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_taylor_ted_2008",
@@ -446,7 +576,13 @@
         }
       ],
       "notes": "Praise is editorial jaw-dropping playlist membership, not a top viewer-rating claim.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_adichie_ted_2009",
@@ -468,7 +604,13 @@
         }
       ],
       "notes": "Editorial selections; source article names this exact TED talk.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_hettiarachchi_tm_2014",
@@ -486,7 +628,15 @@
         }
       ],
       "notes": "Speaker full winning-speech upload. Championship title independently verified on official Toastmasters list; Moxie and WEF discuss winning speech.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 34.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "contest MC title and name 8-16 s"
+      }
     },
     {
       "id": "e_qahtani_tm_2015",
@@ -504,7 +654,15 @@
         }
       ],
       "notes": "Confident Presenting upload, not Toastmasters-owned despite title. Verify intro/outro trim. Official title independently verified.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 36.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "contest MC 2-21 s"
+      }
     },
     {
       "id": "e_smith_tm_2018",
@@ -522,7 +680,15 @@
         }
       ],
       "notes": "Official Toastmasters upload and magazine report. Closing sung excerpt is not ordinary spoken prosody.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 23.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "contest MC 0-10.3 s"
+      }
     },
     {
       "id": "e_romney_debate_2012",
@@ -540,7 +706,13 @@
         }
       ],
       "notes": "Standalone Wall Street Journal clip; victory poll applies whole debate, not validated quality of this closing excerpt. Trim moderator if present.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "e_reagan_debate_1984",
@@ -562,7 +734,15 @@
         }
       ],
       "notes": "Celebrated recovery moment, not claim of unanimous whole-debate victory. Short clip includes questioner; isolate Reagan answer and exclude moderator speech.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 19.8,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "questioner 0-19 s"
+      }
     }
   ]
 }

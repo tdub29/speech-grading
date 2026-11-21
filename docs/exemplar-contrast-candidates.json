@@ -53,7 +53,16 @@
       "pair_id": "pair_reagan_1984",
       "pair_side": "poor",
       "notes": "Clip contains both closing statements (Mondale's too); isolate Reagan. Full-debate alt is the Reagan Library upload. Good side is the second debate (Oct 21) in the acclaimed set.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 30.8,
+      "end_sec": 299.6,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "moderator 0-30.7 s (interleaved Reagan lines excluded as not contiguous); Mondale's closing from 300 s"
+      }
     },
     {
       "id": "p_obama_debate1_2012",
@@ -86,7 +95,13 @@
       "pair_id": "pair_obama_2004_2012",
       "pair_side": "poor",
       "notes": "CNN closing-statement clip; full-debate alts include moderator and Romney.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "p_biden_debate_2024",
@@ -114,7 +129,15 @@
       "pair_id": "pair_biden_2024",
       "pair_side": "poor",
       "notes": "Primary is a 68 s Fox Business clip of the debt answer; alt is the CNN full debate (90 min, needs start/end selection).",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 4.1,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "moderator 0-3.5 s"
+      }
     },
     {
       "id": "a_biden_sotu_2024",
@@ -139,7 +162,13 @@
       "pair_id": "pair_biden_2024",
       "pair_side": "good",
       "notes": "Some commentators (e.g. Noonan) still noted blurred words; acclaim is relative to his subdued appearances. Trim intro/applause; cap 900 s.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "p_clinton_dnc_1988",
@@ -168,7 +197,13 @@
       "pair_id": "pair_clinton_1988_2012",
       "pair_side": "poor",
       "notes": "Clinton Library upload. Closing phrase reported as 'in conclusion' or 'in closing' in different sources.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "a_clinton_dnc_2012",
@@ -193,7 +228,15 @@
       "pair_id": "pair_clinton_1988_2012",
       "pair_side": "good",
       "notes": "Also long (about 48 min) yet praised. C-SPAN upload. Cap 900 s.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 32.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "walk-on music with hallucinated lyrics 0-30 s"
+      }
     },
     {
       "id": "p_palin_endorse_2016",
@@ -221,7 +264,13 @@
       "pair_id": "pair_palin_2008_2016",
       "pair_side": "poor",
       "notes": "ABC upload may include Trump intro; isolate Palin.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "a_palin_rnc_2008",
@@ -246,7 +295,15 @@
       "pair_id": "pair_palin_2008_2016",
       "pair_side": "good",
       "notes": "C-SPAN full upload; cap 900 s.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 26.0,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "announcer 15-25 s"
+      }
     },
     {
       "id": "p_dukakis_debate2_1988",
@@ -274,7 +331,14 @@
       "pair_id": "pair_dukakis_1988",
       "pair_side": "poor",
       "notes": "NBC clip includes narration; isolate Dukakis answer. He reportedly had the flu that day.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "fail",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "reason": "wrong content: commentary wrapped around debate clips (R1 rule 3); not re-sourced"
+      }
     },
     {
       "id": "a_dukakis_dnc_1988",
@@ -299,7 +363,15 @@
       "pair_id": "pair_dukakis_1988",
       "pair_side": "good",
       "notes": "Fan upload (theCarbonFreeze), not official. Acclaim is moderate, not a ranked-list entry.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 35.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "introducer 12-35 s"
+      }
     },
     {
       "id": "p_rubio_nh_debate_2016",
@@ -327,7 +399,14 @@
       "pair_id": "pair_rubio_2012_2016",
       "pair_side": "poor",
       "notes": "WMUR clip includes Christie; isolate Rubio turns.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "fail",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "reason": "panned moment (the memorised line repeated across turns under pressure) spans several turns, so no single contiguous Rubio excerpt contains it (Gate 2 gray zone)"
+      }
     },
     {
       "id": "a_rubio_rnc_2012",
@@ -352,7 +431,15 @@
       "pair_id": "pair_rubio_2012_2016",
       "pair_side": "good",
       "notes": "NYT upload. Acclaim evidence thinner than other good sides.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 13.0,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "announcer 6-7.5 s"
+      }
     },
     {
       "id": "p_miliband_conf_2014",
@@ -378,7 +465,13 @@
       "pair_id": "pair_miliband_2012_2014",
       "pair_side": "poor",
       "notes": "Fan upload (John Dey). The failure is an omission, likely weak in acoustic features; useful as a hard negative.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "a_miliband_conf_2012",
@@ -403,7 +496,14 @@
       "pair_id": "pair_miliband_2012_2014",
       "pair_side": "good",
       "notes": "Only a 163 s excerpt found (Alan Stevens upload); full speech not located on YouTube.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "fail",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "reason": "wrong content: a commentator describes the speech for the whole clip (R1 rule 3); not re-sourced"
+      }
     },
     {
       "id": "p_kinnock_sheffield_1992",
@@ -431,7 +531,14 @@
       "pair_id": "pair_kinnock_1985_1992",
       "pair_side": "poor",
       "notes": "ITN clip, 143 s; partly crowd noise. Whether it changed votes is disputed.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "fail",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "reason": "wrong content: news package narrated by a reporter with short Kinnock clips (R1 rule 3); not re-sourced"
+      }
     },
     {
       "id": "a_kinnock_conf_1985",
@@ -456,7 +563,13 @@
       "pair_id": "pair_kinnock_1985_1992",
       "pair_side": "good",
       "notes": "Fan upload, 391 s excerpt with heckling. Acclaim partly for content and courage.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "p_beverly_tm_2016",
@@ -482,7 +595,15 @@
       "pair_id": "pair_beverly_tm",
       "pair_side": "poor",
       "notes": "Label kept 'acclaimed' because a world-final runner-up is not panned; pair_side 'poor' is relative to his 2019 win. Official Toastmasters upload.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 48.3,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "contest MC name and title 3.8-41.6 s"
+      }
     },
     {
       "id": "a_beverly_tm_2019",
@@ -503,7 +624,15 @@
       "pair_id": "pair_beverly_tm",
       "pair_side": "good",
       "notes": "Official Toastmasters upload.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 17.8,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "contest MC 0-6.3 s"
+      }
     },
     {
       "id": "p_perry_oops_2011",
@@ -529,7 +658,13 @@
         }
       ],
       "notes": "Includes moderator and rival interjections.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "p_bay_ces_2014",
@@ -553,7 +688,14 @@
         }
       ],
       "notes": "80 s CNET clip; Samsung executive also speaks. Very short speech sample.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "fail",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "reason": "speaker cannot be isolated: longest contiguous Bay run (27.2-48.6 s) has about 30 lexical words, under 60 (R1 rule 2)"
+      }
     },
     {
       "id": "p_jindal_response_2009",
@@ -579,7 +721,15 @@
         }
       ],
       "notes": "C-SPAN upload.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "end_sec": 739.0,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "network anchor after 740 s"
+      }
     },
     {
       "id": "p_eastwood_rnc_2012",
@@ -606,7 +756,15 @@
         }
       ],
       "notes": "Some conservative outlets praised it; reception mixed but dominant pan.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 28.5,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "walk-on applause before 29 s"
+      }
     },
     {
       "id": "p_stockdale_vp_1992",
@@ -632,7 +790,13 @@
         }
       ],
       "notes": "78 s opening clip; full-debate alt is PBS (needs segment selection).",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "p_may_conf_2017",
@@ -656,7 +820,14 @@
         }
       ],
       "notes": "Guardian 69 s montage of mishaps, not continuous speech; find the full speech before grading. Some attendees felt it won sympathy.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "fail",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "reason": "not a contiguous recording: a 69 s montage of edited excerpts (manifest note); speaker-only contiguous excerpt not possible (R1 rule 2); full speech not re-sourced"
+      }
     },
     {
       "id": "p_jeb_pleaseclap_2016",
@@ -680,7 +851,13 @@
         }
       ],
       "notes": "48 s CNN clip; the pan targets audience response as much as delivery.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "p_rubio_sotu_response_2013",
@@ -704,7 +881,13 @@
         }
       ],
       "notes": "ABC upload, about 15 min; cap 900 s.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+      }
     },
     {
       "id": "p_zuckerberg_d8_2010",
@@ -728,7 +911,15 @@
         }
       ],
       "notes": "Unofficial 138 s upload; includes interviewer speech.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "start_sec": 102.0,
+      "content_check": {
+        "result": "pending",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "bounds_note": "interviewers 0-102 s interleave; longest contiguous Zuckerberg run 102-137 s"
+      }
     },
     {
       "id": "p_gore_debate1_2000",
@@ -752,7 +943,14 @@
         }
       ],
       "notes": "Contested: Gore won several snap polls. Sighs occur during Bush's turns, so a Gore-only segment may miss the failure. Full 115-min PBS upload needs segment selection.",
-      "selection_status": "candidate_pending_download_and_grading"
+      "selection_status": "candidate_pending_download_and_grading",
+      "content_check": {
+        "result": "fail",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-21",
+        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "reason": "panned moment (audible sighing) occurs during Bush's turns, outside any Gore-only excerpt (Gate 2 gray zone; manifest note)"
+      }
     }
   ],
   "dropped": [
