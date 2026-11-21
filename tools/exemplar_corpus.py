@@ -20,6 +20,7 @@ import threading
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 ROOT = Path.home() / ".orator" / "corpus" / "exemplars"
+FROM_AUDIO = None  # --from-audio: local WAV directory acquire cuts excerpts from
 _THREAD = threading.local()
 
 
@@ -71,22 +72,86 @@ def assert_committed(path):
         raise RuntimeError(f"Manifest labels are not committed at HEAD: {rel}")
 
 
+# The 30 political-corpus events (~/.orator/corpus/manifest.json) that set the incumbent stage band;
+# a held-out item may not be one of them. The manifest names no PMQs speakers, so d_uk_pmqs blocks by URL and id only.
+POLITICAL_CORPUS_EVENTS = {
+    "s_kennedy_inaugural_1961": [("kennedy", 1961)], "s_reagan_inaugural_1981": [("reagan", 1981)],
+    "s_reagan_challenger_1986": [("reagan", 1986)], "s_clinton_inaugural_1993": [("clinton", 1993)],
+    "s_bush_911_address_2001": [("bush", 2001)], "s_obama_dnc_2004": [("obama", 2004)],
+    "s_obama_inaugural_2009": [("obama", 2009)], "s_obama_race_2008": [("obama", 2008)],
+    "s_trump_inaugural_2017": [("trump", 2017)], "s_biden_inaugural_2021": [("biden", 2021)],
+    "s_obama_sotu_2016": [("obama", 2016)], "s_trump_sotu_2019": [("trump", 2019)],
+    "s_biden_sotu_2023": [("biden", 2023)], "s_mlk_dream_1963": [("king", 1963)],
+    "s_thatcher_lady_1980": [("thatcher", 1980)], "s_churchill_finest_hour": [("churchill", 1940)],
+    "s_obama_farewell_2017": [("obama", 2017)], "s_bernie_dnc_2016": [("sanders", 2016)],
+    "s_michelle_obama_dnc_2016": [("obama", 2016)], "s_aoc_floor_2020": [("ocasio-cortez", 2020)],
+    "d_kennedy_nixon_1960": [("kennedy", 1960), ("nixon", 1960)],
+    "d_reagan_carter_1980": [("reagan", 1980), ("carter", 1980)],
+    "d_bush_gore_2000": [("bush", 2000), ("gore", 2000)], "d_obama_mccain_2008": [("obama", 2008), ("mccain", 2008)],
+    "d_obama_romney_2012": [("obama", 2012), ("romney", 2012)], "d_trump_clinton_2016": [("trump", 2016), ("clinton", 2016)],
+    "d_trump_biden_2020": [("trump", 2020), ("biden", 2020)], "d_biden_ryan_vp_2012": [("biden", 2012), ("ryan", 2012)],
+    "d_harris_pence_vp_2020": [("harris", 2020), ("pence", 2020)], "d_uk_pmqs": [],
+}
+
+
+def surname(name):
+    tokens = [t for t in name.lower().replace(".", "").replace(",", "").split() if t not in ("jr", "sr", "ii", "iii")]
+    return tokens[-1]
+
+
+def assert_heldout_disjoint(development, heldout, audio_sha256, political_urls, political_events=POLITICAL_CORPUS_EVENTS):
+    """R5 freeze assert: a held-out item shares no id, audio, URL, speaker or event with development,
+    and no id, URL or event (surname, year) with the political corpus. Raises on the first offender."""
+    dev_ids = {i["id"] for i in development}
+    dev_audio = {audio_sha256[i["id"]] for i in development if i["id"] in audio_sha256}
+    dev_urls = {i["source_url"] for i in development}
+    dev_speakers = {surname(i["speaker"]) for i in development}
+    blocked_events = {(surname(i["speaker"]), int(i["date"][:4])) for i in development}
+    blocked_events |= {e for events in political_events.values() for e in events}
+    for item in heldout:
+        key, who = item["id"], surname(item["speaker"])
+        checks = [(key in dev_ids or key in political_events, "id"),
+                  (audio_sha256.get(key) in dev_audio, "audio sha256"),
+                  (item["source_url"] in dev_urls or item["source_url"] in political_urls, "source url"),
+                  (who in dev_speakers, "speaker"),
+                  ((who, int(item["date"][:4])) in blocked_events, "event")]
+        for failed, reason in checks:
+            if failed:
+                raise ValueError(f"Held-out item {key} shares its {reason} with development or the political corpus")
+
+
+def assert_one_insertion_per_source(events):
+    """R5: each held-out source contributes at most one silence-insertion event."""
+    seen = set()
+    for event in events:
+        if event["source_id"] in seen:
+            raise ValueError(f"More than one insertion event from {event['source_id']}")
+        seen.add(event["source_id"])
+
+
 def acquire(item):
     from speech_grading.pipeline import find_ffmpeg
     key = item_id(item)
     destination = ROOT / "audio" / f"{key}.wav"
     destination.parent.mkdir(parents=True, exist_ok=True)
-    if destination.is_file():
-        return {"id": key, "status": "cached", "audio": str(destination)}
     start = float(item.get("start_sec", 0))
     duration = min(900.0, float(item.get("end_sec", start + 900)) - start)
     if not math.isfinite(start) or not math.isfinite(duration) or start < 0 or duration <= 0:
         raise ValueError(f"Invalid clip bounds for {key}")
+    bounds_path = destination.with_suffix(".bounds.json")
+    bounds = {"start_sec": start, "max_duration_sec": duration}
+    if destination.is_file() and (not bounds_path.is_file() and not item.get("start_sec") and not item.get("end_sec")
+                                  or bounds_path.is_file() and json.loads(bounds_path.read_text(encoding="utf-8")) == bounds):
+        return {"id": key, "status": "cached", "audio": str(destination)}
     ffmpeg = find_ffmpeg()
     if not ffmpeg:
         raise RuntimeError("ffmpeg unavailable")
     source = None
-    if item.get("existing_id"):
+    if FROM_AUDIO is not None:  # cut the excerpt from an already-pinned local WAV (same time base)
+        source = FROM_AUDIO / f"{key}.wav"
+        if not source.is_file():
+            raise RuntimeError(f"No local source audio for {key}")
+    elif item.get("existing_id"):
         source = ROOT.parent / f"{item['existing_id']}.mp3"
         if not source.is_file():
             source = None
@@ -115,45 +180,63 @@ def acquire(item):
     if result.returncode or not destination.is_file():
         destination.unlink(missing_ok=True)
         raise RuntimeError(result.stderr.strip()[-1000:])
+    write_json(bounds_path, bounds)  # a later bound change re-cuts instead of reusing this excerpt
     return {"id": key, "status": "acquired", "audio": str(destination),
             "source_url": item["source_url"], "start_sec": item.get("start_sec", 0), "cap_sec": duration}
 
 
-def grade(item):
-    from speech_grading.asr.faster_whisper_backend import FasterWhisperBackend
+def asr_provenance(audio):
+    """What a cached transcript must match to be reused: engine, model, language, exact audio bytes."""
+    import hashlib
     from speech_grading.config import Config
-    from speech_grading.pipeline import run_on_transcript
-    from speech_grading.schema import Transcript, derive_transcript_fields
+    return {"engine": "faster-whisper", "model": Config().asr_model_size, "language": "en",
+            "audio_sha256": hashlib.sha256(Path(audio).read_bytes()).hexdigest()}
+
+
+def _audio(item):
     key = item_id(item)
-    output = ROOT / "grades" / f"{key}.json"
-    if output.is_file():
-        return {"id": key, "status": "cached"}
     audio = Path(item.get("audio_path", ROOT / "audio" / f"{key}.wav")).resolve()
     if not audio.is_relative_to(ROOT.resolve()) or not audio.is_file():
         raise ValueError(f"Missing or nonlocal corpus audio: {key}")
+    return key, audio
+
+
+def transcribe(item):
+    """ASR only (no scoring), so content can be checked before any grade exists."""
+    from speech_grading.asr.faster_whisper_backend import FasterWhisperBackend
+    from speech_grading.config import Config
+    from speech_grading.schema import Transcript, derive_transcript_fields
+    key, audio = _audio(item)
     transcript_path = ROOT / "transcripts" / f"{key}.json"
-    provenance = "new small ASR"
-    if transcript_path.is_file():
+    provenance_path = ROOT / "transcripts" / f"{key}.asr.json"
+    provenance = asr_provenance(audio)
+    if (transcript_path.is_file() and provenance_path.is_file()
+            and json.loads(provenance_path.read_text(encoding="utf-8")) == provenance):
         transcript = Transcript.model_validate_json(transcript_path.read_text(encoding="utf-8"))
-        provenance = "cached small ASR"
     else:
-        existing = ROOT.parent / "tx" / f"{item.get('existing_id', '__none__')}.json"
-        if existing.is_file() and float(item.get("start_sec", 0)) == 0 and not item.get("end_sec"):
-            transcript = Transcript.model_validate_json(existing.read_text(encoding="utf-8"))
-            provenance = "prior political corpus small ASR, exact source"
-        else:
-            if not hasattr(_THREAD, "backend"):
-                _THREAD.backend = FasterWhisperBackend(model_size="small")
-            transcript = _THREAD.backend.transcribe(str(audio))
+        if not hasattr(_THREAD, "backend"):
+            _THREAD.backend = FasterWhisperBackend(model_size=Config().asr_model_size)
+        transcript = _THREAD.backend.transcribe(str(audio))
         transcript.audio_path = str(audio)
-        transcript = derive_transcript_fields(transcript)
-        write_json(transcript_path, transcript.model_dump())
+        write_json(transcript_path, derive_transcript_fields(transcript).model_dump())
+        write_json(provenance_path, provenance)
     transcript.audio_path = str(audio)
-    transcript = derive_transcript_fields(transcript)
+    return derive_transcript_fields(transcript), provenance
+
+
+def grade(item):
+    from speech_grading.config import Config
+    from speech_grading.pipeline import run_on_transcript
+    key, _ = _audio(item)
+    output = ROOT / "grades" / f"{key}.json"
+    if output.is_file():
+        return {"id": key, "status": "cached"}
+    if item.get("content_check", {}).get("result") != "pass":
+        raise ValueError(f"No passing committed content check: {key}")
+    transcript, provenance = transcribe(item)
     if not transcript.words:
         raise ValueError(f"No recognized speech: {key}")
-    cfg = Config(asr_model_size="small", enable_acoustic=True, use_llm=False,
-                 mode=item.get("mode", "stage"))
+    cfg = Config(enable_acoustic=True, use_llm=False, mode=item.get("mode", "stage"))
     report = run_on_transcript(transcript, cfg)
     if not any(d.dimension == "prosody" for d in report.dimensions):
         raise RuntimeError(f"Requested acoustic measurements missing: {key}")
@@ -344,11 +427,16 @@ def summarize(items):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", type=Path, nargs="+", help="one or more manifests, merged in order")
-    parser.add_argument("action", choices=["acquire", "grade", "summarize"])
+    parser.add_argument("action", choices=["acquire", "transcribe", "grade", "summarize"])
+    parser.add_argument("--root", type=Path, help="corpus root (default ~/.orator/corpus/exemplars)")
+    parser.add_argument("--from-audio", type=Path, help="acquire excerpts from DIR/<id>.wav, no download")
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--ids", nargs="+")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
+    global ROOT, FROM_AUDIO
+    ROOT = args.root.resolve() if args.root else ROOT
+    FROM_AUDIO = args.from_audio.resolve() if args.from_audio else None
     items = load_items(args.manifest)
     if args.ids:
         items = [item for item in items if item["id"] in args.ids]
@@ -361,14 +449,17 @@ def main():
             effects_markdown(result["effects"]) + "\n" + paired_markdown(result["paired"]), encoding="utf-8")
         print(json.dumps({"graded": len(result["rows"]), "missing": result["missing"]}), flush=True)
         return
-    if args.action == "grade":
+    if args.action in ("acquire", "transcribe", "grade"):
         for manifest in args.manifest:  # labels must be committed before any grade exists
             assert_committed(manifest)
     if not 1 <= args.workers <= 4:
         parser.error("--workers must be between 1 and 4")
     def run(item):
         try:
-            result = (acquire if args.action == "acquire" else grade)(item)
+            action = {"acquire": acquire, "grade": grade,
+                      "transcribe": lambda i: {"id": i["id"], "status": "transcribed",
+                                               "words": len(transcribe(i)[0].words)}}[args.action]
+            result = action(item)
         except Exception as exc:
             result = {"id": item["id"], "status": "failed", "error": str(exc)}
         write_json(ROOT / "status" / f"{args.action}-{item_id(item)}.json", result)

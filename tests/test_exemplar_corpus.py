@@ -85,3 +85,102 @@ def test_assert_committed_refuses_uncommitted_labels(tmp_path):
     outside.write_text("[]", encoding="utf-8")
     with pytest.raises(RuntimeError):
         corpus.assert_committed(outside)
+
+
+# --- 2026-11-21 model change orator-pace-pause: medium + English ASR, excerpt bounds, R5 asserts ---
+
+class _CountingBackend:
+    def __init__(self):
+        self.calls = 0
+
+    def transcribe(self, path):
+        from speech_grading.schema import Transcript, Word
+        self.calls += 1
+        words = [Word(text=w, start=i * .5, end=i * .5 + .4, confidence=.9, normalized=w)
+                 for i, w in enumerate(["we", "choose", "to", "go"])]
+        return Transcript(words=words, audio_path=path, engine="faster-whisper")
+
+
+def _corpus_root(tmp_path, monkeypatch, audio=b"RIFF-one"):
+    monkeypatch.setattr(corpus, "ROOT", tmp_path)
+    (tmp_path / "audio").mkdir()
+    (tmp_path / "audio" / "x1.wav").write_bytes(audio)
+    backend = _CountingBackend()
+    monkeypatch.setattr(corpus._THREAD, "backend", backend, raising=False)
+    return backend
+
+
+def test_cached_transcript_reused_only_with_matching_provenance(tmp_path, monkeypatch):
+    backend = _corpus_root(tmp_path, monkeypatch)
+    item = {"id": "x1"}
+    _, provenance = corpus.transcribe(item)
+    assert provenance["model"] == "medium" and provenance["language"] == "en"
+    corpus.transcribe(item)
+    assert backend.calls == 1  # same audio bytes and ASR config: cache hit
+    (tmp_path / "audio" / "x1.wav").write_bytes(b"RIFF-two")
+    corpus.transcribe(item)
+    assert backend.calls == 2  # re-cut excerpt: new sha256, re-transcribed
+    stale = json.loads((tmp_path / "transcripts" / "x1.asr.json").read_text(encoding="utf-8"))
+    stale["model"] = "small"
+    (tmp_path / "transcripts" / "x1.asr.json").write_text(json.dumps(stale), encoding="utf-8")
+    corpus.transcribe(item)
+    assert backend.calls == 3  # a small-model transcript is never reused under medium
+    (tmp_path / "transcripts" / "x1.asr.json").unlink()
+    corpus.transcribe(item)
+    assert backend.calls == 4  # no provenance, no reuse
+
+
+def test_grade_refuses_items_without_a_passing_content_check(tmp_path, monkeypatch):
+    backend = _corpus_root(tmp_path, monkeypatch)
+    for check in (None, {"result": "fail", "reason": "commentator"}, {"result": "pending"}):
+        item = {"id": "x1", "mode": "stage"} | ({"content_check": check} if check else {})
+        with pytest.raises(ValueError, match="content check"):
+            corpus.grade(item)
+    assert backend.calls == 0 and not (tmp_path / "grades").exists()
+
+
+def test_acquire_recuts_excerpt_when_bounds_change(tmp_path, monkeypatch):
+    import numpy as np
+    import soundfile as sf
+    from speech_grading.pipeline import find_ffmpeg
+    if not find_ffmpeg():
+        pytest.skip("ffmpeg unavailable")
+    source = tmp_path / "src"
+    source.mkdir()
+    sf.write(source / "x1.wav", np.zeros(16000 * 4, dtype="float32"), 16000)
+    monkeypatch.setattr(corpus, "ROOT", tmp_path / "root")
+    monkeypatch.setattr(corpus, "FROM_AUDIO", source)
+    assert corpus.acquire({"id": "x1", "source_url": "local", "start_sec": 1, "end_sec": 2})["status"] == "acquired"
+    assert sf.info(tmp_path / "root/audio/x1.wav").duration == pytest.approx(1, abs=.01)
+    assert corpus.acquire({"id": "x1", "source_url": "local", "start_sec": 1, "end_sec": 2})["status"] == "cached"
+    assert corpus.acquire({"id": "x1", "source_url": "local", "start_sec": .5, "end_sec": 3})["status"] == "acquired"
+    assert sf.info(tmp_path / "root/audio/x1.wav").duration == pytest.approx(2.5, abs=.01)
+
+
+def _person(key, speaker, date, url):
+    return {"id": key, "speaker": speaker, "date": date, "source_url": url}
+
+
+def test_heldout_must_be_disjoint_from_development_and_political_corpus():
+    assert corpus.surname("Martin Luther King Jr.") == "king"
+    dev = [_person("e_a", "Ann Lee", "2010-05-01", "u/a")]
+    political = {"u/p"}
+    clean = _person("h_b", "Bo Diaz", "2015-01-01", "u/b")
+    corpus.assert_heldout_disjoint(dev, [clean], {"e_a": "aa", "h_b": "bb"}, political)
+    bad = {
+        "id": clean | {"id": "e_a"},
+        "audio sha256": clean,
+        "source url": clean | {"source_url": "u/p"},
+        "speaker": clean | {"speaker": "Carl Lee"},
+        "event": clean | {"speaker": "Barack Obama", "date": "2004-07-27"},
+    }
+    for reason, item in bad.items():
+        sha = {"e_a": "aa", item["id"]: "aa" if reason == "audio sha256" else "cc"}
+        with pytest.raises(ValueError, match=reason):
+            corpus.assert_heldout_disjoint(dev, [item], sha, political)
+
+
+def test_one_insertion_event_per_heldout_source():
+    corpus.assert_one_insertion_per_source([{"source_id": "a"}, {"source_id": "b"}])
+    with pytest.raises(ValueError):
+        corpus.assert_one_insertion_per_source([{"source_id": "a"}, {"source_id": "a"}])

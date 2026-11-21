@@ -4,7 +4,9 @@ Standard Whisper deletes fillers; we counteract that with verbatim decode settin
 ``word_timestamps=True`` (gives per-word start/end/probability),
 ``condition_on_previous_text=False`` (stops cross-window "cleanup"), and a
 filler-laden ``initial_prompt`` to prime the model to keep um/uh. faster-whisper is
-installed only when this backend is actually used (lazy import).
+installed only when this backend is actually used (lazy import). Decoding is pinned to
+English (``language="en"``) because unpinned language detection drifted English speech
+into other languages on long recordings.
 """
 
 from __future__ import annotations
@@ -19,14 +21,16 @@ _VERBATIM_PROMPT = "Umm, uh, like, you know, I mean, so, basically, er, hmm..."
 class FasterWhisperBackend(ASRBackend):
     engine_id = "faster-whisper"
 
-    def __init__(self, model_size: str = "large-v3", device: str = "cpu",
-                 compute_type: str = "int8", vad_filter: bool = False) -> None:
+    def __init__(self, model_size: str = "medium", device: str = "cpu",
+                 compute_type: str = "int8", vad_filter: bool = False,
+                 language: str | None = "en") -> None:
         self.model_size = model_size
         self.device = device
         self.compute_type = compute_type
         # Off by default so single-file baselines stay put; multitrack turns it on so
         # long silent stretches of a per-speaker track do not hallucinate words.
         self.vad_filter = vad_filter
+        self.language = language  # None restores Whisper's own language detection
         self._model = None  # loaded once, reused across files (multitrack transcribes N)
 
     def transcribe(self, audio_path: str) -> Transcript:
@@ -40,6 +44,7 @@ class FasterWhisperBackend(ASRBackend):
             condition_on_previous_text=False,
             initial_prompt=_VERBATIM_PROMPT,
             vad_filter=self.vad_filter,
+            language=self.language,
         )
 
         raw_words = []

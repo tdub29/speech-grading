@@ -64,7 +64,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p.add_argument("--out-dir", default="orator-group",
                    help="--group output folder (default: orator-group)")
     p.add_argument("--asr-model", default=None,
-                   help="faster-whisper model size (default: large-v3; e.g. small.en for speed)")
+                   help="faster-whisper model size (default: medium, decoded as English; e.g. small.en for speed)")
     p.add_argument("--diarize", action="store_true",
                    help="one shared mic (stage, room): split speakers by voice, then use --group or --speaker")
     p.add_argument("--speakers", type=int, default=None, metavar="N",

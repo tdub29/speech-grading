@@ -35,8 +35,7 @@ def _grade(wav: Path, backend, cfg_mode: str) -> dict:
     t = backend.transcribe(str(wav))
     t.audio_path = str(wav)
     t = derive_transcript_fields(t)
-    report = run_on_transcript(t, Config(asr_model_size="small", enable_acoustic=True,
-                                         use_llm=False, mode=cfg_mode))
+    report = run_on_transcript(t, Config(enable_acoustic=True, use_llm=False, mode=cfg_mode))
     m = {k: v for k, v in report.metrics.items() if isinstance(v, (int, float)) and not isinstance(v, bool)}
     m["overall_score"] = report.overall_score
     for d in report.dimensions:
@@ -99,7 +98,7 @@ def main() -> None:
     ap.add_argument("--start", type=float, default=60.0)
     ap.add_argument("--length", type=float, default=120.0)
     a = ap.parse_args()
-    backend = FasterWhisperBackend(model_size="small")
+    backend = FasterWhisperBackend()  # serving default: medium, English
     rows = []
     for key in a.ids:
         try:
