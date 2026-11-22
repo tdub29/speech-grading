@@ -238,6 +238,7 @@ def _make_backend(cfg: Config, vad_filter: bool = False):
             device=cfg.asr_device,
             compute_type=cfg.asr_compute_type,
             vad_filter=vad_filter,
+            language=cfg.asr_language,
         )
     if name == "crisper-whisper":
         from .asr.crisper_whisper_backend import CrisperWhisperBackend

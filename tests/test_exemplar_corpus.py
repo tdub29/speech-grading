@@ -184,3 +184,25 @@ def test_one_insertion_event_per_heldout_source():
     corpus.assert_one_insertion_per_source([{"source_id": "a"}, {"source_id": "b"}])
     with pytest.raises(ValueError):
         corpus.assert_one_insertion_per_source([{"source_id": "a"}, {"source_id": "a"}])
+
+
+def test_stale_or_unchecked_grades_are_regraded_and_kept_out_of_summary(tmp_path, monkeypatch):
+    _corpus_root(tmp_path, monkeypatch)
+    (tmp_path / "grades").mkdir()
+    stale = {"metadata": {"corpus_asr_provenance": {"model": "small"}}, "metrics": {"wpm": 150}}
+    (tmp_path / "grades" / "x1.json").write_text(json.dumps(stale), encoding="utf-8")
+    base = {"id": "x1", "speaker": "s", "label": "acclaimed", "genre": "g"}
+    with pytest.raises(ValueError, match="content check"):
+        corpus.grade(base | {"content_check": {"result": "fail"}})  # cached file no longer bypasses the gate
+    passing = base | {"content_check": {"result": "pass"}}
+    assert not corpus.grade_is_current(passing, stale)
+    assert not corpus.grade_is_current(base, stale)
+    current = {"metadata": {"corpus_asr_provenance": corpus.asr_provenance(tmp_path / "audio" / "x1.wav")},
+               "overall_score": 70, "metrics": {}, "dimensions": []}
+    assert corpus.grade_is_current(passing, current)
+    assert not corpus.grade_is_current(base | {"content_check": {"result": "pending"}}, current)
+    rows = corpus.summarize([passing])["rows"]
+    assert rows == []  # stale small-ASR grade never reaches the effects table
+    (tmp_path / "grades" / "x1.json").write_text(json.dumps(current), encoding="utf-8")
+    assert len(corpus.summarize([passing])["rows"]) == 1
+    assert corpus.summarize([base | {"content_check": {"result": "fail"}}])["rows"] == []

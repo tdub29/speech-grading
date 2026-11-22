@@ -189,7 +189,8 @@ def asr_provenance(audio):
     """What a cached transcript must match to be reused: engine, model, language, exact audio bytes."""
     import hashlib
     from speech_grading.config import Config
-    return {"engine": "faster-whisper", "model": Config().asr_model_size, "language": "en",
+    cfg = Config()
+    return {"engine": "faster-whisper", "model": cfg.asr_model_size, "language": cfg.asr_language,
             "audio_sha256": hashlib.sha256(Path(audio).read_bytes()).hexdigest()}
 
 
@@ -215,7 +216,8 @@ def transcribe(item):
         transcript = Transcript.model_validate_json(transcript_path.read_text(encoding="utf-8"))
     else:
         if not hasattr(_THREAD, "backend"):
-            _THREAD.backend = FasterWhisperBackend(model_size=Config().asr_model_size)
+            cfg = Config()
+            _THREAD.backend = FasterWhisperBackend(model_size=cfg.asr_model_size, language=cfg.asr_language)
         transcript = _THREAD.backend.transcribe(str(audio))
         transcript.audio_path = str(audio)
         write_json(transcript_path, derive_transcript_fields(transcript).model_dump())
@@ -224,15 +226,26 @@ def transcribe(item):
     return derive_transcript_fields(transcript), provenance
 
 
+def grade_is_current(item, report):
+    """A grade counts only for a passing content check and the current ASR config and audio."""
+    if (item.get("content_check") or {}).get("result") != "pass":
+        return False
+    try:
+        audio = _audio(item)[1]
+    except ValueError:  # excerpt gone: nothing to tie the grade to
+        return False
+    return report.get("metadata", {}).get("corpus_asr_provenance") == asr_provenance(audio)
+
+
 def grade(item):
     from speech_grading.config import Config
     from speech_grading.pipeline import run_on_transcript
     key, _ = _audio(item)
     output = ROOT / "grades" / f"{key}.json"
-    if output.is_file():
-        return {"id": key, "status": "cached"}
-    if item.get("content_check", {}).get("result") != "pass":
+    if (item.get("content_check") or {}).get("result") != "pass":
         raise ValueError(f"No passing committed content check: {key}")
+    if output.is_file() and grade_is_current(item, json.loads(output.read_text(encoding="utf-8"))):
+        return {"id": key, "status": "cached"}
     transcript, provenance = transcribe(item)
     if not transcript.words:
         raise ValueError(f"No recognized speech: {key}")
@@ -394,6 +407,8 @@ def summarize(items):
         path = ROOT / "grades" / f"{item_id(item)}.json"
         if path.is_file():
             report = json.loads(path.read_text(encoding="utf-8"))
+            if not grade_is_current(item, report):  # stale small-ASR or failed-check grades stay out
+                continue
             rows.append({"id": item["id"], "speaker": item["speaker"], "label": item["label"],
                          "genre": item["genre"], "pair_id": item.get("pair_id"),
                          "pair_side": item.get("pair_side"), "mode": item.get("mode", "stage"),

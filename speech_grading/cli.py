@@ -63,6 +63,8 @@ def _build_parser() -> argparse.ArgumentParser:
                    help="grade every labelled speaker: <label>.html/.json plus group.html/.json in --out-dir")
     p.add_argument("--out-dir", default="orator-group",
                    help="--group output folder (default: orator-group)")
+    p.add_argument("--asr-language", default=None, metavar="CODE",
+                   help="Whisper language (default en; 'auto' = detect)")
     p.add_argument("--asr-model", default=None,
                    help="faster-whisper model size (default: medium, decoded as English; e.g. small.en for speed)")
     p.add_argument("--diarize", action="store_true",
@@ -101,6 +103,8 @@ def _config_from_args(args) -> Config:
         cfg.av_offset_sec = args.av_offset
     if args.asr_model:
         cfg.asr_model_size = args.asr_model
+    if args.asr_language:
+        cfg.asr_language = None if args.asr_language == "auto" else args.asr_language
     if args.diarize:
         cfg.diarize = True
         cfg.diarize_speakers = args.speakers
