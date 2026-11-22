@@ -235,10 +235,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 32.5,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Clinton from 'Mr. Mayor, fellow Democrats' to 'keep President Obama on the job'; last phrase is an ASR error on Clinton's speech",
         "bounds_note": "walk-on music with hallucinated lyrics 0-30 s"
       },
       "end_sec": 899.9
@@ -271,10 +272,11 @@
       "notes": "ABC upload may include Trump intro; isolate Palin.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Palin from 'Thank you so much. It's so great to be in Iowa' to 'under President Trump'; no other speaker in the read windows"
       },
       "end_sec": 899.9
     },

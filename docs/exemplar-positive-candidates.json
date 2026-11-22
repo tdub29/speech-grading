@@ -31,10 +31,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 34.0,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "King from 'I am happy to join with you today' to 'work together'; no introducer",
         "bounds_note": "introducer 11-27 s"
       },
       "end_sec": 899.9
@@ -66,10 +67,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 69.0,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Kennedy from the salutation to 'lead the land we love'; no oath reader or announcer in the excerpt",
         "bounds_note": "music and oath (Chief Justice reading, Kennedy repeating) 1-34 s"
       },
       "end_sec": 899.9
@@ -99,13 +101,18 @@
       ],
       "notes": "Official archival MP3 listed as 27 minutes including program material; identify first speaker onset before 900-second cap.",
       "selection_status": "candidate_pending_download_and_grading",
-      "start_sec": 54.5,
+      "start_sec": 85.0,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
-        "bounds_note": "oath reader and repeated oath 1-47 s; unattributed 'Thank you very much' 50-54 s"
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "excerpt opens with 26.7 s without speech, then 6 low-confidence words ('...I don't know what I'm doing.') that are not Roosevelt's; Roosevelt starts 'President Hoover, Mr. Chief Justice' at excerpt 30.68 s (source 85.18 s); rest speaker-only",
+        "bounds_note": "oath reader and repeated oath 1-47 s; unattributed 'Thank you very much' 50-54 s",
+        "tightened_from": {
+          "start_sec": 54.5,
+          "end_sec": 900.0
+        }
       },
       "end_sec": 900.0
     },
@@ -133,10 +140,11 @@
       "start_sec": 25.5,
       "end_sec": 429.6,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Roosevelt from 'Yesterday, December 7th, 1941' to the declaration request; one 'Applause' token transcribed over applause at 241 s (forced-English artifact, kept)",
         "bounds_note": "archive announcer 3-19 s; ends at 'Japanese Empire.'"
       }
     },
@@ -195,10 +203,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 35.8,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Reagan from 'Thank you very much. Chancellor Kohl' to the arms-reduction passage; the German phrase at 60% is Reagan's own quoted German",
         "bounds_note": "applause and an unattributed 'Thank you!' before 36 s"
       },
       "end_sec": 899.9
@@ -226,10 +235,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 12.5,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Eisenhower from 'Good evening, my fellow Americans' to the closing prayer; last 1.3 s (885.9 to 887.2 s) is a 17-token ASR repetition loop ('those who believe in God') where the excerpt cuts mid-sentence, kept as an ASR error on the speaker's own speech",
         "bounds_note": "program announcer 5-10.5 s"
       },
       "end_sec": 900.0
@@ -252,10 +262,11 @@
       "notes": "Exact source in political corpus. Recording provenance uncertain: distinguish original Commons performance, same-day broadcast, later re-recording. Acclaim of text does not establish acclaim of this recording.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Churchill from 'Mr. Speaker, the disastrous military events' to 'this was their'; 305 s excerpt"
       },
       "end_sec": 327.5
     },
@@ -277,10 +288,11 @@
       "notes": "DNC official upload verified; inspect whether entire speech or excerpt. Texas Southern University Archives separately praises delivery, presence, command of crowd, not a second ranking.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Jordan closing passage only (pinned source is 150 s), 'We are a people in a quandary' to 'Thank you'; 181 lexical words"
       },
       "end_sec": 150.0
     },
@@ -302,10 +314,11 @@
       "notes": "Exact source in political corpus. Coach selection rather than all-time ranked list; broad acclaim supported by contemporary and retrospective reporting.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Obama from 'Let me express my deepest gratitude' to 'a belief in things not seen'; no introducer or other speaker in the read windows; 2055 lexical words"
       },
       "end_sec": 899.9
     },
@@ -337,10 +350,11 @@
       "start_sec": 19.5,
       "end_sec": 872.5,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Jobs from 'Thank you. I'm, uh, honored to be with you today' to 'Stay hungry. Stay foolish. Thank you all'; no announcer in the excerpt; 2271 lexical words",
         "bounds_note": "program announcer 7-11 s; copyright notice after 889 s"
       }
     },
@@ -423,10 +437,11 @@
       "notes": "Official university upload. Texas Exes alternate pxBQLFLei70. NPR membership must be verified in full page before analysis inclusion.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-22",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "McRaven from 'Thank you very much. Thank you. Well, thank you, President Powers' through the ten SEAL lessons to the keel passage where the 900 s excerpt ends; no introducer or other speaker in the read windows; 2480 lexical words"
       },
       "end_sec": 899.9
     },
