@@ -105,6 +105,7 @@ def _corpus_root(tmp_path, monkeypatch, audio=b"RIFF-one"):
     monkeypatch.setattr(corpus, "ROOT", tmp_path)
     (tmp_path / "audio").mkdir()
     (tmp_path / "audio" / "x1.wav").write_bytes(audio)
+    (tmp_path / "audio" / "x1.bounds.json").write_text(json.dumps(corpus.excerpt_bounds({"id": "x1"})), encoding="utf-8")
     backend = _CountingBackend()
     monkeypatch.setattr(corpus._THREAD, "backend", backend, raising=False)
     return backend
@@ -206,3 +207,36 @@ def test_stale_or_unchecked_grades_are_regraded_and_kept_out_of_summary(tmp_path
     (tmp_path / "grades" / "x1.json").write_text(json.dumps(current), encoding="utf-8")
     assert len(corpus.summarize([passing])["rows"]) == 1
     assert corpus.summarize([base | {"content_check": {"result": "fail"}}])["rows"] == []
+
+
+# --- 2026-11-23: graded-span parity (Gate 2 amendment assert 1) ---
+
+def test_excerpt_bounds_matches_acquire_formula_and_rejects_bad_bounds():
+    assert corpus.excerpt_bounds({"id": "a", "start_sec": 85.0, "end_sec": 899.9}) == {"start_sec": 85.0, "max_duration_sec": 899.9 - 85.0}
+    assert corpus.excerpt_bounds({"id": "b"}) == {"start_sec": 0.0, "max_duration_sec": 900.0}
+    assert corpus.excerpt_bounds({"id": "c", "start_sec": 10, "end_sec": 5000})["max_duration_sec"] == 900.0
+    for bad in ({"id": "d", "start_sec": 50, "end_sec": 50}, {"id": "d", "start_sec": -1}, {"id": "d", "start_sec": float("nan")}):
+        with pytest.raises(ValueError, match="Invalid clip bounds for d"):
+            corpus.excerpt_bounds(bad)
+
+
+def test_grade_refuses_excerpt_cut_at_superseded_bounds(tmp_path, monkeypatch):
+    backend = _corpus_root(tmp_path, monkeypatch)
+    passing = {"id": "x1", "speaker": "s", "label": "acclaimed", "genre": "g", "content_check": {"result": "pass"}}
+    current = {"metadata": {"corpus_asr_provenance": corpus.asr_provenance(tmp_path / "audio" / "x1.wav")},
+               "overall_score": 70, "metrics": {}, "dimensions": []}
+    assert corpus.bounds_current(passing, tmp_path / "audio" / "x1.wav")
+    assert corpus.grade_is_current(passing, current)
+    tightened = passing | {"start_sec": 85.0}  # manifest bound moved, excerpt not re-cut
+    assert not corpus.bounds_current(tightened, tmp_path / "audio" / "x1.wav")
+    assert not corpus.grade_is_current(tightened, current)
+    with pytest.raises(ValueError, match="committed bounds"):
+        corpus.grade(tightened)
+    (tmp_path / "audio" / "x1.bounds.json").unlink()  # no bounds record: not provably the committed span
+    assert not corpus.grade_is_current(passing, current)
+    with pytest.raises(ValueError, match="committed bounds"):
+        corpus.grade(passing)
+    assert backend.calls == 0 and not (tmp_path / "grades").exists()
+    (tmp_path / "grades").mkdir()
+    (tmp_path / "grades" / "x1.json").write_text(json.dumps(current), encoding="utf-8")
+    assert corpus.summarize([passing])["rows"] == []  # stale-span grade never reaches the effects table

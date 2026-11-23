@@ -129,17 +129,32 @@ def assert_one_insertion_per_source(events):
         seen.add(event["source_id"])
 
 
+def excerpt_bounds(item):
+    """The excerpt the committed manifest defines (OSM draft, qwen2.5-coder:7b via osm-ralph)."""
+    start = float(item.get("start_sec", 0))
+    end = float(item.get("end_sec", start + 900))
+
+    if not math.isfinite(start) or not math.isfinite(end) or start < 0 or end <= start:
+        raise ValueError(f"Invalid clip bounds for {item.get('id')}")
+
+    duration = min(900.0, end - start)
+    return {"start_sec": start, "max_duration_sec": duration}
+
+
+def bounds_current(item, audio):
+    """Graded-span parity: the excerpt on disk was cut at the manifest's committed bounds."""
+    path = Path(audio).with_suffix(".bounds.json")
+    return path.is_file() and json.loads(path.read_text(encoding="utf-8")) == excerpt_bounds(item)
+
+
 def acquire(item):
     from speech_grading.pipeline import find_ffmpeg
     key = item_id(item)
     destination = ROOT / "audio" / f"{key}.wav"
     destination.parent.mkdir(parents=True, exist_ok=True)
-    start = float(item.get("start_sec", 0))
-    duration = min(900.0, float(item.get("end_sec", start + 900)) - start)
-    if not math.isfinite(start) or not math.isfinite(duration) or start < 0 or duration <= 0:
-        raise ValueError(f"Invalid clip bounds for {key}")
+    bounds = excerpt_bounds(item)
+    start, duration = bounds["start_sec"], bounds["max_duration_sec"]
     bounds_path = destination.with_suffix(".bounds.json")
-    bounds = {"start_sec": start, "max_duration_sec": duration}
     if destination.is_file() and (not bounds_path.is_file() and not item.get("start_sec") and not item.get("end_sec")
                                   or bounds_path.is_file() and json.loads(bounds_path.read_text(encoding="utf-8")) == bounds):
         return {"id": key, "status": "cached", "audio": str(destination)}
@@ -227,12 +242,14 @@ def transcribe(item):
 
 
 def grade_is_current(item, report):
-    """A grade counts only for a passing content check and the current ASR config and audio."""
+    """A grade counts only for a passing content check, the committed bounds and the current ASR config and audio."""
     if (item.get("content_check") or {}).get("result") != "pass":
         return False
     try:
         audio = _audio(item)[1]
     except ValueError:  # excerpt gone: nothing to tie the grade to
+        return False
+    if not bounds_current(item, audio):  # excerpt cut at superseded bounds
         return False
     return report.get("metadata", {}).get("corpus_asr_provenance") == asr_provenance(audio)
 
@@ -240,10 +257,12 @@ def grade_is_current(item, report):
 def grade(item):
     from speech_grading.config import Config
     from speech_grading.pipeline import run_on_transcript
-    key, _ = _audio(item)
+    key, audio = _audio(item)
     output = ROOT / "grades" / f"{key}.json"
     if (item.get("content_check") or {}).get("result") != "pass":
         raise ValueError(f"No passing committed content check: {key}")
+    if not bounds_current(item, audio):
+        raise ValueError(f"Excerpt not cut at the committed bounds (re-run acquire): {key}")
     if output.is_file() and grade_is_current(item, json.loads(output.read_text(encoding="utf-8"))):
         return {"id": key, "status": "cached"}
     transcript, provenance = transcribe(item)
