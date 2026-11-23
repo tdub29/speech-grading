@@ -100,7 +100,7 @@ def surname(name):
 
 
 def assert_heldout_disjoint(development, heldout, audio_sha256, political_urls, political_events=POLITICAL_CORPUS_EVENTS):
-    """R5 freeze assert: a held-out item shares no id, audio, URL, speaker or event with development,
+    """R5 freeze assert: a held-out item shares no id, audio, URL, speaker, pair_id or event with development,
     and no id, URL or event (surname, year) with the political corpus. Raises on the first offender."""
     dev_ids = {i["id"] for i in development}
     dev_audio = {audio_sha256[i["id"]] for i in development if i["id"] in audio_sha256}
@@ -108,12 +108,14 @@ def assert_heldout_disjoint(development, heldout, audio_sha256, political_urls, 
     dev_speakers = {surname(i["speaker"]) for i in development}
     blocked_events = {(surname(i["speaker"]), int(i["date"][:4])) for i in development}
     blocked_events |= {e for events in political_events.values() for e in events}
+    dev_pairs = {i["pair_id"] for i in development if i.get("pair_id") is not None}
     for item in heldout:
         key, who = item["id"], surname(item["speaker"])
         checks = [(key in dev_ids or key in political_events, "id"),
                   (audio_sha256.get(key) in dev_audio, "audio sha256"),
                   (item["source_url"] in dev_urls or item["source_url"] in political_urls, "source url"),
                   (who in dev_speakers, "speaker"),
+                  (item.get("pair_id") is not None and item["pair_id"] in dev_pairs, "pair_id"),
                   ((who, int(item["date"][:4])) in blocked_events, "event")]
         for failed, reason in checks:
             if failed:

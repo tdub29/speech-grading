@@ -181,6 +181,19 @@ def test_heldout_must_be_disjoint_from_development_and_political_corpus():
             corpus.assert_heldout_disjoint(dev, [item], sha, political)
 
 
+def test_heldout_pair_id_must_be_disjoint_from_development():
+    dev = [_person("e_a", "Ann Lee", "2010-05-01", "u/a") | {"pair_id": "p1"}, _person("e_c", "Di Fox", "2011-05-01", "u/c")]
+    clean = _person("h_b", "Bo Diaz", "2015-01-01", "u/b")
+    corpus.assert_heldout_disjoint(dev, [clean, clean | {"id": "h_d", "pair_id": "p9"}], {}, set(), {})
+    with pytest.raises(ValueError, match="h_b shares its pair_id"):
+        corpus.assert_heldout_disjoint(dev, [clean | {"pair_id": "p1"}], {}, set(), {})
+    with pytest.raises(ValueError, match="shares its speaker"):  # speaker is checked before pair_id
+        corpus.assert_heldout_disjoint(dev, [clean | {"speaker": "Zed Lee", "pair_id": "p1"}], {}, set(), {})
+    with pytest.raises(ValueError, match="shares its pair_id"):  # pair_id is checked before a political-corpus event
+        corpus.assert_heldout_disjoint(dev, [clean | {"pair_id": "p1", "speaker": "X Roe", "date": "2008-01-01"}],
+                                       {}, set(), {"s_x": [("roe", 2008)]})
+
+
 def test_one_insertion_event_per_heldout_source():
     corpus.assert_one_insertion_per_source([{"source_id": "a"}, {"source_id": "b"}])
     with pytest.raises(ValueError):
