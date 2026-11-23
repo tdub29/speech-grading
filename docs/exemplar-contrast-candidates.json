@@ -57,10 +57,11 @@
       "start_sec": 30.8,
       "end_sec": 299.6,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Reagan closing from 'Well, we'll include it in that' to the Thomas Paine quotation; no moderator or Mondale speech",
         "bounds_note": "moderator 0-30.7 s (interleaved Reagan lines excluded as not contiguous); Mondale's closing from 300 s"
       }
     },
@@ -97,10 +98,11 @@
       "notes": "CNN closing-statement clip; full-debate alts include moderator and Romney.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Obama closing from 'Well, Jim, I want to thank you' to 'fight just as hard in a second time'; no moderator speech"
       },
       "end_sec": 130.7
     },
@@ -133,10 +135,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 4.1,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Biden debt answer from 'He had the largest national debt' to 'if we finally beat Medicare'; 176 words, one run",
         "bounds_note": "moderator 0-3.5 s"
       },
       "end_sec": 66.9
@@ -166,10 +169,11 @@
       "notes": "Some commentators (e.g. Noonan) still noted blurred words; acclaim is relative to his subdued appearances. Trim intro/applause; cap 900 s.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Biden from 'good evening' to 'where they belong'; applause gaps up to 20.4 s; no chamber voice transcribed"
       },
       "end_sec": 899.9
     },
@@ -202,12 +206,18 @@
       "notes": "Clinton Library upload. Closing phrase reported as 'in conclusion' or 'in closing' in different sources.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "excerpt 0 to 129.3 s is the convention chair and another voice ('Delegates and honored guests ... the Honorable Bill Clinton'); Clinton starts 'Mr. Chairman, I'm honored to be here tonight' at 189.4 s, so start_sec 0 tightened to 188.5; 'Go ahead.' at 527.8 s inside the speech is not attributable from the transcript (kept)",
+        "tightened_from": {
+          "start_sec": 0.0,
+          "end_sec": 899.9
+        }
       },
-      "end_sec": 899.9
+      "end_sec": 899.9,
+      "start_sec": 188.5
     },
     {
       "id": "a_clinton_dnc_2012",
@@ -306,10 +316,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 26.0,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Palin from 'Thank you' (49.6 s, after 48 s of walk-on applause with no words) to the community-organizer line; applause gaps up to 48.3 s",
         "bounds_note": "announcer 15-25 s"
       },
       "end_sec": 899.9
@@ -374,13 +385,18 @@
       "pair_side": "good",
       "notes": "Fan upload (theCarbonFreeze), not official. Acclaim is moderate, not a ranked-list entry.",
       "selection_status": "candidate_pending_download_and_grading",
-      "start_sec": 35.5,
+      "start_sec": 516.0,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
-        "bounds_note": "introducer 12-35 s"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "excerpt 0 to 452 s is the pre-speech ovation with a crowd chant ('We love you', 413.3 s) and two fragments ('...I don't know', 'Mr Chairman') not attributable to Dukakis; Dukakis starts 'A few months ago, when Olympia Dukakis' at excerpt 481.6 s (source 517.1 s), so start_sec 35.5 tightened to 516.0",
+        "bounds_note": "introducer 12-35 s",
+        "tightened_from": {
+          "start_sec": 35.5,
+          "end_sec": 899.9
+        }
       },
       "end_sec": 899.9
     },
@@ -446,10 +462,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 13.0,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Rubio from 'I think I just drank Clint Eastwood's water' to 'that coach that taught you the lessons'; no announcer",
         "bounds_note": "announcer 6-7.5 s"
       },
       "end_sec": 899.9
@@ -480,10 +497,11 @@
       "notes": "Fan upload (John Dey). The failure is an omission, likely weak in acoustic features; useful as a hard negative.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Miliband from 'Well, friends, thank you' to 'Friends, together we can'; one 'Applause' token is a forced-English artifact (kept)"
       },
       "end_sec": 899.9
     },
@@ -581,10 +599,11 @@
       "notes": "Fan upload, 391 s excerpt with heckling. Acclaim partly for content and courage.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Kinnock from 'We want to honor our undertakings' to 'Let's do it'; leading 'applause' token and trailing 'Thank you.' timed past the excerpt end are forced-English artifacts over applause (kept as ASR error); heckling not transcribed as words"
       },
       "end_sec": 390.7
     },
@@ -613,13 +632,18 @@
       "pair_side": "poor",
       "notes": "Label kept 'acclaimed' because a world-final runner-up is not panned; pair_side 'poor' is relative to his 2019 win. Official Toastmasters upload.",
       "selection_status": "candidate_pending_download_and_grading",
-      "start_sec": 48.3,
+      "start_sec": 99.8,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
-        "bounds_note": "contest MC name and title 3.8-41.6 s"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "excerpt 0 to 27.5 s is the contest MC reading the 57-word title and the name ('... Aaron Beverly.'); Beverly starts 'Be honest, you enjoyed that, didn't you?' at excerpt 53.8 s (source 102.1 s), so start_sec 48.3 tightened to 99.8; the 2026-11-21 bounds note put the MC at 3.8 to 41.6 s, the excerpt read shows the title reading runs to source 75.8 s",
+        "bounds_note": "contest MC name and title 3.8-41.6 s",
+        "tightened_from": {
+          "start_sec": 48.3,
+          "end_sec": 551.1
+        }
       },
       "end_sec": 551.1
     },
@@ -645,10 +669,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 17.8,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Beverly from 'The contest chair was relieved' (his own joke) to 'Contest chair. Thank you.'; no MC speech",
         "bounds_note": "contest MC 0-6.3 s"
       },
       "end_sec": 458.4
@@ -744,10 +769,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "end_sec": 739.0,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Jindal from 'Good evening, and happy Mardi Gras' to 'God bless America'; one run, no anchor",
         "bounds_note": "network anchor after 740 s"
       }
     },
@@ -779,10 +805,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 28.5,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Eastwood from 'Thank you very much' to 'Thank you very much'; audience 'make my day' exchange is audience response inside the delivery (rule 2 excludes MCs, not audience)",
         "bounds_note": "walk-on applause before 29 s"
       },
       "end_sec": 700.1
@@ -813,10 +840,11 @@
       "notes": "78 s opening clip; full-debate alt is PBS (needs segment selection).",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Stockdale opening from 'Who am I? Why am I here?' to 'I'm an insider on'; 147 words, no moderator"
       },
       "end_sec": 77.6
     },
@@ -906,10 +934,11 @@
       "notes": "ABC upload, about 15 min; cap 900 s.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Rubio from 'Good evening. I'm Marco Rubio' to 'bless the United States of America'; no anchor"
       },
       "end_sec": 877.1
     },
@@ -938,10 +967,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 102.0,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Zuckerberg answer from 'Sure, so, I mean' to 'It's like you'; 107 lexical words, one run, no interviewer speech",
         "bounds_note": "interviewers 0-102 s interleave; longest contiguous Zuckerberg run 102-137 s"
       },
       "end_sec": 137.1

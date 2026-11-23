@@ -380,10 +380,11 @@
       "notes": "Speaker website links Harvard upload. TED hosts same event under shortened title.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Rowling from 'President Faust, members of the Harvard Corporation' (25.3 s, after applause) to the Amnesty passage; no introducer"
       },
       "end_sec": 899.9
     },
@@ -467,10 +468,11 @@
       "notes": "Official TED lists: popularity and editorial praise are different label channels; same publisher family. YouTube alternate iG9CE55wbtY.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Robinson from 'Good morning. How are you?' to the intelligence-is-distinct passage; no host"
       },
       "end_sec": 900.0
     },
@@ -500,10 +502,11 @@
       "notes": "TEDxHouston event. Popularity does not independently validate delivery.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Brown from 'So, I'll start with this' to the numbing passage; quoted audience replies are read by Brown"
       },
       "end_sec": 900.0
     },
@@ -529,10 +532,11 @@
       "notes": "TEDxPuget Sound event; source page identifies editor selection.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Sinek from 'How do you explain when things don't go' to the TiVo and golden-circle close; no host"
       },
       "end_sec": 900.0
     },
@@ -554,10 +558,11 @@
       "notes": "Contains vocal demonstrations and exercises. These are target content, not a uniform natural speech sample; tag before comparing prosody.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Treasure from 'The human voice' to 'an idea worth spreading. Thank you'; vocal warm-up exercises led by Treasure kept as target content; 'Laughter' token at 78.5 s is a forced-English artifact over laughter (kept)"
       },
       "end_sec": 584.3
     },
@@ -579,10 +584,11 @@
       "notes": "Current official popularity playlist; do not invent a numerical rank from page order.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Urban from 'So, in college, I was a government major' to 'Thank you'; no host"
       },
       "end_sec": 834.1
     },
@@ -608,10 +614,11 @@
       "notes": "Praise is editorial jaw-dropping playlist membership, not a top viewer-rating claim.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Taylor from 'I grew up to study the brain' to the euphoria passage; no host"
       },
       "end_sec": 900.0
     },
@@ -637,10 +644,11 @@
       "notes": "Editorial selections; source article names this exact TED talk.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Adichie from 'I'm a storyteller' to the publisher passage; no host"
       },
       "end_sec": 900.0
     },
@@ -663,13 +671,18 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 34.5,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
-        "bounds_note": "contest MC title and name 8-16 s"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Hettiarachchi from 'You and I are not very different from this flower' to 'Over to you.' (excerpt 427.7 s); 'I'll see you guys next time. Bye.' at excerpt 430.0 s is an uploader outro not attributable to the speaker, so end_sec 473.6 tightened to 463.0",
+        "bounds_note": "contest MC title and name 8-16 s",
+        "tightened_from": {
+          "start_sec": 34.5,
+          "end_sec": 473.6
+        }
       },
-      "end_sec": 473.6
+      "end_sec": 463.0
     },
     {
       "id": "e_qahtani_tm_2015",
@@ -690,13 +703,18 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 36.5,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
-        "bounds_note": "contest MC 2-21 s"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Qahtani contest speech from 'What? Oh, you all think smoking kills?' to 'Contest sir' (excerpt 430.7 s); from 444.6 s the MC announces the winner and Qahtani gives post-win remarks (a different speech), so end_sec 685.1 tightened to 468.0",
+        "bounds_note": "contest MC 2-21 s",
+        "tightened_from": {
+          "start_sec": 36.5,
+          "end_sec": 685.1
+        }
       },
-      "end_sec": 685.1
+      "end_sec": 468.0
     },
     {
       "id": "e_smith_tm_2018",
@@ -717,10 +735,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 23.5,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Smith from 'Life will sometimes feel like a fight' to 'Mr. Contest Chair' (ASR 'Mr. Conte Shea'); sung 'I'm still standing' lines are Smith's own (kept, noted as non-ordinary prosody)",
         "bounds_note": "contest MC 0-10.3 s"
       },
       "end_sec": 450.4
@@ -743,10 +762,11 @@
       "notes": "Standalone Wall Street Journal clip; victory poll applies whole debate, not validated quality of this closing excerpt. Trim moderator if present.",
       "selection_status": "candidate_pending_download_and_grading",
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music"
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Romney closing statement from 'Thank you, Jim, and Mr. President' to 'Thank you, Jim'; one run, no moderator speech"
       },
       "end_sec": 133.6
     },
@@ -773,10 +793,11 @@
       "selection_status": "candidate_pending_download_and_grading",
       "start_sec": 19.8,
       "content_check": {
-        "result": "pending",
+        "result": "pass",
         "by": "model-pipeline Data stage agent (maker, unreviewed)",
-        "date": "2026-11-21",
-        "method": "transcript read (development Whisper small, word timestamps) of the opening 75 s, closing 45 s and 12 s at 30%, 60%, 90%; bounds drop introducers, announcers, oath readers, MCs, moderators, interviewers, music",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 30 s, the closing 30 s and 15 s at 30%, 60% and 90% of the excerpt, plus every word run split at gaps over 2 s at the excerpt start and end, plus lexical word count; speaker-only yes or no per Gate 2 rule 1 and rule 2",
+        "note": "Reagan answer from 'Not at all, Mr. Trewhitt' to 'there would be no state'; 84 lexical words; 15 s laughter gap; no questioner speech",
         "bounds_note": "questioner 0-19 s"
       },
       "end_sec": 63.8
