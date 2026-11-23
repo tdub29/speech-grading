@@ -1,0 +1,562 @@
+{
+  "schema_version": 1,
+  "reviewed": "2026-11-23",
+  "status": "heldout_research_candidates",
+  "role": "R5 held-out set: never used to choose a band, detector or threshold; frozen at the first held-out grade.",
+  "audio_policy": "Audio and full transcripts remain outside repository under ~/.orator/corpus only.",
+  "composition": "10 acclaimed and 10 panned, all mode stage, one item per speaker, no pair_id; speakers disjoint from development and the political corpus.",
+  "sources": [
+    {
+      "id": "american_rhetoric_top100",
+      "url": "https://www.americanrhetoric.com/top100speechesall.html"
+    },
+    {
+      "id": "ted_most_popular",
+      "url": "https://www.ted.com/playlists/171/the_most_popular_ted_talks_of_all_time"
+    },
+    {
+      "id": "npr_commencement",
+      "url": "https://apps.npr.org/commencement/"
+    },
+    {
+      "id": "toastmasters_champions",
+      "url": "https://www.toastmasters.org/resources/speech-contests/world-champions-of-public-speaking"
+    },
+    {
+      "id": "press_contemporary",
+      "description": "Contemporary news reports, reviews and coaching critiques, cited per candidate."
+    }
+  ],
+  "candidates": [
+    {
+      "id": "h_cuomo_dnc_1984",
+      "label": "acclaimed",
+      "speaker": "Mario Cuomo",
+      "title": "1984 DNC keynote address (A Tale of Two Cities)",
+      "date": "1984-07-16",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=wIzGAsGQi20",
+      "rankings": [
+        {
+          "list_id": "american_rhetoric_top100",
+          "rank": 11,
+          "url": "https://www.americanrhetoric.com/top100speechesall.html"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.americanrhetoric.com/top100speechesall.html",
+          "claim": "Ranked 11 of 100 in the American Rhetoric Top 100 Speeches of the 20th Century (Lucas and Medhurst scholar survey)."
+        }
+      ],
+      "notes": "Governor Mario M Cuomo channel upload, full speech 2355 s; no captions, so the excerpt starts at 0 s and bounds are set from the medium-en read.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 900.0
+    },
+    {
+      "id": "h_jackson_dnc_1988",
+      "label": "acclaimed",
+      "speaker": "Jesse Jackson",
+      "title": "1988 DNC address (Keep Hope Alive), closing excerpt",
+      "date": "1988-07-19",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=ZVvqaq9LtfE",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=6RCARIpVDLU"
+      ],
+      "rankings": [
+        {
+          "list_id": "american_rhetoric_top100",
+          "rank": 49,
+          "url": "https://www.americanrhetoric.com/top100speechesall.html"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.americanrhetoric.com/top100speechesall.html",
+          "claim": "Ranked 49 of 100 in the American Rhetoric Top 100 Speeches of the 20th Century (Lucas and Medhurst scholar survey)."
+        }
+      ],
+      "notes": "314 s excerpt upload of the closing section; the C-SPAN full speech is the alt.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 314.0
+    },
+    {
+      "id": "h_richards_dnc_1988",
+      "label": "acclaimed",
+      "speaker": "Ann Richards",
+      "title": "1988 DNC keynote address",
+      "date": "1988-07-18",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=5IwIKT_TAN0",
+      "rankings": [
+        {
+          "list_id": "american_rhetoric_top100",
+          "rank": 38,
+          "url": "https://www.americanrhetoric.com/top100speechesall.html"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.americanrhetoric.com/top100speechesall.html",
+          "claim": "Ranked 38 of 100 in the American Rhetoric Top 100 Speeches of the 20th Century (Lucas and Medhurst scholar survey)."
+        }
+      ],
+      "notes": "Full speech upload 2037 s; captions show Richards from 0 s.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 900.0
+    },
+    {
+      "id": "h_fisher_rnc_1992",
+      "label": "acclaimed",
+      "speaker": "Mary Fisher",
+      "title": "A Whisper of AIDS, 1992 RNC",
+      "date": "1992-08-19",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=zB5K9k__SOo",
+      "rankings": [
+        {
+          "list_id": "american_rhetoric_top100",
+          "rank": 50,
+          "url": "https://www.americanrhetoric.com/top100speechesall.html"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.americanrhetoric.com/top100speechesall.html",
+          "claim": "Ranked 50 of 100 in the American Rhetoric Top 100 Speeches of the 20th Century (Lucas and Medhurst scholar survey)."
+        }
+      ],
+      "notes": "Convention video and announcer introduction 0 to about 75 s per captions; speech to about 862 s.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 75.0,
+      "end_sec": 862.0
+    },
+    {
+      "id": "h_macarthur_congress_1951",
+      "label": "acclaimed",
+      "speaker": "Douglas MacArthur",
+      "title": "Farewell Address to Congress (Old Soldiers Never Die), closing excerpt",
+      "date": "1951-04-19",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=pKHWbaf5gDE",
+      "rankings": [
+        {
+          "list_id": "american_rhetoric_top100",
+          "rank": 14,
+          "url": "https://www.americanrhetoric.com/top100speechesall.html"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.americanrhetoric.com/top100speechesall.html",
+          "claim": "Ranked 14 of 100 in the American Rhetoric Top 100 Speeches of the 20th Century (Lucas and Medhurst scholar survey)."
+        }
+      ],
+      "notes": "320 s excerpt upload ending on 'Goodbye.'",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 320.0
+    },
+    {
+      "id": "h_cuddy_ted_2012",
+      "label": "acclaimed",
+      "speaker": "Amy Cuddy",
+      "title": "Your body language may shape who you are",
+      "date": "2012-06",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=Ks-_Mh1QhMc",
+      "rankings": [
+        {
+          "list_id": "ted_most_popular",
+          "rank": 3,
+          "url": "https://www.ted.com/playlists/171/the_most_popular_ted_talks_of_all_time"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.ted.com/playlists/171/the_most_popular_ted_talks_of_all_time",
+          "claim": "Third on TED's own playlist 'The most popular TED Talks of all time' (read 2026-11-23)."
+        },
+        {
+          "url": "https://247wallst.com/special-report/2022/01/12/25-most-viewed-ted-talks-of-all-time/3/",
+          "claim": "Second most viewed TED Talk by TED-site views as of 2022-01-10."
+        }
+      ],
+      "notes": "Captions show an inserted news clip with a narrator at about 80 to 100 s; the excerpt starts after it.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 100.0,
+      "end_sec": 1000.0
+    },
+    {
+      "id": "h_waldinger_ted_2015",
+      "label": "acclaimed",
+      "speaker": "Robert Waldinger",
+      "title": "What makes a good life? Lessons from the longest study on happiness",
+      "date": "2015-11",
+      "genre": "TED",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=8KkKuTCFvzI",
+      "rankings": [
+        {
+          "list_id": "ted_most_popular",
+          "rank": 8,
+          "url": "https://www.ted.com/playlists/171/the_most_popular_ted_talks_of_all_time"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.ted.com/playlists/171/the_most_popular_ted_talks_of_all_time",
+          "claim": "Eighth on TED's own playlist 'The most popular TED Talks of all time' (read 2026-11-23)."
+        }
+      ],
+      "notes": "TEDxBeaconStreet talk on the TED channel, 767 s.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 767.0
+    },
+    {
+      "id": "h_obrien_dartmouth_2011",
+      "label": "acclaimed",
+      "speaker": "Conan O'Brien",
+      "title": "Dartmouth College commencement address",
+      "date": "2011-06-12",
+      "genre": "commencement",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=KmDYXaaT9sA",
+      "alt_urls": [
+        "https://www.youtube.com/watch?v=ELC_e2QBQMk"
+      ],
+      "rankings": [
+        {
+          "list_id": "npr_commencement",
+          "rank": "selected",
+          "url": "https://apps.npr.org/commencement/"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://apps.npr.org/commencement/",
+          "claim": "Listed in NPR's 'The Best Commencement Speeches, Ever' database."
+        },
+        {
+          "url": "https://www.wyso.org/2011-06-16/did-conan-obrien-give-the-greatest-commencement-speech-ever",
+          "claim": "NPR member station piece, 2011-06-16: 'Did Conan O'Brien give the greatest commencement speech ever?'"
+        }
+      ],
+      "notes": "Team Coco upload 1425 s; O'Brien speaking from 0 s per captions.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 900.0
+    },
+    {
+      "id": "h_lacroix_tm_2001",
+      "label": "acclaimed",
+      "speaker": "Darren LaCroix",
+      "title": "Ouch! (World Championship of Public Speaking winning speech)",
+      "date": "2001-08",
+      "genre": "Toastmasters",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=puSUnj3gf_Y",
+      "rankings": [
+        {
+          "list_id": "toastmasters_champions",
+          "rank": "2001 winner",
+          "url": "https://www.toastmasters.org/resources/speech-contests/world-champions-of-public-speaking"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.toastmasters.org/resources/speech-contests/world-champions-of-public-speaking",
+          "claim": "Toastmasters International official list: Darren LaCroix, 2001 World Champion of Public Speaking."
+        }
+      ],
+      "notes": "Speaker's own upload: title card 0 to about 15 s; winning speech to about 490 s; after that the speaker comments on the win and promotes his school (excluded).",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 15.0,
+      "end_sec": 492.0
+    },
+    {
+      "id": "h_tay_tm_2016",
+      "label": "acclaimed",
+      "speaker": "Darren Tay",
+      "title": "Outsmart, Outlast (World Championship of Public Speaking winning speech)",
+      "date": "2016-08",
+      "genre": "Toastmasters",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=v26CcifgEq4",
+      "rankings": [
+        {
+          "list_id": "toastmasters_champions",
+          "rank": "2016 winner",
+          "url": "https://www.toastmasters.org/resources/speech-contests/world-champions-of-public-speaking"
+        }
+      ],
+      "judgement_sources": [
+        {
+          "url": "https://www.toastmasters.org/resources/speech-contests/world-champions-of-public-speaking",
+          "claim": "Toastmasters International official list: Darren Tay, 2016 World Champion of Public Speaking."
+        }
+      ],
+      "notes": "Toastmasters International upload, 196 s; captions show a chant or announcer at 0 to about 38 s.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 38.0,
+      "end_sec": 196.0
+    },
+    {
+      "id": "h_dean_iowa_2004",
+      "label": "panned",
+      "speaker": "Howard Dean",
+      "title": "Iowa caucus night concession speech (the Dean scream)",
+      "date": "2004-01-19",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=01Nzj24xyP0",
+      "poor_reason": "shouted, hoarse, list-chanting delivery ending in a scream; judged unpresidential on delivery",
+      "judgement_sources": [
+        {
+          "url": "https://www.history.com/this-day-in-history/january-19/the-dean-scream",
+          "claim": "HISTORY retrospective on the 'Dean scream' speech after his third-place Iowa finish."
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Dean_scream",
+          "claim": "The clip aired 633 times on national networks and cable within four days and was widely mocked."
+        }
+      ],
+      "notes": "Upload 1243 s: Harkin introduction and crowd to about 420 s per captions; Dean from about 425 s to about 1040 s.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 420.0,
+      "end_sec": 1060.0
+    },
+    {
+      "id": "h_west_vma_2015",
+      "label": "panned",
+      "speaker": "Kanye West",
+      "title": "Video Vanguard Award acceptance speech, MTV VMAs",
+      "date": "2015-08-30",
+      "genre": "award",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=r7mLs9LeQB4",
+      "poor_reason": "rambling, off-script acceptance that loses its thread",
+      "judgement_sources": [
+        {
+          "url": "https://www.npr.org/2015/08/31/436188683/small-batch-the-vmas-from-speeches-to-singing-to-squads",
+          "claim": "NPR called it a rambling speech."
+        },
+        {
+          "url": "https://www.foxnews.com/entertainment/kanye-west-rants-at-vmas-i-have-decided-to-run-for-president",
+          "claim": "Fox News: West 'rants' at the VMAs in a nonsensical speech."
+        }
+      ],
+      "notes": "MTV highlights upload 545 s (edited); no captions, so bounds are set from the medium-en read.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 545.0
+    },
+    {
+      "id": "h_paltrow_oscars_1999",
+      "label": "panned",
+      "speaker": "Gwyneth Paltrow",
+      "title": "Best Actress acceptance speech, 71st Academy Awards",
+      "date": "1999-03-21",
+      "genre": "award",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=NG9p1FFwxb0",
+      "poor_reason": "breathless, tearful, overwrought acceptance; listed among the worst Oscar speeches",
+      "judgement_sources": [
+        {
+          "url": "https://theweek.com/oscars/81895/the-best-and-worst-speeches-in-oscars-history",
+          "claim": "The Week lists it among the worst speeches in Oscars history."
+        },
+        {
+          "url": "https://www.heart.co.uk/showbiz/tv-movies/worst-oscars-speeches/",
+          "claim": "Heart lists it among the cringiest Oscar speeches."
+        }
+      ],
+      "notes": "Oscars channel upload: presenter and announcer 0 to about 78 s per captions.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 78.0,
+      "end_sec": 259.0
+    },
+    {
+      "id": "h_sanford_presser_2009",
+      "label": "panned",
+      "speaker": "Mark Sanford",
+      "title": "Press conference statement admitting the Argentina affair",
+      "date": "2009-06-24",
+      "genre": "press_statement",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=1qAtZ9N6FiY",
+      "poor_reason": "meandering, halting statement that opens with hiking stories before the admission",
+      "judgement_sources": [
+        {
+          "url": "https://www.npr.org/2009/06/25/105923781/how-not-to-handle-a-political-crisis",
+          "claim": "NPR: a textbook case of how not to handle a political crisis."
+        }
+      ],
+      "notes": "TPM upload 1108 s: prepared statement 0 to about 655 s, reporter questions after (excluded).",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 655.0
+    },
+    {
+      "id": "h_johnson_cbi_2021",
+      "label": "panned",
+      "speaker": "Boris Johnson",
+      "title": "CBI annual conference speech (Peppa Pig World)",
+      "date": "2021-11-22",
+      "genre": "keynote",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=PCiJxEN0z6M",
+      "poor_reason": "lost his place in his notes ('forgive me'), long pauses, car noises and a Peppa Pig digression",
+      "judgement_sources": [
+        {
+          "url": "https://www.euronews.com/2021/11/23/peppa-pig-world-uk-pm-boris-johnson-bemuses-with-speech-digression-about-children-s-theme-",
+          "claim": "Euronews: Johnson bemuses with a speech digression about a children's theme park."
+        },
+        {
+          "url": "https://www.newstatesman.com/politics/the-staggers/2021/11/is-boris-johnson-losing-his-way",
+          "claim": "New Statesman on the speech: 'Is Boris Johnson losing his way?'"
+        },
+        {
+          "url": "https://www.ucl.ac.uk/news/headlines/2021/nov/why-was-boris-johnsons-cbi-speech-received-so-badly",
+          "claim": "UCL expert comment: why the CBI speech was received so badly."
+        }
+      ],
+      "notes": "CBI live-stream upload 1456 s, Johnson from 0 s; 'forgive me' at about 1060 s and Peppa Pig at about 1300 to 1400 s per captions; the excerpt is the last 900 s.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 556.0,
+      "end_sec": 1456.0
+    },
+    {
+      "id": "h_truss_conf_2014",
+      "label": "panned",
+      "speaker": "Liz Truss",
+      "title": "Speech to Conservative Party Conference 2014 (cheese and pork markets)",
+      "date": "2014-09-29",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=gygpvd9_Ra0",
+      "poor_reason": "stilted, mistimed pauses and a mismatched snarl on 'That. Is. A. Disgrace.'; mocked for the delivery",
+      "judgement_sources": [
+        {
+          "url": "https://www.huffingtonpost.co.uk/entry/liz-truss-cheese_uk_578b805ce4b0daae46fbf5b1",
+          "claim": "HuffPost UK on the widely mocked cheese and pork-markets delivery."
+        }
+      ],
+      "notes": "Conservatives channel full speech, 693 s.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 693.0
+    },
+    {
+      "id": "h_britt_sotu_2024",
+      "label": "panned",
+      "speaker": "Katie Britt",
+      "title": "Republican response to the 2024 State of the Union",
+      "date": "2024-03-07",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=xfKCWMG4O0I",
+      "poor_reason": "theatrical, whispered-to-tearful cadence widely panned as a performance",
+      "judgement_sources": [
+        {
+          "url": "https://www.thedailybeast.com/official-katie-britt-gop-response-to-state-of-the-union-has-republicans-losing-it",
+          "claim": "Daily Beast: the response had Republicans 'losing it'."
+        },
+        {
+          "url": "https://www.startribune.com/katie-britt-state-of-the-union-response-reaction/600349521",
+          "claim": "Star Tribune column panning the delivery and the setting."
+        }
+      ],
+      "notes": "CNBC upload 1053 s; Britt from 0 s per captions.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 900.0
+    },
+    {
+      "id": "h_bachmann_sotu_2011",
+      "label": "panned",
+      "speaker": "Michele Bachmann",
+      "title": "Tea Party response to the 2011 State of the Union",
+      "date": "2011-01-25",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=UtQ4nTSfguU",
+      "poor_reason": "delivered to the wrong camera, eye contact off-lens throughout on the network feed",
+      "judgement_sources": [
+        {
+          "url": "https://www.throughlinegroup.com/2011/01/26/michele-bachmanns-odd-tea-party-response/",
+          "claim": "Communication-coaching firm critique of the delivery."
+        },
+        {
+          "url": "https://www.mediaite.com/tv/as-cable-news-laughs-at-michelle-bachmanns-wrong-camera-speech-heres-the-whole-story",
+          "claim": "Mediaite: cable news laughed at the wrong-camera speech."
+        }
+      ],
+      "notes": "CNN upload 399 s; no captions, so bounds are set from the medium-en read. The pan is mainly visual, a known weakness of this label.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 399.0
+    },
+    {
+      "id": "h_hathaway_oscars_2013",
+      "label": "panned",
+      "speaker": "Anne Hathaway",
+      "title": "Best Supporting Actress acceptance speech, 85th Academy Awards",
+      "date": "2013-02-24",
+      "genre": "award",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=k_b5xav1jls",
+      "poor_reason": "awkward, rehearsed-sounding delivery ('It came true') that drew a backlash",
+      "judgement_sources": [
+        {
+          "url": "https://time.com/4540341/anne-hathaway-les-mis-oscar/",
+          "claim": "Time: she was uncomfortable that night, leading to the awkwardly delivered speech."
+        },
+        {
+          "url": "https://www.nme.com/news/film/anne-hathaway-explains-oscar-speech-got-called-big-time-1712190",
+          "claim": "NME: Hathaway says she 'got called out big time' for the speech."
+        }
+      ],
+      "notes": "Oscars channel upload: presenter and nominees 0 to about 118 s per captions.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 118.0,
+      "end_sec": 243.0
+    },
+    {
+      "id": "h_guilfoyle_rnc_2020",
+      "label": "panned",
+      "speaker": "Kimberly Guilfoyle",
+      "title": "2020 RNC speech, night 1",
+      "date": "2020-08-24",
+      "genre": "political",
+      "mode": "stage",
+      "source_url": "https://www.youtube.com/watch?v=ErSd_YiRCAs",
+      "poor_reason": "shouted at full volume to an empty hall; mocked for the delivery",
+      "judgement_sources": [
+        {
+          "url": "https://www.thedailybeast.com/kimberly-guilfoyle-shouts-unhinged-rnc-speech-at-the-top-of-her-lungs",
+          "claim": "Daily Beast: she shouted the speech at the top of her lungs."
+        },
+        {
+          "url": "https://www.marieclaire.com/politics/a33793626/kimberly-guilfoyle-speech-reactions-rnc/",
+          "claim": "Marie Claire on the strong reactions to the delivery."
+        }
+      ],
+      "notes": "PBS NewsHour upload 375 s; no captions, so bounds are set from the medium-en read.",
+      "selection_status": "heldout_pending_download_and_content_check",
+      "start_sec": 0.0,
+      "end_sec": 375.0
+    }
+  ]
+}
