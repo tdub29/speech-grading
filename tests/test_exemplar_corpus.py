@@ -6,6 +6,8 @@ from pathlib import Path
 
 import pytest
 
+from speech_grading.eval.provenance import scoring_sha256
+
 spec = importlib.util.spec_from_file_location("exemplar_corpus", Path(__file__).parents[1] / "tools/exemplar_corpus.py")
 corpus = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(corpus)
@@ -211,9 +213,13 @@ def test_stale_or_unchecked_grades_are_regraded_and_kept_out_of_summary(tmp_path
     passing = base | {"content_check": {"result": "pass"}}
     assert not corpus.grade_is_current(passing, stale)
     assert not corpus.grade_is_current(base, stale)
-    current = {"metadata": {"corpus_asr_provenance": corpus.asr_provenance(tmp_path / "audio" / "x1.wav")},
+    current = {"metadata": {"corpus_asr_provenance": corpus.asr_provenance(tmp_path / "audio" / "x1.wav"),
+                            "corpus_scoring_sha256": scoring_sha256()},
                "overall_score": 70, "metrics": {}, "dimensions": []}
     assert corpus.grade_is_current(passing, current)
+    old_code = current | {"metadata": current["metadata"] | {"corpus_scoring_sha256": "0" * 64}}
+    assert not corpus.grade_is_current(passing, old_code)  # grade from older scoring code is not reused
+    assert not corpus.grade_is_current(passing, current | {"metadata": {"corpus_asr_provenance": current["metadata"]["corpus_asr_provenance"]}})
     assert not corpus.grade_is_current(base | {"content_check": {"result": "pending"}}, current)
     rows = corpus.summarize([passing])["rows"]
     assert rows == []  # stale small-ASR grade never reaches the effects table
@@ -236,7 +242,8 @@ def test_excerpt_bounds_matches_acquire_formula_and_rejects_bad_bounds():
 def test_grade_refuses_excerpt_cut_at_superseded_bounds(tmp_path, monkeypatch):
     backend = _corpus_root(tmp_path, monkeypatch)
     passing = {"id": "x1", "speaker": "s", "label": "acclaimed", "genre": "g", "content_check": {"result": "pass"}}
-    current = {"metadata": {"corpus_asr_provenance": corpus.asr_provenance(tmp_path / "audio" / "x1.wav")},
+    current = {"metadata": {"corpus_asr_provenance": corpus.asr_provenance(tmp_path / "audio" / "x1.wav"),
+                            "corpus_scoring_sha256": scoring_sha256()},
                "overall_score": 70, "metrics": {}, "dimensions": []}
     assert corpus.bounds_current(passing, tmp_path / "audio" / "x1.wav")
     assert corpus.grade_is_current(passing, current)

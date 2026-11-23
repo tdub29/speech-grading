@@ -117,11 +117,13 @@ def pick_midclause_boundary(texts: list[str], starts: list[float], ends: list[fl
     return None
 
 
-def degradation_verdict(baseline: dict, edited: dict, target: str, expect: str, tol: float = 0.1) -> dict:
-    """Did ``target`` move in the ``expect`` direction, and which other numeric metrics moved over ``tol``?"""
+def degradation_verdict(baseline: dict, edited: dict, target: str, expect: str, tol: float = 0.1,
+                        min_rel: float = 0.0) -> dict:
+    """Did ``target`` move in the ``expect`` direction by at least ``min_rel`` of baseline (so ASR jitter
+    does not count), and which other numeric metrics moved over ``tol``?"""
     b = baseline[target]
     e = edited[target]
-    moved = e > b if expect == "up" else e < b
+    moved = (e > b if expect == "up" else e < b) and abs(e - b) >= min_rel * abs(b)
 
     def num(v):
         return isinstance(v, (int, float)) and not isinstance(v, bool)

@@ -202,6 +202,7 @@ def acquire(item):
             "source_url": item["source_url"], "start_sec": item.get("start_sec", 0), "cap_sec": duration}
 
 
+# shortcut: decode options (compute_type, beam, VAD) are code defaults, not in provenance; add them if they ever become configurable
 def asr_provenance(audio):
     """What a cached transcript must match to be reused: engine, model, language, exact audio bytes."""
     import hashlib
@@ -253,7 +254,10 @@ def grade_is_current(item, report):
         return False
     if not bounds_current(item, audio):  # excerpt cut at superseded bounds
         return False
-    return report.get("metadata", {}).get("corpus_asr_provenance") == asr_provenance(audio)
+    meta = report.get("metadata", {})
+    from speech_grading.eval.provenance import scoring_sha256
+    return (meta.get("corpus_asr_provenance") == asr_provenance(audio)
+            and meta.get("corpus_scoring_sha256") == scoring_sha256())  # older scoring code: regrade
 
 
 def grade(item):
@@ -276,6 +280,8 @@ def grade(item):
         raise RuntimeError(f"Requested acoustic measurements missing: {key}")
     value = report.model_dump()
     value["metadata"]["corpus_asr_provenance"] = provenance
+    from speech_grading.eval.provenance import scoring_sha256
+    value["metadata"]["corpus_scoring_sha256"] = scoring_sha256()
     write_json(output, value)
     return {"id": key, "status": "graded", "words": transcript.total_words}
 
@@ -478,6 +484,8 @@ def main():
         items = [item for item in items if item["id"] in args.ids]
     ROOT.mkdir(parents=True, exist_ok=True)
     if args.action == "summarize":
+        if args.ids and not args.output:  # a subset must never overwrite the full summary.json
+            parser.error("summarize --ids needs --output")
         result = summarize(items)
         out = args.output or ROOT / "summary.json"
         write_json(out, result)
