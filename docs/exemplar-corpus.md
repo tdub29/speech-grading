@@ -169,6 +169,14 @@ switches from speech to debate, and in Reagan's pair both sides are debates.
 
 ## Controlled degradations (one factor at a time)
 
+Status 2026-11-24: the A/B numbers in this section are void. They came from small-ASR transcripts and a
+grade cache keyed only on the transform name, so they predate the medium English ASR and the pace and pause
+repairs. The tool now keys its cache on ASR model, clip bytes and scoring code, and reads the serving ASR
+transcripts. Rerun `tools/ab_degrade.py` before quoting any A/B result. The stage pace band and mid-clause
+detector changes these results motivated were not shipped: at 20 held-out speakers neither effect could be
+measured. Only the measurement repairs shipped (pace windows split at long gaps, short pieces skipped, no
+long-pause finding next to a filler, word-choice thresholds read from config).
+
 `tools/ab_degrade.py` takes a 120 s clip from 5 graded exemplars. It writes one
 degraded copy per transform:
 - pace 0.8x and 1.25x
