@@ -46,6 +46,10 @@ def detect_pauses(t: Transcript, thresholds: dict) -> list[Finding]:
             continue  # micro
         if gap <= pause_long:
             continue  # normal
+        # Next to a filler ("the [0.9 s] um [0.9 s] budget"): fillers.py counts this hesitation once;
+        # scoring both gaps too charged one um three times.
+        if any(w.is_filled_pause or w.normalized in FILLED_PAUSES for w in (t.words[i - 1], t.words[i])):
+            continue
         # Long pause. Base score scales with how far the gap exceeds the threshold.
         base = min(1.0, 0.5 + (gap - pause_long))
 

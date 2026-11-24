@@ -63,12 +63,3 @@ def count_tricolons(sentences: list[str], max_item_words: int = 6) -> int:
         if joined or same_start:
             count += 1
     return count
-
-
-def mid_clause_pause_share(gaps: list[float], at_boundary: list[bool], min_pause: float = 0.25):
-    pauses = [i for i, gap in enumerate(gaps) if gap >= min_pause]
-    if not pauses:
-        return None
-
-    mid = sum(1 for i in pauses if not at_boundary[i])
-    return round(mid / len(pauses), 3)

@@ -51,6 +51,7 @@ def detect_tripped_up(
     t: Transcript,
     findings: Optional[list[Finding]] = None,
     weights: Optional[dict] = None,
+    thresholds: Optional[dict] = None,
 ) -> list[Finding]:
     """Fuse lexical + timing + disfluency signals into ranked tripped-up moments.
 
@@ -58,8 +59,9 @@ def detect_tripped_up(
     from the transcript so the detector is self-contained.
     """
     weights = weights or DEFAULT_THRESHOLDS["tripped_up_weights"]
-    min_score = DEFAULT_THRESHOLDS["tripped_up_min_score"]
-    low_conf_threshold = DEFAULT_THRESHOLDS["low_conf_threshold"]
+    th = thresholds or {}  # the caller's config; a config override used to be ignored here
+    min_score = th.get("tripped_up_min_score", DEFAULT_THRESHOLDS["tripped_up_min_score"])
+    low_conf_threshold = th.get("low_conf_threshold", DEFAULT_THRESHOLDS["low_conf_threshold"])
     median = t.speaker_median_gap
     words = t.words
     out: list[Finding] = []
@@ -175,7 +177,7 @@ class OfflineWordChoice(WordChoiceAnalyzer):
         seen: set[tuple[int, str]] = set()
 
         # Tripped-up moments (the signature signal).
-        for f in detect_tripped_up(t, None, self.cfg.thresholds.get("tripped_up_weights")):
+        for f in detect_tripped_up(t, None, self.cfg.thresholds.get("tripped_up_weights"), thresholds=self.cfg.thresholds):
             key = (f.word_index, "tripped_up")
             if key in seen:
                 continue

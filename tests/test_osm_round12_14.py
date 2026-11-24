@@ -1,22 +1,10 @@
 import sys
 from pathlib import Path
 
-from speech_grading.analysis.delivery_extras import mid_clause_pause_share
 from speech_grading.eval.ab_pairs import degradation_verdict
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from exemplar_corpus import paired_markdown  # noqa: E402
-
-
-def test_midclause_example():
-    assert mid_clause_pause_share([0.1, 0.5, 0.3, 0.8], [False, True, False, False]) == 0.667
-
-
-def test_midclause_none_and_threshold():
-    assert mid_clause_pause_share([0.1, 0.2], [False, False]) is None
-    assert mid_clause_pause_share([], []) is None
-    assert mid_clause_pause_share([0.25, 0.4], [True, True]) == 0.0
-    assert mid_clause_pause_share([0.3, 0.6], [False, True], min_pause=0.5) == 0.0
 
 
 def test_verdict_example():

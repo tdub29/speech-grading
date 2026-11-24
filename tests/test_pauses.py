@@ -4,9 +4,16 @@ from __future__ import annotations
 
 from speech_grading.analysis.pauses import detect_pauses
 from speech_grading.config import Config
+from speech_grading.schema import derive_transcript_fields
 
 
 def test_detect_pauses_flags_midclause_long_pause(sample_transcript):
+    # The fixture's only long gap follows "uh,": fillers.py scores that hesitation, so no pause finding (D3).
+    assert detect_pauses(sample_transcript, Config().thresholds) == []
+    # The same gap after a lexical word is a mid-clause pause.
+    words = [w.model_copy(update={"text": "the", "normalized": "the", "is_filled_pause": False}) if w.text == "uh," else w
+             for w in sample_transcript.words]
+    sample_transcript = derive_transcript_fields(sample_transcript.model_copy(update={"words": words}))
     ps = detect_pauses(sample_transcript, Config().thresholds)
 
     # At least one long pause is detected, and every finding is a long_pause.
@@ -65,4 +72,5 @@ def test_pause_after_comma_is_clause_boundary_not_midclause():
           Word(text="together", start=3.7, end=4.2)]
     t = derive_transcript_fields(Transcript(words=ws, has_timing=True))
     r = [f.rationale for f in _dp(t, {})]
-    assert r == ["Long pause at a clause boundary", "Long mid-clause pause (awkward)"]
+    # The gap after "uh," is the filler's hesitation, scored once by fillers.py (D3), not a pause finding.
+    assert r == ["Long pause at a clause boundary"]

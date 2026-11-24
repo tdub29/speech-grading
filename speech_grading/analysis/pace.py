@@ -38,28 +38,42 @@ def _rate(n_words: int, seconds: float) -> float:
     return n_words / (seconds / 60.0) if seconds > 0 else 0.0
 
 
-def _window_wpms(t: Transcript, window_sec: float) -> list[float]:
+def _capped_ends(ws: list, word_cap: float) -> list[float]:
+    """Word ends with any word held past ``word_cap`` trimmed to the median word length."""
+    typical = statistics.median(w.end - w.start for w in ws) if ws else 0.0
+    return [min(w.end, w.start + typical) if w.end - w.start > word_cap else w.end for w in ws]
+
+
+def _window_wpms(t: Transcript, window_sec: float, gap_cap: float = 2.0, word_cap: float = 1.5) -> list[float]:
     """Rolling-window WPM across [first word start, last word end].
 
     Each window is ``window_sec`` long; its WPM counts the real lexical words whose
     *start* falls inside the window, divided by the window length in minutes. Windows
     are non-overlapping and tile the span; a partial final window is included.
-    Filled-pause tokens never contribute to the word count.
+    Filled-pause tokens never contribute to the word count. Windows also split at every
+    gap over ``gap_cap`` measured from word-capped ends (the gaps ``overall_wpm`` drops),
+    and a piece shorter than half a window or with fewer than 3 lexical words gives none.
     """
     if not t.words or window_sec <= 0:
         return []
 
     # Tile each of this speaker's turns separately (one turn when unfiltered), so time
-    # spent listening to another speaker never reads as a 0-WPM window.
-    bounds = sorted({0, *t.turn_starts}) + [len(t.words)]
+    # spent listening to another speaker never reads as a 0-WPM window; split at applause
+    # and dead air too, so a break overall WPM already discounts never reads as a slow window.
+    ws = t.words
+    end = _capped_ends(ws, word_cap)
+    bounds = sorted({0, *t.turn_starts} | {i for i in range(1, len(ws)) if ws[i].start - end[i - 1] > gap_cap}) + [len(ws)]
     wpms: list[float] = []
     for a, b in zip(bounds, bounds[1:]):
-        seg = t.words[a:b]
+        seg = ws[a:b]
         if not seg:
             continue
         span_start = min(w.start for w in seg)
-        span_end = max(w.end for w in seg)
+        span_end = max(end[a:b])
         starts = [w.start for w in seg if not w.is_filled_pause]
+        # A one-word "Yes." turn or a word stranded between two breaks is not a pace sample.
+        if span_end - span_start < window_sec / 2 or len(starts) < 3:
+            continue
         lo = span_start
         while lo < span_end:
             hi = min(lo + window_sec, span_end)
@@ -126,8 +140,7 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
     gap_cap = thresholds.get("wpm_gap_cap_sec", 2.0)
     word_cap = thresholds.get("wpm_word_cap_sec", 1.5)
     ws = t.words
-    typical = statistics.median(w.end - w.start for w in ws) if ws else 0.0
-    eff_end = [min(w.end, w.start + typical) if w.end - w.start > word_cap else w.end for w in ws]
+    eff_end = _capped_ends(ws, word_cap)
     held = sum(w.end - e for w, e in zip(ws, eff_end))
     excess = sum(max(0.0, ws[i].start - eff_end[i - 1] - gap_cap)
                  for i in range(1, len(ws)) if i not in t.turn_starts)  # turns: other speaker's time
@@ -138,7 +151,7 @@ def compute_pace(t: Transcript, thresholds: dict) -> DimensionScore:
     overall_wpm = _rate(t.total_words, t.duration_sec - excess)
     articulation_wpm = _rate(t.total_words, t.speaking_sec - held)
 
-    window_wpms = _window_wpms(t, window_sec)
+    window_wpms = _window_wpms(t, window_sec, gap_cap, word_cap)
     k = len(window_wpms)
     consistency = statistics.pstdev(window_wpms) if k >= 2 else 0.0
 
