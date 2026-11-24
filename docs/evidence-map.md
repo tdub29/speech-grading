@@ -124,8 +124,8 @@ Sources: [fillers.py](../speech_grading/analysis/fillers.py), [repetitions.py](.
 | Tripped signal weights | hedge .20; vague .15; pause .25; low_conf .20; filled_pause .10; repair .10 | No listener-rated model fitting | no evidence | Keep all six weights heuristic |
 | `_pause_norm` |0 at median+.2 s; linear width.8 s;1 at median+1 s | No calibrated word-finding norm | no evidence | Keep .2/.8/1 heuristic |
 | `low_conf_threshold` | .5, below threshold contributes (threshold-conf)/threshold; None contributes0 | ASR confidence not calibrated to slurring, comprehension or lexical retrieval | no evidence | Keep .5 heuristic; never diagnose speech ability from recognition confidence |
-| `tripped_up_min_score` | .45; offline reads DEFAULT_THRESHOLDS directly | No validation; a config override for this key currently does not change detector | no evidence | Keep .45 heuristic; record this effective behavior, do not imply config takes effect |
-| Tripped low-conf config source | DEFAULT_THRESHOLDS .5, not supplied Config override | Code fact | no evidence | Preserve this task's scope; effective default mapped above |
+| `tripped_up_min_score` | .45; offline reads the config value, DEFAULT_THRESHOLDS when unset | No validation; a config override for this key changes the detector | no evidence | Keep .45 heuristic |
+| Tripped low-conf config source | Config `low_conf_threshold`, DEFAULT_THRESHOLDS .5 when unset | Code fact | no evidence | Keep .5 default; a config override takes effect |
 | Tripped active rationale | Signal>=.5 displayed; output score capped1, rounded3 decimals | Explanation selection, not causal attribution | no evidence | Keep .5 heuristic; a displayed reason is not proven cause |
 | Offline suggestion confidence | .6, both single-token and phrase suggestions | Fixed constant, no calibrated confidence | no evidence | Keep .6 heuristic |
 | WordNet candidate cap | First6 synsets, single-word alphabetic candidates; keep specificity gain>0; rank by gain then frequency | Norms measure concreteness/frequency, not contextual substitution correctness | no evidence | Keep6 heuristic; require semantic fit before accepting |
