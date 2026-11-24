@@ -53,7 +53,14 @@
       "notes": "Governor Mario M Cuomo channel upload, full speech 2355 s; no captions, so the excerpt starts at 0 s and bounds are set from the medium-en read.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 900.0
+      "end_sec": 900.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Cuomo from 'Thank you very much. On behalf of the great Empire State' to 'fighting to preserve our environment' (excerpt cut mid-speech at 900 s); no introducer before 0.7 s; applause gaps up to 41.8 s"
+      }
     },
     {
       "id": "h_jackson_dnc_1988",
@@ -83,7 +90,14 @@
       "notes": "314 s excerpt upload of the closing section; the C-SPAN full speech is the alt.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 314.0
+      "end_sec": 314.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Jackson from 'Jesse Jackson, you don't understand my situation' (his own voicing of others) to 'I love you very much'; 622 lexical words, no chair or announcer"
+      }
     },
     {
       "id": "h_richards_dnc_1988",
@@ -110,7 +124,14 @@
       "notes": "Full speech upload 2037 s; captions show Richards from 0 s.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 900.0
+      "end_sec": 900.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Richards from 'Thank you. Thank you very much. Good evening, ladies and gentlemen' to 'We want leaders like Jesse Jackson'; 'Crowd Cheering' at 885.2 s is a forced-English artifact over crowd noise (kept as ASR error); no announcer"
+      }
     },
     {
       "id": "h_fisher_rnc_1992",
@@ -137,7 +158,14 @@
       "notes": "Convention video and announcer introduction 0 to about 75 s per captions; speech to about 862 s.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 75.0,
-      "end_sec": 862.0
+      "end_sec": 862.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Fisher from 'Thank you. Thank you.' (0 to 4.0 s, after the announcer's introduction ends before the excerpt start, most likely Fisher acknowledging applause; not attributable from the transcript, kept as in development 'Go ahead.' in p_clinton_dnc_1988) and 'Less than three months ago, at platform hearings in Salt Lake City' (14.4 s) to 'God bless us all. Good night.'"
+      }
     },
     {
       "id": "h_macarthur_congress_1951",
@@ -164,7 +192,14 @@
       "notes": "320 s excerpt upload ending on 'Goodbye.'",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 320.0
+      "end_sec": 320.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "MacArthur from 'Some may say to avoid spread of the conflict' (16.5 s, no words before) to 'Goodbye.'; 395 lexical words, one voice; the upload is an edited excerpt of the address (gaps up to 10.6 s)"
+      }
     },
     {
       "id": "h_cuddy_ted_2012",
@@ -195,7 +230,14 @@
       "notes": "Captions show an inserted news clip with a narrator at about 80 to 100 s; the excerpt starts after it.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 100.0,
-      "end_sec": 1000.0
+      "end_sec": 1000.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Cuddy from 'So, um, a handshake or the lack of a handshake' (2.8 s, after the inserted news clip ends before the excerpt start) to the car-accident story (excerpt cut mid-talk at 900 s); 2668 lexical words in two runs; no narrator or host words"
+      }
     },
     {
       "id": "h_waldinger_ted_2015",
@@ -222,7 +264,14 @@
       "notes": "TEDxBeaconStreet talk on the TED channel, 767 s.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 767.0
+      "end_sec": 767.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Waldinger from 'What keeps us healthy and happy as we go through life?' (12.4 s) to 'The good life is built with good relationships. Thank you.' (759.58 s); 759.6 to 763.8 s is a zero-duration loop over applause ('Congratulations! Thank you ... guys. Convention.'), a forced-English artifact kept as ASR error as in development (e_eisenhower_farewell_1961, a_kinnock_conf_1985); no host"
+      }
     },
     {
       "id": "h_obrien_dartmouth_2011",
@@ -256,7 +305,14 @@
       "notes": "Team Coco upload 1425 s; O'Brien speaking from 0 s per captions.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 900.0
+      "end_sec": 900.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "O'Brien from 'I've been living in Los Angeles for two years' (6.5 s) to the parents' advice passage (excerpt cut mid-speech at 900 s); 1951 lexical words, laughter gaps only, no introducer"
+      }
     },
     {
       "id": "h_lacroix_tm_2001",
@@ -283,7 +339,14 @@
       "notes": "Speaker's own upload: title card 0 to about 15 s; winning speech to about 490 s; after that the speaker comments on the win and promotes his school (excluded).",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 15.0,
-      "end_sec": 492.0
+      "end_sec": 492.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "LaCroix contest speech from 'Can you remember a moment when a brilliant idea flashed into your head?' (3.8 s, after the title card) to 'Go ahead and fall, fall forward!'; 'Mr. Contest Chair, friends' is his own address; no MC speech"
+      }
     },
     {
       "id": "h_tay_tm_2016",
@@ -310,7 +373,14 @@
       "notes": "Toastmasters International upload, 196 s; captions show a chant or announcer at 0 to about 38 s.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 38.0,
-      "end_sec": 196.0
+      "end_sec": 196.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Tay from 'Hey, loser, how do you like your new school uniform?' (10.3 s; no words before) to 'Let us all be vulnerable together'; 266 lexical words; the Toastmasters upload is a 196 s cut of the winning speech; no MC speech"
+      }
     },
     {
       "id": "h_dean_iowa_2004",
@@ -335,7 +405,14 @@
       "notes": "Upload 1243 s: Harkin introduction and crowd to about 420 s per captions; Dean from about 425 s to about 1040 s.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 420.0,
-      "end_sec": 1060.0
+      "end_sec": 1060.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Dean from 'Well... you guys you have already got the picture here' (27.5 s; crowd only before) through the state list and 'Yeah!' to 'Thank you very much ... Thank you, thank you, thank you.' (621.0 s); 'Come on up here, Jeannie' is Dean calling a staffer up, no other voice transcribed; 'Tom' at 57.0 s is Dean naming Harkin mid-sentence"
+      }
     },
     {
       "id": "h_west_vma_2015",
@@ -359,8 +436,19 @@
       ],
       "notes": "MTV highlights upload 545 s (edited); no captions, so bounds are set from the medium-en read.",
       "selection_status": "heldout_pending_download_and_content_check",
-      "start_sec": 0.0,
-      "end_sec": 545.0
+      "start_sec": 182.5,
+      "end_sec": 545.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "West from 'First of all, thank you, Taylor, for being so gracious' (183.4 s) to 'I don't understand it bro.' (544.5 s); 0 to 7.0 s is the presenter (Taylor Swift), 18.7 to 29.5 s a song lyric over the music bed, 122 to 149 s a 'Jesus!' loop over music and 157.7 s 'bro listen to the kids' is not attributable, so start_sec 0 tightened to 182.5; the MTV upload is an edited highlights cut (jump cuts kept)",
+        "tightened_from": {
+          "start_sec": 0.0,
+          "end_sec": 545.0
+        }
+      }
     },
     {
       "id": "h_paltrow_oscars_1999",
@@ -384,8 +472,19 @@
       ],
       "notes": "Oscars channel upload: presenter and announcer 0 to about 78 s per captions.",
       "selection_status": "heldout_pending_download_and_content_check",
-      "start_sec": 78.0,
-      "end_sec": 259.0
+      "start_sec": 92.0,
+      "end_sec": 259.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Paltrow from 'Oh, I would like to thank the Academy from the bottom of my heart' (excerpt 14.3 s) to 'Thank you, thank you so much everybody.'; 'This is her first Academy Award.' at excerpt 0 to 2.7 s is the announcer, so start_sec 78.0 tightened to 92.0",
+        "tightened_from": {
+          "start_sec": 78.0,
+          "end_sec": 259.0
+        }
+      }
     },
     {
       "id": "h_sanford_presser_2009",
@@ -405,8 +504,19 @@
       ],
       "notes": "TPM upload 1108 s: prepared statement 0 to about 655 s, reporter questions after (excluded).",
       "selection_status": "heldout_pending_download_and_content_check",
-      "start_sec": 0.0,
-      "end_sec": 655.0
+      "start_sec": 19.8,
+      "end_sec": 655.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Sanford from 'I had a conversation with Gina Smith, uh, this morning' (excerpt 20.1 s) to 'time that I probably can't devote to the R. G. A.' (653.5 s), ending before reporter questions; 'Where's Gina Smith? Not here. Not here? Okay.' (16.2 to 19.1 s) carries a likely reply from the room ('Not here.' at 17.9 s), so start_sec 0.0 tightened to 19.8 rather than kept under the development 'Go ahead.' precedent (verified in run 6; run 5 draft said pass)",
+        "tightened_from": {
+          "start_sec": 0.0,
+          "end_sec": 655.0
+        }
+      }
     },
     {
       "id": "h_johnson_cbi_2021",
@@ -435,7 +545,18 @@
       "notes": "CBI live-stream upload 1456 s, Johnson from 0 s; 'forgive me' at about 1060 s and Peppa Pig at about 1300 to 1400 s per captions; the excerpt is the last 900 s.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 556.0,
-      "end_sec": 1456.0
+      "end_sec": 1450.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Johnson from 'century Persia, I think' (0.0 s, excerpt cut mid-speech at its committed start) through 'Forgive me.' (520.1 s) and Peppa Pig World (764.4 s) to 'Thank you very much for your kind attention this morning. Thank you.' (891.7 s); 896.96 to 899.98 s 'Thank you, Prime Minister.' is the host, so end_sec 1456.0 tightened to 1450.0 (excerpt 894.0 s)",
+        "tightened_from": {
+          "start_sec": 556.0,
+          "end_sec": 1456.0
+        }
+      }
     },
     {
       "id": "h_truss_conf_2014",
@@ -456,7 +577,14 @@
       "notes": "Conservatives channel full speech, 693 s.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 693.0
+      "end_sec": 693.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Truss from 'Conference, I have to confess that I was both delighted and surprised' (11.0 s; no words before) to 'until the British apple is back at the top of the tree' (688.1 s); 1048 lexical words in 27 runs, one voice, no chair or introducer; the upload ends at 693.0 s"
+      }
     },
     {
       "id": "h_britt_sotu_2024",
@@ -481,7 +609,14 @@
       "notes": "CNBC upload 1053 s; Britt from 0 s per captions.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 900.0
+      "end_sec": 900.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Britt from 'Good evening, America. My name is Katie Britt' (0.0 s) to 'American greatness rests in the fact that we always' (excerpt cut mid-speech at 900 s); 1690 lexical words in 8 runs, one voice, no network anchor or introducer; 'Lincoln Riley' for Laken Riley kept as ASR error"
+      }
     },
     {
       "id": "h_bachmann_sotu_2011",
@@ -506,7 +641,14 @@
       "notes": "CNN upload 399 s; no captions, so bounds are set from the medium-en read. The pan is mainly visual, a known weakness of this label.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 399.0
+      "end_sec": 399.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Bachmann from 'Good evening. My name is Congresswoman Michelle Bachman' (0.7 s) to 'God bless the United States of America' (396.0 s); 952 lexical words in one run, one voice, no anchor or introducer; the documented pan is mainly visual (camera gaze), a label-proxy weakness already named in the manifest notes, not a content-check failure"
+      }
     },
     {
       "id": "h_hathaway_oscars_2013",
@@ -530,8 +672,19 @@
       ],
       "notes": "Oscars channel upload: presenter and nominees 0 to about 118 s per captions.",
       "selection_status": "heldout_pending_download_and_content_check",
-      "start_sec": 118.0,
-      "end_sec": 243.0
+      "start_sec": 130.0,
+      "end_sec": 243.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Hathaway from 'It came true. Oh. Thank you so much to the Academy' (excerpt 12.7 s) to 'never more in real life. Thank you. Thank you.' (122.5 s); 'The leading role in Rachael Getting Married.' at excerpt 0 to 3.0 s is the presenter reading the nomination, so start_sec 118.0 tightened to 130.0; 'Um,' at 81.9 s is her own filler; no other voice",
+        "tightened_from": {
+          "start_sec": 118.0,
+          "end_sec": 243.0
+        }
+      }
     },
     {
       "id": "h_guilfoyle_rnc_2020",
@@ -556,7 +709,14 @@
       "notes": "PBS NewsHour upload 375 s; no captions, so bounds are set from the medium-en read.",
       "selection_status": "heldout_pending_download_and_content_check",
       "start_sec": 0.0,
-      "end_sec": 375.0
+      "end_sec": 375.0,
+      "content_check": {
+        "result": "pass",
+        "by": "model-pipeline Data stage agent (maker, unreviewed)",
+        "date": "2026-11-23",
+        "method": "transcript read (Whisper medium, language en, snapshot 08e178d4, of the excerpt itself) of the opening 25 s, the closing 25 s, the first 3 and last 3 word runs split at gaps over 2 s, every run under 12 words, and the word timings at each bound; speaker-only yes or no per Gate 2 rule 1 and rule 2; drafted by the stopped run 5 agent and re-read in run 6",
+        "note": "Guilfoyle from 'Good evening, America, I'm Kimberly Guilfoyle' (2.7 s; no words before) to 'the best is yet to come.' (369.0 s, WAV 374.9 s); 760 lexical words in one run (no gap over 2 s: no hall audience), no introducer, anchor or second voice"
+      }
     }
   ]
 }
