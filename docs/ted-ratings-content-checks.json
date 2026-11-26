@@ -1,0 +1,1830 @@
+{
+  "ted_0001_al_gore_on_averting_climate_crisis": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 252,
+    "speech_coverage": 0.817,
+    "mean_confidence": 0.968,
+    "reasons": []
+  },
+  "ted_0017_amy_smith_shares_simple_lifesaving_design": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 349,
+    "speech_coverage": 0.889,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_0018_ross_lovegrove_shares_organic_designs": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 331,
+    "speech_coverage": 0.814,
+    "mean_confidence": 0.939,
+    "reasons": []
+  },
+  "ted_0029_dan_gilbert_asks_why_are_we_happy": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 348,
+    "speech_coverage": 0.775,
+    "mean_confidence": 0.945,
+    "reasons": []
+  },
+  "ted_0053_phil_borges_on_endangered_cultures": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 308,
+    "speech_coverage": 0.811,
+    "mean_confidence": 0.931,
+    "reasons": []
+  },
+  "ted_0054_martin_rees_asks_is_this_our_final_century": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 284,
+    "speech_coverage": 0.779,
+    "mean_confidence": 0.94,
+    "reasons": []
+  },
+  "ted_0064_e_o_wilson_on_saving_life_on_earth": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 246,
+    "speech_coverage": 0.924,
+    "mean_confidence": 0.937,
+    "reasons": []
+  },
+  "ted_0118_bill_stone_explores_the_earth_and_space": {
+    "result": "fail",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 227,
+    "speech_coverage": 0.533,
+    "mean_confidence": 0.943,
+    "reasons": [
+      "non-speech stretch over 20 s"
+    ]
+  },
+  "ted_0138_erin_mckean_redefines_the_dictionary": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 334,
+    "speech_coverage": 0.812,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_0144_zeresenay_alemseged_looks_for_humanity_s_roots": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 354,
+    "speech_coverage": 0.886,
+    "mean_confidence": 0.93,
+    "reasons": []
+  },
+  "ted_0152_maira_kalman_the_illustrated_woman": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 349,
+    "speech_coverage": 0.808,
+    "mean_confidence": 0.919,
+    "reasons": []
+  },
+  "ted_0169_daniel_goleman_on_compassion": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 330,
+    "speech_coverage": 0.847,
+    "mean_confidence": 0.948,
+    "reasons": []
+  },
+  "ted_0201_jill_bolte_taylor_s_powerful_stroke_of_insight": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 353,
+    "speech_coverage": 0.84,
+    "mean_confidence": 0.942,
+    "reasons": []
+  },
+  "ted_0204_karen_armstrong_makes_her_ted_prize_wish_the_charter_for_com": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 232,
+    "speech_coverage": 0.818,
+    "mean_confidence": 0.947,
+    "reasons": []
+  },
+  "ted_0219_amy_tan_on_creativity": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 365,
+    "speech_coverage": 0.892,
+    "mean_confidence": 0.949,
+    "reasons": []
+  },
+  "ted_0225_paul_ewald_asks_can_we_domesticate_germs": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 447,
+    "speech_coverage": 0.918,
+    "mean_confidence": 0.946,
+    "reasons": []
+  },
+  "ted_0231_yves_behar_on_designing_objects_that_tell_stories": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 327,
+    "speech_coverage": 0.901,
+    "mean_confidence": 0.923,
+    "reasons": []
+  },
+  "ted_0274_spencer_wells_is_building_a_family_tree_for_all_humanity": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 414,
+    "speech_coverage": 0.876,
+    "mean_confidence": 0.929,
+    "reasons": []
+  },
+  "ted_0308_doris_kearns_goodwin_on_learning_from_past_presidents": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 442,
+    "speech_coverage": 0.881,
+    "mean_confidence": 0.947,
+    "reasons": []
+  },
+  "ted_0322_newton_aduaka_tells_the_story_of_ezra": {
+    "result": "fail",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 138,
+    "speech_coverage": 0.371,
+    "mean_confidence": 0.884,
+    "reasons": [
+      "138 words < 150",
+      "non-speech stretch over 20 s"
+    ]
+  },
+  "ted_0325_james_forbes": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 257,
+    "speech_coverage": 0.887,
+    "mean_confidence": 0.956,
+    "reasons": []
+  },
+  "ted_0362_paul_sereno_digs_up_dinosaurs": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 338,
+    "speech_coverage": 0.808,
+    "mean_confidence": 0.917,
+    "reasons": []
+  },
+  "ted_0364_greg_lynn_on_organic_design": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 302,
+    "speech_coverage": 0.892,
+    "mean_confidence": 0.951,
+    "reasons": []
+  },
+  "ted_0368_joseph_pine_on_what_consumers_want": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 259,
+    "speech_coverage": 0.675,
+    "mean_confidence": 0.926,
+    "reasons": []
+  },
+  "ted_0421_bruce_bueno_de_mesquita_predicts_iran_s_future": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 360,
+    "speech_coverage": 0.874,
+    "mean_confidence": 0.968,
+    "reasons": []
+  },
+  "ted_0440_sean_gourley_on_the_mathematics_of_war": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 335,
+    "speech_coverage": 0.803,
+    "mean_confidence": 0.955,
+    "reasons": []
+  },
+  "ted_0497_paul_romer": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 355,
+    "speech_coverage": 0.84,
+    "mean_confidence": 0.96,
+    "reasons": []
+  },
+  "ted_0511_rebecca_saxe_how_brains_make_moral_judgments": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 403,
+    "speech_coverage": 0.838,
+    "mean_confidence": 0.956,
+    "reasons": []
+  },
+  "ted_0514_bjarke_ingels_3_warp_speed_architecture_tales": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 385,
+    "speech_coverage": 0.874,
+    "mean_confidence": 0.936,
+    "reasons": []
+  },
+  "ted_0562_shashi_tharoor": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 341,
+    "speech_coverage": 0.796,
+    "mean_confidence": 0.937,
+    "reasons": []
+  },
+  "ted_0609_jamie_heywood_the_big_idea_my_brother_inspired": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 411,
+    "speech_coverage": 0.862,
+    "mean_confidence": 0.938,
+    "reasons": []
+  },
+  "ted_0624_raghava_kk_five_lives_of_an_artist": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 350,
+    "speech_coverage": 0.798,
+    "mean_confidence": 0.947,
+    "reasons": []
+  },
+  "ted_0731_julian_assange_why_the_world_needs_wikileaks": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 351,
+    "speech_coverage": 0.819,
+    "mean_confidence": 0.936,
+    "reasons": []
+  },
+  "ted_0770_christien_meindertsma_on_pig_05049": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 350,
+    "speech_coverage": 0.802,
+    "mean_confidence": 0.923,
+    "reasons": []
+  },
+  "ted_0804_greg_stone_saving_the_ocean_one_island_at_a_time": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 390,
+    "speech_coverage": 0.824,
+    "mean_confidence": 0.957,
+    "reasons": []
+  },
+  "ted_0809_aaron_huey": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 277,
+    "speech_coverage": 0.736,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_0816_kristina_gjerde_making_law_on_the_high_seas": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 337,
+    "speech_coverage": 0.918,
+    "mean_confidence": 0.943,
+    "reasons": []
+  },
+  "ted_0822_william_ury": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 321,
+    "speech_coverage": 0.814,
+    "mean_confidence": 0.963,
+    "reasons": []
+  },
+  "ted_0834_beverly_dereck_joubert_life_lessons_from_big_cats": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 303,
+    "speech_coverage": 0.728,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_0836_majora_carter_3_stories_of_local_ecoactivism": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 355,
+    "speech_coverage": 0.884,
+    "mean_confidence": 0.942,
+    "reasons": []
+  },
+  "ted_0842_deborah_rhodes": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 278,
+    "speech_coverage": 0.734,
+    "mean_confidence": 0.958,
+    "reasons": []
+  },
+  "ted_0862_christopher_mcdougall_are_we_born_to_run": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 430,
+    "speech_coverage": 0.864,
+    "mean_confidence": 0.943,
+    "reasons": []
+  },
+  "ted_0865_cynthia_breazeal_the_rise_of_personal_robots": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 426,
+    "speech_coverage": 0.86,
+    "mean_confidence": 0.958,
+    "reasons": []
+  },
+  "ted_0866_mother_and_daughter_doctor_heroes_hawa_abdi_deqo_mohamed": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 303,
+    "speech_coverage": 0.841,
+    "mean_confidence": 0.919,
+    "reasons": []
+  },
+  "ted_0870_patricia_kuhl_the_linguistic_genius_of_babies": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 290,
+    "speech_coverage": 0.872,
+    "mean_confidence": 0.959,
+    "reasons": []
+  },
+  "ted_0872_lisa_gansky_the_future_of_business_is_the_mesh": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 342,
+    "speech_coverage": 0.852,
+    "mean_confidence": 0.937,
+    "reasons": []
+  },
+  "ted_0891_rogier_van_der_heide_why_light_needs_darkness": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 333,
+    "speech_coverage": 0.9,
+    "mean_confidence": 0.958,
+    "reasons": []
+  },
+  "ted_0898_patricia_ryan_ideas_in_all_languages_not_just_english": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 251,
+    "speech_coverage": 0.745,
+    "mean_confidence": 0.938,
+    "reasons": []
+  },
+  "ted_0912_roger_ebert_remaking_my_voice": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 282,
+    "speech_coverage": 0.771,
+    "mean_confidence": 0.95,
+    "reasons": []
+  },
+  "ted_0917_john_hunter_on_the_world_peace_game": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 320,
+    "speech_coverage": 0.777,
+    "mean_confidence": 0.931,
+    "reasons": []
+  },
+  "ted_0918_anil_ananthaswamy": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 372,
+    "speech_coverage": 0.912,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_0942_aaron_koblin": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 319,
+    "speech_coverage": 0.672,
+    "mean_confidence": 0.842,
+    "reasons": []
+  },
+  "ted_0976_simon_lewis_don_t_take_consciousness_for_granted": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 385,
+    "speech_coverage": 0.834,
+    "mean_confidence": 0.95,
+    "reasons": []
+  },
+  "ted_0985_a_robot_that_flies_like_a_bird": {
+    "result": "fail",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 143,
+    "speech_coverage": 0.559,
+    "mean_confidence": 0.876,
+    "reasons": [
+      "143 words < 150"
+    ]
+  },
+  "ted_0988_paul_bloom_the_origins_of_pleasure": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 320,
+    "speech_coverage": 0.738,
+    "mean_confidence": 0.933,
+    "reasons": []
+  },
+  "ted_0993_mark_pagel_how_language_transformed_humanity": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 347,
+    "speech_coverage": 0.862,
+    "mean_confidence": 0.97,
+    "reasons": []
+  },
+  "ted_1013_kate_hartman_the_art_of_wearable_communication": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 303,
+    "speech_coverage": 0.727,
+    "mean_confidence": 0.934,
+    "reasons": []
+  },
+  "ted_1020_elizabeth_murchison": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 296,
+    "speech_coverage": 0.79,
+    "mean_confidence": 0.959,
+    "reasons": []
+  },
+  "ted_1027_yang_lan": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 304,
+    "speech_coverage": 0.899,
+    "mean_confidence": 0.908,
+    "reasons": []
+  },
+  "ted_1046_jay_bradner_open_source_cancer_research": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 366,
+    "speech_coverage": 0.826,
+    "mean_confidence": 0.958,
+    "reasons": []
+  },
+  "ted_1047_beatrice_coron_stories_cut_from_paper": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 181,
+    "speech_coverage": 0.61,
+    "mean_confidence": 0.916,
+    "reasons": []
+  },
+  "ted_1051_daniel_wolpert_the_real_reason_for_brains": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 415,
+    "speech_coverage": 0.882,
+    "mean_confidence": 0.949,
+    "reasons": []
+  },
+  "ted_1061_michael_nielsen_open_science_now": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 335,
+    "speech_coverage": 0.867,
+    "mean_confidence": 0.956,
+    "reasons": []
+  },
+  "ted_1109_drew_berry_animations_of_unseeable_biology": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 393,
+    "speech_coverage": 0.845,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_1148_garth_lenz_images_of_beauty_and_devastation": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 309,
+    "speech_coverage": 0.773,
+    "mean_confidence": 0.928,
+    "reasons": []
+  },
+  "ted_1150_neil_macgregor_2600_years_of_history_in_one_object": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 274,
+    "speech_coverage": 0.788,
+    "mean_confidence": 0.938,
+    "reasons": []
+  },
+  "ted_1187_regina_dugan_from_mach_20_glider_to_humming_bird_drone": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 230,
+    "speech_coverage": 0.832,
+    "mean_confidence": 0.967,
+    "reasons": []
+  },
+  "ted_1210_brian_greene_why_is_our_universe_fine_tuned_for_life": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 321,
+    "speech_coverage": 0.939,
+    "mean_confidence": 0.962,
+    "reasons": []
+  },
+  "ted_1211_michael_norton_how_to_buy_happiness": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 456,
+    "speech_coverage": 0.884,
+    "mean_confidence": 0.954,
+    "reasons": []
+  },
+  "ted_1227_joshua_foer_feats_of_memory_anyone_can_do": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 322,
+    "speech_coverage": 0.816,
+    "mean_confidence": 0.954,
+    "reasons": []
+  },
+  "ted_1255_john_hodgman_design_explained": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 299,
+    "speech_coverage": 0.745,
+    "mean_confidence": 0.962,
+    "reasons": []
+  },
+  "ted_1262_rodney_mullen_pop_an_ollie_and_innovate": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 343,
+    "speech_coverage": 0.745,
+    "mean_confidence": 0.918,
+    "reasons": []
+  },
+  "ted_1268_wolfgang_kessling_how_to_air_condition_outdoor_spaces": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 310,
+    "speech_coverage": 0.868,
+    "mean_confidence": 0.93,
+    "reasons": []
+  },
+  "ted_1283_chris_gerdes_the_future_race_car_150mph_and_no_driver": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 323,
+    "speech_coverage": 0.801,
+    "mean_confidence": 0.965,
+    "reasons": []
+  },
+  "ted_1284_marc_goodman_a_vision_of_crimes_in_the_future": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 282,
+    "speech_coverage": 0.741,
+    "mean_confidence": 0.958,
+    "reasons": []
+  },
+  "ted_1294_vinay_venkatraman_technology_crafts_for_the_digitally_unders": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 371,
+    "speech_coverage": 0.833,
+    "mean_confidence": 0.943,
+    "reasons": []
+  },
+  "ted_1302_michael_anti_behind_the_great_firewall_of_china": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 256,
+    "speech_coverage": 0.804,
+    "mean_confidence": 0.87,
+    "reasons": []
+  },
+  "ted_1313_lisa_kristine_glimpses_of_modern_day_slavery": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 256,
+    "speech_coverage": 0.78,
+    "mean_confidence": 0.976,
+    "reasons": []
+  },
+  "ted_1315_ivan_krastev_can_democracy_exist_without_trust": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 308,
+    "speech_coverage": 0.835,
+    "mean_confidence": 0.945,
+    "reasons": []
+  },
+  "ted_1328_susan_solomon_the_promise_of_research_with_stem_cells": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 321,
+    "speech_coverage": 0.915,
+    "mean_confidence": 0.965,
+    "reasons": []
+  },
+  "ted_1350_thomas_p_campbell_weaving_narratives_in_museum_galleries": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 245,
+    "speech_coverage": 0.804,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_1368_emma_teeling_the_secret_of_the_bat_genome": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 321,
+    "speech_coverage": 0.83,
+    "mean_confidence": 0.931,
+    "reasons": []
+  },
+  "ted_1377_arunachalam_muruganantham_how_i_started_a_sanitary_napkin_re": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 335,
+    "speech_coverage": 0.779,
+    "mean_confidence": 0.88,
+    "reasons": []
+  },
+  "ted_1408_don_levy_a_cinematic_journey_through_visual_effects": {
+    "result": "fail",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 111,
+    "speech_coverage": 0.292,
+    "mean_confidence": 0.887,
+    "reasons": [
+      "111 words < 150",
+      "non-speech stretch over 20 s"
+    ]
+  },
+  "ted_1417_richard_weller_could_the_sun_be_good_for_your_heart": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 345,
+    "speech_coverage": 0.865,
+    "mean_confidence": 0.944,
+    "reasons": []
+  },
+  "ted_1429_tyler_dewitt_hey_science_teachers_make_it_fun": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 268,
+    "speech_coverage": 0.804,
+    "mean_confidence": 0.961,
+    "reasons": []
+  },
+  "ted_1463_jessica_green_good_germs_make_healthy_buildings": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 315,
+    "speech_coverage": 0.862,
+    "mean_confidence": 0.972,
+    "reasons": []
+  },
+  "ted_1466_colin_camerer_neuroscience_game_theory_monkeys": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 458,
+    "speech_coverage": 0.849,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_1484_robert_gordon_the_death_of_innovation_the_end_of_growth": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 330,
+    "speech_coverage": 0.851,
+    "mean_confidence": 0.961,
+    "reasons": []
+  },
+  "ted_1498_pearl_arredondo_my_story_from_gangland_daughter_to_star_teac": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 296,
+    "speech_coverage": 0.815,
+    "mean_confidence": 0.965,
+    "reasons": []
+  },
+  "ted_1503_meg_jay_why_30_is_not_the_new_20": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 322,
+    "speech_coverage": 0.799,
+    "mean_confidence": 0.946,
+    "reasons": []
+  },
+  "ted_1527_didier_sornette_how_we_can_predict_the_next_financial_crisis": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 251,
+    "speech_coverage": 0.903,
+    "mean_confidence": 0.899,
+    "reasons": []
+  },
+  "ted_1541_charmian_gooch_meet_global_corruption_s_hidden_players": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 288,
+    "speech_coverage": 0.82,
+    "mean_confidence": 0.967,
+    "reasons": []
+  },
+  "ted_1551_john_searle_our_shared_condition_consciousness": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 373,
+    "speech_coverage": 0.944,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_1568_russell_foster_why_do_we_sleep": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 321,
+    "speech_coverage": 0.827,
+    "mean_confidence": 0.944,
+    "reasons": []
+  },
+  "ted_1580_james_lyne_everyday_cybercrime_and_what_you_can_do_about_it": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 310,
+    "speech_coverage": 0.851,
+    "mean_confidence": 0.938,
+    "reasons": []
+  },
+  "ted_1590_malcolm_gladwell_the_unheard_story_of_david_and_goliath": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 299,
+    "speech_coverage": 0.877,
+    "mean_confidence": 0.96,
+    "reasons": []
+  },
+  "ted_1591_kelli_swazey_life_that_doesn_t_end_with_death": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 274,
+    "speech_coverage": 0.855,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_1594_jason_pontin_can_technology_solve_our_big_problems": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 268,
+    "speech_coverage": 0.869,
+    "mean_confidence": 0.966,
+    "reasons": []
+  },
+  "ted_1598_trita_parsi_iran_and_israel_peace_is_possible": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 276,
+    "speech_coverage": 0.83,
+    "mean_confidence": 0.961,
+    "reasons": []
+  },
+  "ted_1600_andrew_fitzgerald_adventures_in_twitter_fiction": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 333,
+    "speech_coverage": 0.903,
+    "mean_confidence": 0.945,
+    "reasons": []
+  },
+  "ted_1613_abha_dawesar_life_in_the_digital_now": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 367,
+    "speech_coverage": 0.864,
+    "mean_confidence": 0.966,
+    "reasons": []
+  },
+  "ted_1617_robin_nagle_what_i_discovered_in_new_york_city_trash": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 331,
+    "speech_coverage": 0.89,
+    "mean_confidence": 0.968,
+    "reasons": []
+  },
+  "ted_1630_peter_doolittle_how_your_working_memory_makes_sense_of_the_w": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 375,
+    "speech_coverage": 0.82,
+    "mean_confidence": 0.945,
+    "reasons": []
+  },
+  "ted_1641_eddy_cartaya_my_glacier_cave_discoveries": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 418,
+    "speech_coverage": 0.844,
+    "mean_confidence": 0.952,
+    "reasons": []
+  },
+  "ted_1647_krista_donaldson_the_80_prosthetic_knee_that_s_changing_live": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 383,
+    "speech_coverage": 0.83,
+    "mean_confidence": 0.955,
+    "reasons": []
+  },
+  "ted_1648_paul_piff_does_money_make_you_mean": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 295,
+    "speech_coverage": 0.796,
+    "mean_confidence": 0.963,
+    "reasons": []
+  },
+  "ted_1650_mick_cornett_how_an_obese_town_lost_a_million_pounds": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 268,
+    "speech_coverage": 0.754,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_1658_mark_kendall_demo_a_needle_free_vaccine_patch_that_s_safer_a": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 372,
+    "speech_coverage": 0.859,
+    "mean_confidence": 0.955,
+    "reasons": []
+  },
+  "ted_1665_joe_kowan_how_i_beat_stage_fright": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 316,
+    "speech_coverage": 0.71,
+    "mean_confidence": 0.948,
+    "reasons": []
+  },
+  "ted_1669_nicolas_perony_puppies_now_that_i_ve_got_your_attention_comp": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 291,
+    "speech_coverage": 0.789,
+    "mean_confidence": 0.95,
+    "reasons": []
+  },
+  "ted_1677_leyla_acaroglu_paper_beats_plastic_how_to_rethink_environmen": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 377,
+    "speech_coverage": 0.858,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_1682_roselinde_torres_what_it_takes_to_be_a_great_leader": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 256,
+    "speech_coverage": 0.836,
+    "mean_confidence": 0.958,
+    "reasons": []
+  },
+  "ted_1696_anne_marie_slaughter_can_we_all_have_it_all": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 273,
+    "speech_coverage": 0.871,
+    "mean_confidence": 0.968,
+    "reasons": []
+  },
+  "ted_1719_louie_schwartzberg_hidden_miracles_of_the_natural_world": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 219,
+    "speech_coverage": 0.612,
+    "mean_confidence": 0.96,
+    "reasons": []
+  },
+  "ted_1735_gavin_schmidt_the_emergent_patterns_of_climate_change": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 300,
+    "speech_coverage": 0.825,
+    "mean_confidence": 0.969,
+    "reasons": []
+  },
+  "ted_1742_william_black_how_to_rob_a_bank_from_the_inside_that_is": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 251,
+    "speech_coverage": 0.866,
+    "mean_confidence": 0.94,
+    "reasons": []
+  },
+  "ted_1745_tristram_wyatt_the_smelly_mystery_of_the_human_pheromone": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 299,
+    "speech_coverage": 0.823,
+    "mean_confidence": 0.957,
+    "reasons": []
+  },
+  "ted_1749_andrew_solomon_how_the_worst_moments_in_our_lives_make_us_wh": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 315,
+    "speech_coverage": 0.845,
+    "mean_confidence": 0.97,
+    "reasons": []
+  },
+  "ted_1784_renata_salecl_our_unhealthy_obsession_with_choice": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 275,
+    "speech_coverage": 0.854,
+    "mean_confidence": 0.943,
+    "reasons": []
+  },
+  "ted_1797_talithia_williams_own_your_body_s_data": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 364,
+    "speech_coverage": 0.813,
+    "mean_confidence": 0.967,
+    "reasons": []
+  },
+  "ted_1800_eric_liu_why_ordinary_people_need_to_understand_power": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 299,
+    "speech_coverage": 0.763,
+    "mean_confidence": 0.975,
+    "reasons": []
+  },
+  "ted_1832_gail_reed_where_to_train_the_world_s_doctors_cuba": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 254,
+    "speech_coverage": 0.782,
+    "mean_confidence": 0.95,
+    "reasons": []
+  },
+  "ted_1838_dilip_ratha_the_hidden_force_in_global_economics_sending_mon": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 244,
+    "speech_coverage": 0.833,
+    "mean_confidence": 0.953,
+    "reasons": []
+  },
+  "ted_1850_kimberley_motley_how_i_defend_the_rule_of_law": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 339,
+    "speech_coverage": 0.818,
+    "mean_confidence": 0.966,
+    "reasons": []
+  },
+  "ted_1854_jeremy_heimans_what_new_power_looks_like": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 369,
+    "speech_coverage": 0.87,
+    "mean_confidence": 0.972,
+    "reasons": []
+  },
+  "ted_1860_ramanan_laxminarayan_the_coming_crisis_in_antibiotics": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 348,
+    "speech_coverage": 0.876,
+    "mean_confidence": 0.951,
+    "reasons": []
+  },
+  "ted_1863_leana_wen_what_your_doctor_won_t_disclose": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 340,
+    "speech_coverage": 0.821,
+    "mean_confidence": 0.965,
+    "reasons": []
+  },
+  "ted_1886_bruno_torturra_got_a_smartphone_start_broadcasting": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 280,
+    "speech_coverage": 0.849,
+    "mean_confidence": 0.947,
+    "reasons": []
+  },
+  "ted_1900_sarah_bergbreiter_why_i_make_robots_the_size_of_a_grain_of_r": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 412,
+    "speech_coverage": 0.823,
+    "mean_confidence": 0.907,
+    "reasons": []
+  },
+  "ted_1904_severine_autesserre_to_solve_mass_violence_look_to_locals": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 234,
+    "speech_coverage": 0.868,
+    "mean_confidence": 0.927,
+    "reasons": []
+  },
+  "ted_1920_james_a_white_sr_the_little_problem_i_had_renting_a_house": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 406,
+    "speech_coverage": 0.869,
+    "mean_confidence": 0.937,
+    "reasons": []
+  },
+  "ted_1923_romina_libster_the_power_of_herd_immunity": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 255,
+    "speech_coverage": 0.789,
+    "mean_confidence": 0.773,
+    "reasons": []
+  },
+  "ted_1935_linda_hill_how_to_manage_for_collective_creativity": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 316,
+    "speech_coverage": 0.854,
+    "mean_confidence": 0.951,
+    "reasons": []
+  },
+  "ted_1936_vincent_cochetel_i_was_held_hostage_for_317_days_here_s_what": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 282,
+    "speech_coverage": 0.736,
+    "mean_confidence": 0.946,
+    "reasons": []
+  },
+  "ted_1943_dave_isay_everyone_around_you_has_a_story_the_world_needs_to": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 358,
+    "speech_coverage": 0.841,
+    "mean_confidence": 0.92,
+    "reasons": []
+  },
+  "ted_1949_boniface_mwangi_boniface_mwangi_the_day_i_stood_up_alone": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 338,
+    "speech_coverage": 0.748,
+    "mean_confidence": 0.943,
+    "reasons": []
+  },
+  "ted_1969_pamela_ronald_the_case_for_engineering_our_food": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 257,
+    "speech_coverage": 0.814,
+    "mean_confidence": 0.978,
+    "reasons": []
+  },
+  "ted_1997_margaret_heffernan_why_it_s_time_to_forget_the_pecking_order": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 305,
+    "speech_coverage": 0.866,
+    "mean_confidence": 0.967,
+    "reasons": []
+  },
+  "ted_1998_steve_silberman_the_forgotten_history_of_autism": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 293,
+    "speech_coverage": 0.869,
+    "mean_confidence": 0.962,
+    "reasons": []
+  },
+  "ted_2002_chip_kidd_the_art_of_first_impressions_in_design_and_life": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 300,
+    "speech_coverage": 0.81,
+    "mean_confidence": 0.945,
+    "reasons": []
+  },
+  "ted_2004_chris_urmson_how_a_driverless_car_sees_the_road": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 425,
+    "speech_coverage": 0.85,
+    "mean_confidence": 0.966,
+    "reasons": []
+  },
+  "ted_2014_aspen_baker_a_better_way_to_talk_about_abortion": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 282,
+    "speech_coverage": 0.775,
+    "mean_confidence": 0.944,
+    "reasons": []
+  },
+  "ted_2019_alaa_murabit_what_my_religion_really_says_about_women": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 269,
+    "speech_coverage": 0.757,
+    "mean_confidence": 0.975,
+    "reasons": []
+  },
+  "ted_2046_michael_kimmel_why_gender_equality_is_good_for_everyone_men_": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 278,
+    "speech_coverage": 0.736,
+    "mean_confidence": 0.929,
+    "reasons": []
+  },
+  "ted_2048_scott_dinsmore_how_to_find_work_you_love": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 477,
+    "speech_coverage": 0.852,
+    "mean_confidence": 0.925,
+    "reasons": []
+  },
+  "ted_2055_mac_stone_stunning_photos_of_the_endangered_everglades": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 315,
+    "speech_coverage": 0.864,
+    "mean_confidence": 0.945,
+    "reasons": []
+  },
+  "ted_2056_martin_pistorius_how_my_mind_came_back_to_life_and_no_one_kn": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 318,
+    "speech_coverage": 0.848,
+    "mean_confidence": 0.97,
+    "reasons": []
+  },
+  "ted_2069_jennifer_doudna_we_can_now_edit_our_dna_but_let_s_do_it_wise": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 282,
+    "speech_coverage": 0.918,
+    "mean_confidence": 0.974,
+    "reasons": []
+  },
+  "ted_2086_josh_luber_why_sneakers_are_a_great_investment": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 302,
+    "speech_coverage": 0.755,
+    "mean_confidence": 0.968,
+    "reasons": []
+  },
+  "ted_2098_jedidah_isler_the_untapped_genius_that_could_change_science_": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 279,
+    "speech_coverage": 0.838,
+    "mean_confidence": 0.969,
+    "reasons": []
+  },
+  "ted_2114_james_veitch_this_is_what_happens_when_you_reply_to_spam_ema": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 298,
+    "speech_coverage": 0.491,
+    "mean_confidence": 0.879,
+    "reasons": []
+  },
+  "ted_2132_pardis_sabeti_how_we_ll_fight_the_next_deadly_virus": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 390,
+    "speech_coverage": 0.876,
+    "mean_confidence": 0.966,
+    "reasons": []
+  },
+  "ted_2133_matthew_williams_special_olympics_let_me_be_myself_a_champio": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 194,
+    "speech_coverage": 0.716,
+    "mean_confidence": 0.932,
+    "reasons": []
+  },
+  "ted_2135_sean_follmer_shape_shifting_tech_will_change_work_as_we_know": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 350,
+    "speech_coverage": 0.854,
+    "mean_confidence": 0.949,
+    "reasons": []
+  },
+  "ted_2139_jocelyne_bloch_the_brain_may_be_able_to_repair_itself_with_h": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 302,
+    "speech_coverage": 0.848,
+    "mean_confidence": 0.95,
+    "reasons": []
+  },
+  "ted_2161_tim_urban_inside_the_mind_of_a_master_procrastinator": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 338,
+    "speech_coverage": 0.823,
+    "mean_confidence": 0.966,
+    "reasons": []
+  },
+  "ted_2168_siyanda_mohutsiwa_how_young_africans_found_a_voice_on_twitte": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 300,
+    "speech_coverage": 0.839,
+    "mean_confidence": 0.957,
+    "reasons": []
+  },
+  "ted_2174_adam_grant_the_surprising_habits_of_original_thinkers": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 355,
+    "speech_coverage": 0.812,
+    "mean_confidence": 0.962,
+    "reasons": []
+  },
+  "ted_2176_parag_khanna_how_megacities_are_changing_the_map_of_the_worl": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 269,
+    "speech_coverage": 0.771,
+    "mean_confidence": 0.964,
+    "reasons": []
+  },
+  "ted_2180_linus_torvalds_the_mind_behind_linux": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 308,
+    "speech_coverage": 0.804,
+    "mean_confidence": 0.939,
+    "reasons": []
+  },
+  "ted_2186_christiana_figueres_the_inside_story_of_the_paris_climate_ag": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 250,
+    "speech_coverage": 0.829,
+    "mean_confidence": 0.977,
+    "reasons": []
+  },
+  "ted_2205_sangeeta_bhatia_this_tiny_particle_could_roam_your_body_to_f": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 299,
+    "speech_coverage": 0.843,
+    "mean_confidence": 0.972,
+    "reasons": []
+  },
+  "ted_2226_jamila_raqib_the_secret_to_effective_nonviolent_resistance": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 277,
+    "speech_coverage": 0.729,
+    "mean_confidence": 0.944,
+    "reasons": []
+  },
+  "ted_2235_wanda_diaz_merced_how_a_blind_astronomer_found_a_way_to_hear": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 256,
+    "speech_coverage": 0.697,
+    "mean_confidence": 0.912,
+    "reasons": []
+  },
+  "ted_2243_elise_roy_when_we_design_for_disability_we_all_benefit": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 225,
+    "speech_coverage": 0.859,
+    "mean_confidence": 0.951,
+    "reasons": []
+  },
+  "ted_2249_lisa_dyson_a_forgotten_space_age_technology_could_change_how": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 286,
+    "speech_coverage": 0.854,
+    "mean_confidence": 0.981,
+    "reasons": []
+  },
+  "ted_2251_gerard_ryle_how_the_panama_papers_journalists_broke_the_bigg": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 317,
+    "speech_coverage": 0.804,
+    "mean_confidence": 0.959,
+    "reasons": []
+  },
+  "ted_2255_martin_reeves_how_to_build_a_business_that_lasts_100_years": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 224,
+    "speech_coverage": 0.735,
+    "mean_confidence": 0.939,
+    "reasons": []
+  },
+  "ted_2271_kio_stark_why_you_should_talk_to_strangers": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 295,
+    "speech_coverage": 0.761,
+    "mean_confidence": 0.973,
+    "reasons": []
+  },
+  "ted_2278_neha_narula_the_future_of_money": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 291,
+    "speech_coverage": 0.823,
+    "mean_confidence": 0.97,
+    "reasons": []
+  },
+  "ted_2282_abigail_marsh_why_some_people_are_more_altruistic_than_other": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 329,
+    "speech_coverage": 0.817,
+    "mean_confidence": 0.974,
+    "reasons": []
+  },
+  "ted_2305_todd_coleman_a_temporary_tattoo_that_brings_hospital_care_to": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 326,
+    "speech_coverage": 0.845,
+    "mean_confidence": 0.977,
+    "reasons": []
+  },
+  "ted_2308_philippa_neave_the_unexpected_challenges_of_a_country_s_firs": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 339,
+    "speech_coverage": 0.859,
+    "mean_confidence": 0.942,
+    "reasons": []
+  },
+  "ted_2314_kelli_jean_drinkwater_enough_with_the_fear_of_fat": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 268,
+    "speech_coverage": 0.81,
+    "mean_confidence": 0.952,
+    "reasons": []
+  },
+  "ted_2321_suzanne_barakat_islamophobia_killed_my_brother_let_s_end_the": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 321,
+    "speech_coverage": 0.749,
+    "mean_confidence": 0.969,
+    "reasons": []
+  },
+  "ted_2341_elizabeth_lesser_say_your_truths_and_seek_them_in_others": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 258,
+    "speech_coverage": 0.863,
+    "mean_confidence": 0.978,
+    "reasons": []
+  },
+  "ted_2345_rebecca_brachman_could_a_drug_prevent_depression_and_ptsd": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 367,
+    "speech_coverage": 0.87,
+    "mean_confidence": 0.976,
+    "reasons": []
+  },
+  "ted_2347_laura_vanderkam_how_to_gain_control_of_your_free_time": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 373,
+    "speech_coverage": 0.855,
+    "mean_confidence": 0.978,
+    "reasons": []
+  },
+  "ted_2368_caleb_barlow_where_is_cybercrime_really_coming_from": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 266,
+    "speech_coverage": 0.832,
+    "mean_confidence": 0.957,
+    "reasons": []
+  },
+  "ted_2378_joshua_smith_new_nanotech_to_catch_cancer_early": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 273,
+    "speech_coverage": 0.796,
+    "mean_confidence": 0.962,
+    "reasons": []
+  },
+  "ted_2391_stacy_smith_the_data_behind_hollywood_s_sexism": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 296,
+    "speech_coverage": 0.857,
+    "mean_confidence": 0.96,
+    "reasons": []
+  },
+  "ted_2392_ani_liu_smelfies_and_other_experiments_in_synthetic_biology": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 341,
+    "speech_coverage": 0.8,
+    "mean_confidence": 0.962,
+    "reasons": []
+  },
+  "ted_2397_carrie_poppy_a_scientific_approach_to_the_paranormal": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 311,
+    "speech_coverage": 0.733,
+    "mean_confidence": 0.943,
+    "reasons": []
+  },
+  "ted_2404_carrie_nugent_adventures_of_an_asteroid_hunter": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 305,
+    "speech_coverage": 0.811,
+    "mean_confidence": 0.971,
+    "reasons": []
+  },
+  "ted_2406_karina_galperin_why_don_t_we_write_words_the_way_pronounce_t": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 242,
+    "speech_coverage": 0.796,
+    "mean_confidence": 0.727,
+    "reasons": []
+  },
+  "ted_2424_david_r_williams_how_racism_makes_us_sick": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 215,
+    "speech_coverage": 0.86,
+    "mean_confidence": 0.979,
+    "reasons": []
+  },
+  "ted_2425_giorgia_lupi_how_we_can_find_ourselves_in_data": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 326,
+    "speech_coverage": 0.895,
+    "mean_confidence": 0.972,
+    "reasons": []
+  },
+  "ted_2434_david_casarett_a_doctor_s_case_for_medical_marijuana": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 336,
+    "speech_coverage": 0.874,
+    "mean_confidence": 0.979,
+    "reasons": []
+  },
+  "ted_2437_siddhartha_roy_science_in_service_to_the_public_good": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 251,
+    "speech_coverage": 0.773,
+    "mean_confidence": 0.959,
+    "reasons": []
+  },
+  "ted_2440_lisa_genova_what_you_can_do_to_prevent_alzheimer_s": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 336,
+    "speech_coverage": 0.864,
+    "mean_confidence": 0.982,
+    "reasons": []
+  },
+  "ted_2442_deborah_lipstadt_behind_the_lies_of_holocaust_denial": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 294,
+    "speech_coverage": 0.83,
+    "mean_confidence": 0.968,
+    "reasons": []
+  },
+  "ted_2481_cheyenne_cochrane_a_celebration_of_natural_hair": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 258,
+    "speech_coverage": 0.794,
+    "mean_confidence": 0.957,
+    "reasons": []
+  },
+  "ted_2482_luma_mufleh_don_t_feel_sorry_for_refugees_believe_in_them": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 351,
+    "speech_coverage": 0.739,
+    "mean_confidence": 0.954,
+    "reasons": []
+  },
+  "ted_2489_anil_seth_how_your_brain_hallucinates_your_conscious_reality": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 339,
+    "speech_coverage": 0.852,
+    "mean_confidence": 0.969,
+    "reasons": []
+  },
+  "ted_2499_titus_kaphar_can_art_amend_history": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 259,
+    "speech_coverage": 0.643,
+    "mean_confidence": 0.947,
+    "reasons": []
+  },
+  "ted_2510_manoush_zomorodi_how_boredom_can_lead_to_your_most_brilliant": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 324,
+    "speech_coverage": 0.823,
+    "mean_confidence": 0.947,
+    "reasons": []
+  },
+  "ted_2513_peter_calthorpe_7_principles_for_building_better_cities": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 304,
+    "speech_coverage": 0.861,
+    "mean_confidence": 0.96,
+    "reasons": []
+  },
+  "ted_2526_noriko_arai_can_a_robot_pass_a_university_entrance_exam": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 200,
+    "speech_coverage": 0.799,
+    "mean_confidence": 0.925,
+    "reasons": []
+  },
+  "ted_2529_chetan_bhatt_dare_to_refuse_the_origin_myths_that_claim_who_": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 269,
+    "speech_coverage": 0.853,
+    "mean_confidence": 0.977,
+    "reasons": []
+  },
+  "ted_2534_benjamin_grant_what_it_feels_like_to_see_earth_from_space": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 289,
+    "speech_coverage": 0.807,
+    "mean_confidence": 0.962,
+    "reasons": []
+  },
+  "ted_2537_emily_esfahani_smith_there_s_more_to_life_than_being_happy": {
+    "result": "pass",
+    "by": "tools/ted_ratings_corpus.py rule C1 (automated)",
+    "date": "2026-11-26",
+    "words": 295,
+    "speech_coverage": 0.808,
+    "mean_confidence": 0.974,
+    "reasons": []
+  }
+}
