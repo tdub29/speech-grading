@@ -97,3 +97,20 @@ def test_speaker_filter_drops_stale_acoustic_gaps():
                                                    Word(text="c", start=2, end=3, speaker="A")]))
     t.acoustic_gaps[1] = (0.5, 1.5)
     assert t.filter_by_speaker("A").acoustic_gaps == {}
+
+
+def test_silence_swallowing_a_sentence_start_word_pins_at_the_sentence_edge(tmp_path):
+    # "You" held 2.2 to 3.3 s inside the 2.0 to 3.5 s silence: the pause opens the sentence
+    spec = [("we", 0.0, 0.5), ("went", 0.5, 1.0), ("home.", 1.0, 2.0), ("You", 2.2, 3.3),
+            ("stay", 3.5, 4.2), ("here.", 4.2, 5.0)]
+    pauses = [f for f in _report(_clip(tmp_path), spec).findings if f.kind == "long_pause"]
+    assert len(pauses) == 1 and "sentence boundary" in pauses[0].rationale
+
+
+def test_silence_partly_shown_by_a_word_gap_is_not_added_again(tmp_path):
+    # the 2.0 to 3.5 s silence is 60% inside the 2.0 to 2.9 s word gap: the word gap already counts it
+    spec = [("we", 0.0, 0.5), ("went", 0.5, 1.0), ("to", 1.0, 1.6), ("the", 1.6, 2.0),
+            ("big", 2.9, 3.6), ("store.", 3.6, 5.0)]
+    t = derive_transcript_fields(Transcript(words=_words(spec), audio_path=_clip(tmp_path)))
+    run_on_transcript(t, Config(enable_acoustic=True, use_llm=False))
+    assert t.acoustic_gaps == {}

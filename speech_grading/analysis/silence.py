@@ -40,14 +40,27 @@ def find_silences(audio_path: str, min_sec: float) -> list[tuple[float, float]]:
     return [(a, b) for a, b in spans if b - a >= min_sec]
 
 
-def _boundary_for(t: Transcript, c: float) -> int | None:
-    """Boundary index (silence before word i) for an instant ``c``: the gap holding it, else the
-    nearer edge of the word whose ASR span swallowed it."""
+_CLAUSE_END = (".", "?", "!", ",", ";", ":")
+
+
+def _boundary_for(t: Transcript, a: float, b: float) -> int | None:
+    """Boundary index (silence before word i) for a silence (a, b): the gap holding its centre, else
+    an edge of the word whose ASR span swallowed it. A silence covering most of that word goes to the
+    word's punctuated edge when it has one (a held "You" opening a sentence pauses at the sentence
+    edge); otherwise the nearer edge."""
     words = t.words
+    c = (a + b) / 2
     for k, w in enumerate(words):
         if c < w.start:
             return k  # in the gap before word k
         if c <= w.end:
+            span = w.end - w.start
+            covered = (min(b, w.end) - max(a, w.start)) / span if span > 0 else 1.0
+            if covered >= 0.5:
+                if k > 0 and words[k - 1].text.rstrip().endswith(_CLAUSE_END):
+                    return k
+                if w.text.rstrip().endswith(_CLAUSE_END):
+                    return k + 1
             return k + 1 if c > (w.start + w.end) / 2 else k
     return None
 
@@ -65,7 +78,7 @@ def attach_silences(t: Transcript, spans: list[tuple[float, float]]) -> None:
         shown = sum(max(0.0, min(b, words[j].start) - max(a, words[j - 1].end)) for j in range(1, len(words)))
         if shown >= 0.5 * (b - a):
             continue
-        i = _boundary_for(t, (a + b) / 2)
+        i = _boundary_for(t, a, b)
         if i is None or not 0 < i < len(words) or i in t.turn_starts:
             continue
         if b - a > t.gap_before(i):
