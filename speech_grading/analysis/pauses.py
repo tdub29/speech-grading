@@ -71,12 +71,16 @@ def detect_pauses(t: Transcript, thresholds: dict) -> list[Finding]:
             score = base
             rationale = "Long pause at a sentence boundary"
 
+        # An audio silence the ASR timestamps hid carries its own span (analysis.silence).
+        start, end = t.acoustic_gaps.get(i, (t.words[i - 1].end, t.words[i].start))
+        if end - start < gap:
+            start, end = t.words[i - 1].end, t.words[i].start
         findings.append(
             Finding(
                 kind="long_pause",
                 word_index=i,
-                start=t.words[i - 1].end,
-                end=t.words[i].start,
+                start=start,
+                end=end,
                 original="(pause %.2fs)" % gap,
                 rationale=rationale,
                 score=score,

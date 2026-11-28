@@ -35,6 +35,23 @@ from .wordchoice.base import analyze_word_choice
 _ISSUE_KIND = {"tripped_up": "tripped_up", "weak": "weak_word", "hedge": "hedge", "filler": "filler"}
 
 
+def _attach_acoustic_silences(t: Transcript, cfg: Config) -> None:
+    """Pin audio silences the ASR timestamps hid to their word boundary (analysis.silence)."""
+    if not (cfg.enable_acoustic and t.has_timing and t.audio_path and os.path.exists(t.audio_path)):
+        return
+    from .analysis.visual import is_video
+
+    if is_video(t.audio_path):
+        return
+    try:
+        from .analysis.silence import attach_silences, find_silences
+
+        # shortcut: loads the audio a second time (prosody loads it again); share the load if grading time matters.
+        attach_silences(t, find_silences(t.audio_path, cfg.thresholds.get("pause_long", 0.7)))
+    except ImportError:  # librosa missing: prosody already says so; word gaps stand alone
+        return
+
+
 def _wordchoice_to_findings(t: Transcript, wcs: list[WordChoiceFinding]) -> list[Finding]:
     out: list[Finding] = []
     n = len(t.words)
@@ -62,6 +79,7 @@ def run_on_transcript(t: Transcript, cfg: Config) -> Report:
     """Run the full analysis + scoring stack over an already-built Transcript."""
     if cfg.speaker:
         t = t.filter_by_speaker(cfg.speaker)
+    _attach_acoustic_silences(t, cfg)
     findings: list[Finding] = []
     findings += detect_fillers(t, cfg.thresholds)
     findings += detect_repetitions(t)

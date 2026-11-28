@@ -70,6 +70,9 @@ class Transcript(BaseModel):
     # Speaker label -> that speaker's own audio file (multitrack input). filter_by_speaker
     # points audio_path at it, so prosody reads the right voice.
     tracks: dict[str, str] = Field(default_factory=dict)
+    # Word index -> (start, end) of an audio silence the ASR timestamps hid at that boundary
+    # (set by analysis.silence.attach_silences); gap_before() reads the longer of the two.
+    acoustic_gaps: dict[int, tuple[float, float]] = Field(default_factory=dict)
 
     @property
     def total_words(self) -> int:
@@ -84,7 +87,11 @@ class Transcript(BaseModel):
         """Silent gap (seconds) immediately before word ``i`` (0 for the first word)."""
         if i <= 0 or i >= len(self.words) or i in self.turn_starts:
             return 0.0
-        return max(0.0, self.words[i].start - self.words[i - 1].end)
+        word_gap = max(0.0, self.words[i].start - self.words[i - 1].end)
+        if i in self.acoustic_gaps:
+            a, b = self.acoustic_gaps[i]
+            return max(word_gap, b - a)
+        return word_gap
 
     def filter_by_speaker(self, speaker: str) -> Transcript:
         """Return a new Transcript containing only words for the given speaker."""
@@ -111,6 +118,7 @@ class Transcript(BaseModel):
         filtered.duration_sec = round(sum(
             matching[b - 1].end - matching[a].start for a, b in zip(bounds, bounds[1:])), 4) or 0.0
         filtered.sentences = []
+        filtered.acoustic_gaps = {}  # keyed by the old word indices
         return derive_transcript_fields(filtered)
 
 

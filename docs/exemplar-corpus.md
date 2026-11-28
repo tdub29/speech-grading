@@ -191,7 +191,7 @@ per-clip table is `~/.orator/corpus/exemplars/ab-medium-en/ab_degrade.md`.
 | pace 1.25x | wpm up | 5 of 5 | -5.5, -3.6, -0.9, -7.1, -10.9 |
 | pitch flattened | monotone_semitones down | 5 of 5 | -7.2, -7.2, -5.2, -7.8, -5.3 |
 | dynamics compressed | energy_dynamics down | 5 of 5 | -2.4, -1.2, +1.5, -0.1, +0.8 |
-| 1.5 s mid-clause silence | midclause_pauses up | 0 of 5 | +0.5, +0.2, +3.3, +0.4, -0.7 |
+| 1.5 s mid-clause silence (before the audio silence check) | midclause_pauses up | 0 of 5 | +0.5, +0.2, +3.3, +0.4, -0.7 |
 | same-speaker "um" | filler_count up | 0 of 1 | Jobs only: +0.1; 4 clips had no timed "um" |
 
 What it shows:
@@ -203,12 +203,18 @@ What it shows:
    also moved 9 to 28 other metrics by over 10%, so it is not a pure one-factor change.
 3. **Compression is barely penalized.** `energy_dynamics` fell on every clip (median 40%),
    but the overall score moved 2.4 points or less.
-4. **The mid-clause pause detector still misses every inserted silence.** `midclause_pauses`
-   did not change on any clip (Sinek stayed at 1, the rest at 0). The pause repairs that
-   shipped did not fix this. The likely cause, not yet checked against the edited
-   transcripts, is that the ASR punctuates at the new gap, so the pause reads as a clause
-   boundary. A detector that reads silence from the audio, not from ASR word gaps and
-   punctuation, is the next candidate change.
+4. **Inserted silences were invisible to the old detector; the audio silence check now finds them.**
+   The cause was not punctuation. faster-whisper stretched the neighboring word over the silence,
+   so the word gap read 0.00 s (one word held 2.56 s). `analysis/silence.py` now reads silence
+   from the audio (frames more than 35 dB below the 95th-percentile speech level, at least
+   0.7 s) and pins it to the word boundary at its centre. On fresh clips, at the inserted span:
+   it found a mid-clause pause on 3 of 5 (Churchill, Kennedy, Reagan), on 0 of 5 unedited
+   baselines, against 0 for the old code. The two misses: the ASR wrote a comma at the silence
+   (FDR), and one source was too short to cut (Romney). Whole-clip `midclause_pauses` counts are
+   not a usable target here: re-transcribing the same bytes changed them by up to 5, so the
+   test reads the inserted span only. On the 63 development speeches the median score did not
+   move (worst: Qahtani -6.5, from real dramatic pauses). The floor finds few silences in noisy
+   archival recordings, so real pauses there can still be missed.
 5. **Filler insertion lowered the filler count.** Medium ASR timed an "um" only in Jobs.
    Splicing a second one in moved `filler_count` from 3 to 2, the wrong way. Re-transcribing
    the edited audio dropped fillers, which is the filler-dropping problem of Finding 2.
