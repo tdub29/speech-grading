@@ -41,6 +41,8 @@ SOURCE = {
 }
 MANIFEST = REPO / "docs" / "ted-ratings-manifest.json"
 CHECKS = REPO / "docs" / "ted-ratings-content-checks.json"
+CONFIRM = REPO / "docs" / "ted-ratings-confirm-manifest.json"  # fresh sample for model-change confirmation
+CONFIRM_PER_STRATUM = 15
 SEED = "ted-ratings-2026-11-25"
 NEGATIVE = ("Longwinded", "Unconvincing", "Obnoxious", "Confusing")
 EXCLUDED_TAGS = {"performance", "music", "live music", "dance", "magic", "poetry", "spoken word"}
@@ -229,10 +231,47 @@ def cmd_split(_):
                       "per_stratum": [sum(i["stratum"] == s for i in items) for s in range(N_STRATA)]}))
 
 
+def cmd_split_confirm(args):
+    """Fresh confirmation sample: next unused candidates per stratum, speakers disjoint from the frozen split."""
+    if CONFIRM.exists():
+        raise SystemExit(f"{CONFIRM} exists; the confirmation sample is frozen")
+    import yt_dlp  # noqa: F401  fail fast: resolve_one's errors are skipped below
+    used = {i["speaker"] for i in json.loads(MANIFEST.read_text(encoding="utf-8"))["speeches"]}
+    used_urls = {i["source_url"] for i in json.loads(MANIFEST.read_text(encoding="utf-8"))["speeches"]} | political_urls()
+    strata = json.loads((ROOT / "candidates.json").read_text(encoding="utf-8"))["strata"]
+    items = []
+    for stratum in strata:
+        taken = 0
+        for item in stratum[PER_STRATUM + RESERVE:]:
+            if item["speaker"] in used:
+                continue
+            try:
+                hit = resolve_one(item)
+            except Exception:  # network error: skip; order stays label-blind
+                continue
+            url = f"https://www.youtube.com/watch?v={hit.get('youtube_id')}"
+            if hit.get("status") != "resolved" or url in used_urls:
+                continue
+            used_urls.add(url)
+            start, end = excerpt(hit["yt_duration_sec"])
+            items.append({**item, "split": "confirm", "source_url": url, "youtube_channel": hit["channel"],
+                          "yt_duration_sec": hit["yt_duration_sec"], "start_sec": start, "end_sec": end,
+                          "mode": "stage", "genre": "ted_talk"})
+            taken += 1
+            if taken == CONFIRM_PER_STRATUM:
+                break
+    assert len({i["speaker"] for i in items}) == len(items), "one talk per speaker"
+    ec.write_json(CONFIRM, {"source": SOURCE, "seed": SEED, "rule": "candidates after index PER_STRATUM + RESERVE in "
+                            "each neg_share stratum, label-blind hash order, speakers and URLs disjoint from "
+                            "ted-ratings-manifest.json", "count": len(items),
+                            "speeches": sorted(items, key=lambda i: i["id"])})
+    print(json.dumps({"confirm": len(items), "per_stratum": [sum(i["stratum"] == s for i in items) for s in range(N_STRATA)]}))
+
+
 # ---------- audio, ASR, content check, grade (exemplar_corpus code, this corpus root) ----------
 
 def load_manifest(split):
-    data = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    data = json.loads((CONFIRM if split == "confirm" else MANIFEST).read_text(encoding="utf-8"))
     checks = json.loads(CHECKS.read_text(encoding="utf-8")) if CHECKS.is_file() else {}
     items = [dict(i, label=i["neg_share"]) for i in data["speeches"] if i["split"] == split]
     for item in items:
@@ -266,7 +305,7 @@ def content_check(item):
 
 def cmd_run(args):
     ec.ROOT = ROOT
-    ec.assert_committed(MANIFEST)
+    ec.assert_committed(CONFIRM if args.split == "confirm" else MANIFEST)
     items = load_manifest(args.split)
     if args.limit:
         items = items[:args.limit]
@@ -401,8 +440,9 @@ def main():
     p.add_argument("--workers", type=int, default=4)
     p.set_defaults(fn=cmd_resolve)
     sub.add_parser("split").set_defaults(fn=cmd_split)
+    sub.add_parser("split-confirm").set_defaults(fn=cmd_split_confirm)
     p = sub.add_parser("run")
-    p.add_argument("--split", choices=["development", "heldout"], required=True)
+    p.add_argument("--split", choices=["development", "heldout", "confirm"], required=True)
     p.add_argument("--stage", choices=["acquire", "transcribe", "check", "grade"], required=True)
     p.add_argument("--workers", type=int, default=1)
     p.add_argument("--limit", type=int)
